@@ -11,7 +11,7 @@ public class TestSingleton : MonoBehaviour
         if (!Instance) Instance = this;
         else
         {
-            Debug.LogError("There can't be multiple instances of " + this.name);
+            Debug.LogError("There can't be multiple instances of " + this.GetType().FullName);
             Destroy(this);
         }
     }
