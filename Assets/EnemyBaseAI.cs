@@ -49,6 +49,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public bool PlayerVisible()
     {
+        if (PlayerColorChangeBehavior.Instance.IsChanging) return false; // The player's invisible when changing color
         _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
         if (Vector3.Angle(EyeTransform.forward, _playerRay.direction) > EnemyData.DetectionFOV)
         {
@@ -77,6 +78,11 @@ public class EnemyBaseAI : MonoBehaviour
                         if (DebugCommentText) DebugCommentText.text = "Materials DO NOT match";
                         return true;
                     }
+                }
+                if (_hit.collider.tag == "Unblendable")
+                {
+                    if (DebugCommentText) DebugCommentText.text = "Player in front of unblendable wall";
+                    return true;
                 }
             }
         } else
