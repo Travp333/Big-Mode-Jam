@@ -6,11 +6,11 @@ public class PlayerColorChangeBehavior : MonoBehaviour
 {
     public static PlayerColorChangeBehavior Instance;
 
-    [SerializeField]
-    private MeshRenderer mesh;
+    public MeshRenderer mesh;
+    public bool IsBlack { get; private set; } = true; // true for black, false for white
+    public Material CurrentMaterial => IsBlack ? SceneData.Instance.Black : SceneData.Instance.White;
 
-    public bool mode { get; private set; } = true; // true for black, false for white
-    public Material CurrentMaterial => mode ? SceneData.Instance.Black : SceneData.Instance.White;
+
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class PlayerColorChangeBehavior : MonoBehaviour
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            mode = !mode;
+            IsBlack = !IsBlack;
             mesh.material = CurrentMaterial;
         }
     }

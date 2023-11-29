@@ -15,18 +15,26 @@ public class EnemyBaseAI : MonoBehaviour
     public Transform EyeTransform; // Where detection raycasts originate
     public LayerMask PlayerDetectionMask;
     public LayerMask EnvironmentDetectionMask;
-    public TMPro.TMP_Text DebugText;
+    public TMPro.TMP_Text DebugCommentText;
+    public TMPro.TMP_Text DebugStateText;
 
-    private Transform PlayerTransform;
-    private Vector3 PlayerPosition {
+    [HideInInspector] public Vector3 PointOfInterest;
+
+    Transform PlayerTransform;
+    Ray _playerRay;
+    RaycastHit _hit;
+    Vector3 PlayerPosition {
         get
         {
             return PlayerTransform.position + Vector3.up; // Offsets transform position
         }
     }
-
-    Ray _playerRay;
-    RaycastHit _hit;
+    bool TextureIsBlackAtCoord (float TextureUCoord)
+    {
+        // If TextureUCoord < 0.5, the texture should be black, so should return true
+        return (TextureUCoord < 0.5f) ? true : false;
+    }
+    readonly Vector3 FLATVECTOR = new Vector3(1,0,1);
 
     private void Awake()
     {
@@ -42,12 +50,16 @@ public class EnemyBaseAI : MonoBehaviour
     public bool PlayerVisible()
     {
         _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
-        //if (Vector3.Angle(EyeTransform.forward, _playerRay.direction) > EnemyData.DetectionFOV) return false;
+        if (Vector3.Angle(EyeTransform.forward, _playerRay.direction) > EnemyData.DetectionFOV)
+        {
+            if (DebugCommentText) DebugCommentText.text = "Player out of FOV";
+            return false;
+        }
 
         Debug.DrawLine(EyeTransform.position, PlayerPosition, Color.green);
         if (Physics.Linecast(EyeTransform.position, PlayerPosition, out _hit, PlayerDetectionMask) && _hit.collider.tag == "Player")
         {
-            if (DebugText) DebugText.text = "Player Visible";
+            if (DebugCommentText) DebugCommentText.text = "Player Visible";
             Debug.DrawRay(EyeTransform.position, _playerRay.direction, Color.red);
 
             if (Physics.Raycast(EyeTransform.position, _playerRay.direction, out _hit, 100, EnvironmentDetectionMask))
@@ -55,47 +67,60 @@ public class EnemyBaseAI : MonoBehaviour
                 if (_hit.collider.tag == "Environment")
                 {
                     Debug.Log("Name: " + _hit.collider.name + " Texture coord: " + _hit.textureCoord);
-                    //Debug.Log("Wall material: " + _hit.collider.GetComponent<Renderer>().sharedMaterial.name + " Player Material: " + PlayerColorChangeBehavior.Instance.CurrentMaterial.name);
-                    if ( !string.Equals(_hit.collider.GetComponent<Renderer>().sharedMaterial.name, PlayerColorChangeBehavior.Instance.CurrentMaterial.name) ) 
+                    if ( PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
                     {
-                        if (DebugText) DebugText.text = "Materials DO NOT match";
-                        return true;
+                        if (DebugCommentText) DebugCommentText.text = "Materials match!";
+                        return false;
                     }
                     else
                     {
-                        if (DebugText) DebugText.text = "Materials match!";
-                        return false;
+                        if (DebugCommentText) DebugCommentText.text = "Materials DO NOT match";
+                        return true;
                     }
                 }
             }
         } else
         {
-            if (DebugText) DebugText.text = "Player Not Visible";
-        }
-            
+            if (DebugCommentText) DebugCommentText.text = "Player Not Visible";
+        }            
         return false;
     }
-
+    public void FaceObjectOfInterest()
+    {
+        Vector3 objectVector = PointOfInterest- transform.position;
+        transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation(Vector3.Scale(objectVector, FLATVECTOR)), Time.deltaTime * EnemyData.TurnSpeed );
+    }
     public class EnemyIdleState : EnemyBaseState
     {
         public override string Name() { return "Idle"; }
         public override void Enter(EnemyBaseAI owner) {
         }
         public override void Update(EnemyBaseAI owner) {
-            owner.PlayerVisible();
-            //if (owner.PlayerVisible) owner.AI.SetState(EnemyBaseAI.SuspiciousState, owner);
+            //owner.PlayerVisible();
+            if (owner.PlayerVisible()) owner.AI.SetState(EnemyBaseAI.SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner) {
         }
     }
     public class EnemySuspiciousState : EnemyBaseState
     {
-        public override string Name() { return "Idle"; }
+
+        float _timer;
+        public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.PointOfInterest = owner.PlayerPosition;
+            _timer = 0;
         }
         public override void Update(EnemyBaseAI owner)
         {
+            if (owner.PlayerVisible()) owner.PointOfInterest = owner.PlayerPosition;
+            owner.FaceObjectOfInterest();
+
+            // Transition
+            if (_timer < owner.EnemyData.SuspiciousTime)
+                _timer += Time.deltaTime;
+            else owner.AI.SetState(IdleState,owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -125,7 +150,7 @@ namespace StateMachine
                 CurrentState?.Exit(owner);
             }
             CurrentState = newState;
-            Debug.Log("Entering " + CurrentState.Name() + " state");
+            if (owner.DebugStateText) owner.DebugStateText.text = newState.Name();
             CurrentState.Enter(owner);
         }
 

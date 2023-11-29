@@ -5,8 +5,10 @@ using UnityEngine;
 public class TemporaryPlayerMovement : MonoBehaviour
 {
     public float Speed;
+    public float RotationSensitivity = 5;
 
     Vector2 _inputs;
+    float _rotationInput;
     Vector3 _velocity;
     Rigidbody _rigid;
     void Start()
@@ -18,6 +20,9 @@ public class TemporaryPlayerMovement : MonoBehaviour
     void Update()
     {
         _inputs = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        _rotationInput = Input.GetAxis("Mouse X") * RotationSensitivity;
+
+        transform.Rotate(0,_rotationInput * Time.unscaledDeltaTime, 0);
 
         _velocity.y = _rigid.velocity.y;
         _velocity.x = _inputs.x * Speed;
