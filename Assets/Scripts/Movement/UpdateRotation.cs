@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //updates what direction the player model is facing
@@ -18,7 +18,13 @@ public class UpdateRotation : MonoBehaviour
     Vector3 DummyGrav;
     bool Gate = true;
     bool gravSwap;
-    // Start is called before the first frame update
+	// Start is called before the first frame update
+	public void SnapRotationToDirection(){
+		Vector3 player2Pointer = sphere.ProjectDirectionOnPlane(point.transform.position - transform.parent.gameObject.transform.position, CustomGravity.GetUpAxis(transform.position));
+		Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
+		Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(player2Pointer, gravity), gravity);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, 99999f * Time.deltaTime);
+	}
     void Start()
     {
 		transform.rotation = Quaternion.LookRotation( transform.forward , CustomGravity.GetUpAxis(transform.position));
@@ -40,7 +46,7 @@ public class UpdateRotation : MonoBehaviour
     void UpdateSpins()
     {
 		Vector3 player2Pointer = sphere.ProjectDirectionOnPlane(point.transform.position - transform.parent.gameObject.transform.position, CustomGravity.GetUpAxis(transform.position));
-		Debug.DrawRay(this.transform.position, player2Pointer, Color.gray, 3f);
+	    //Debug.DrawRay(this.transform.position, player2Pointer, Color.gray, 3f);
         Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
 		//the "gravSwap" logic is works in the sence that the bool represents if gravity is changing or not but this not creates an issue with priority, if it is before the 
 		// connected body check, it overwrites it and forces its orientation    , which causes issues when standing on moving platforms. however, if it is after the connected body check,
@@ -67,7 +73,6 @@ public class UpdateRotation : MonoBehaviour
 		//	Quaternion toRotation = Quaternion.LookRotation(sphere.forwardAxis, gravity);
 		//	transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
 		//}
-		//SHOULD MAKE IT SO THAT ROTATING IN AIR IS SLOWER
 		else if (sphere.velocity.magnitude > .2f && (sphere.playerInput != Vector3.zero)){
 			if(!sphere.OnGround){
 				Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(player2Pointer, gravity), gravity);

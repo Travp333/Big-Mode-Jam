@@ -8,64 +8,95 @@ public class MovementSpeedController : MonoBehaviour
 {
     Movement movement;
     [SerializeField, Range(0f, 100f)]
-	[Tooltip("speeds of the character, these states represent the speed when your character is jogging, walking")]
-	public float baseSpeed = 10f, walkSpeed = 7f;
+    [Tooltip("speeds of the character, these states represent the speed when your character is jogging, walking, rolling")]
+	public float baseSpeed = 10f, walkSpeed = 5f, rollSpeed = 30f, crouchWalkSpeed = 3f;
     // Start is called before the first frame update
     public float currentSpeed;
     [SerializeField]
-    float factor = 1f;
-    float lastFactor;
-    [SerializeField]
-	public bool slowed = false;
+	public bool walking = false;
+	public bool crouching;
 	public bool moving;
+	public bool rolling;
 	
 	public InputAction movementAction;
 	public InputAction walkAction;
-    //this will determine how severely speed is impacted
-
-    // kindof a rough system atm, but currently you need to set factor to one of these set values then when you reset it you need to set it to its alternative
-    //(.1, 10), (.2, 5), (.4, 2.5), (.5, 2), (.8, 1.25)
-	// these are the only clean divisions i could think of so that we end up at the exact number we started with 
+	public InputAction crouchAction;
+	float lastPressTime;
+	[SerializeField]
+	
+	float doublePressTime;
 	// Awake is called when the script instance is being loaded.
 	void Awake()
 	{
 		walkAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Walk");
 		movementAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Move");
+		crouchAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Crouch");
 	}
-    public void setFactor(float plug){
-        factor = plug;
-    }
+    
+	void resetRolling(){
+		rolling = false;
+		crouching = true;
+	}
+	
+
+	IEnumerator StartCrouch()
+	{
+		yield return new WaitForSeconds(.2f);
+		Debug.Log("Croumch" + (Time.time - lastPressTime));
+		rolling = false;
+		if(crouching){
+			crouching = false;
+		}
+		else{
+			crouching = true;
+		}
+	}
 
     void Update() {
-	    MovementState(factor);
+	    MovementState();
+	    if(crouchAction.WasPressedThisFrame() && movement.OnGround){
+	    	
+	    	if(Time.time - lastPressTime <= doublePressTime){
+	    		StopCoroutine("StartCrouch");
+	    		Debug.Log("ROLL!");
+	    		rolling = true;
+	    		Invoke("resetRolling", .5f);
+	    		crouching = true;
+	    	}
+	    	else{
+	    		lastPressTime = Time.time;
+	    		StartCoroutine("StartCrouch");
+	    	}
+	    }
 	    if(walkAction.IsPressed()){
-	    	slowed = true;
+	    	walking = true;
 	    }
 	    else{
-	    	slowed = false;
+	    	walking = false;
 	    }
     }
 
     void Start() {
         movement = GetComponent<Movement>();
     }
-    void MovementState(float factor){
+    void MovementState(){
 	    //change movement speeds universally
 	    moving = movementAction.ReadValue<Vector2>().magnitude > 0;
-		if (!slowed){
+	    if(crouching){
+	    	currentSpeed = crouchWalkSpeed;
+	    	walking = false;
+	    }
+	    if(!crouching ){
+	    	currentSpeed = baseSpeed;
+	    }
+	    if (!walking && !crouching){
 			currentSpeed = baseSpeed;
 		}
-        else if(slowed){
+		else if(walking && ! crouching){
             currentSpeed = walkSpeed;
         }
         if(currentSpeed <= 0){
             currentSpeed = 0;
-        }
-        if (factor != lastFactor){
-            walkSpeed *= factor;
-            baseSpeed *= factor;
-            currentSpeed *= factor;		
-            lastFactor = factor;
         }
 	}
     public Vector3 ProjectDirectionOnPlane (Vector3 direction, Vector3 normal) {

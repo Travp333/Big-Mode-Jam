@@ -1,5 +1,4 @@
-﻿//Author: Travis Parks
-//Debugging: Travis Parks
+﻿
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour { 
@@ -91,6 +90,7 @@ public class Movement : MonoBehaviour {
 
 	public bool moveBlocked;
 	public void blockMovement(){
+		Debug.Log("Blocked Movement in movement.cs!");
 		moveBlocked = true;
 		playerInput.x = 0f;
 		playerInput.y = 0f;
@@ -98,8 +98,7 @@ public class Movement : MonoBehaviour {
 	}
 	public void unblockMovement(){
 		moveBlocked = false;
-		transform.GetChild(1).gameObject.SetActive(true);
-		transform.GetChild(4).gameObject.SetActive(false);
+
 	}
 	//runs when object becomes active
 	void Awake () {

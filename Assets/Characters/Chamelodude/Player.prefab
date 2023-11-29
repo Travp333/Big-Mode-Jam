@@ -327,10 +327,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseSpeed: 15
   walkSpeed: 5
+  rollSpeed: 30
+  crouchWalkSpeed: 3
   currentSpeed: 0
   factor: 1
-  slowed: 0
+  walking: 0
+  crouching: 0
   moving: 0
+  rolling: 0
   movementAction:
     m_Name: Movement
     m_Type: 0
@@ -349,6 +353,16 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  crouchAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  doublePressTime: 0.4
 --- !u!114 &2604539337735843514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,7 +433,7 @@ MonoBehaviour:
   alignDelay: 1
   minVerticalAngle: -89
   maxVerticalAngle: 89
-  rotationSpeed: 172
+  rotationSpeed: 22
   focusCentering: 0
   focusRadius: 0
   focus: {fileID: 8131352036699158722}
@@ -1063,5 +1077,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 3414375860299764301}
   isOnGroundADJ: 0
-  OnGroundBuffer: 0.25
+  OnGroundBuffer: 0.15
   JumpBuffer: 0.4

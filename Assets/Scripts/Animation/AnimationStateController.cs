@@ -8,7 +8,8 @@ using UnityEngine;
 public class AnimationStateController : MonoBehaviour
 {
     public GameObject player = default;
-    Movement sphere = default; 
+	Movement sphere = default; 
+	UpdateRotation rotation;
     Animator animator;
 	int isRunningHash;
     int isOnSteepHash;
@@ -16,11 +17,13 @@ public class AnimationStateController : MonoBehaviour
     int onGroundHash;
 	int isOnWallHash;
 	int isWalkingHash;
+	int isRollingHash;
+	int isCrouchedHash;
 
     int isFallingHash;
     bool isOnGround;
     bool isOnWall;
-
+	bool moveBlockGate;
     [HideInInspector]
     public bool isOnGroundADJ;
     bool isOnSteep;
@@ -37,11 +40,13 @@ public class AnimationStateController : MonoBehaviour
     float Jumpstopwatch = 0;
 
 
-    void JumpAnimEvent(){
+	public void JumpAnimEvent(){
 		sphere.JumpTrigger();
-	}
+    }
 
-    void Start() { 
+
+	void Start() { 
+		rotation = player.transform.GetChild(0).GetComponent<UpdateRotation>();
         sphere = player.GetComponent<Movement>();
         animator = GetComponent<Animator>();
 	    isRunningHash = Animator.StringToHash("isRunning");
@@ -49,10 +54,13 @@ public class AnimationStateController : MonoBehaviour
         isJumpingHash = Animator.StringToHash("isJumping");
         onGroundHash = Animator.StringToHash("OnGround");
         isOnWallHash = Animator.StringToHash("isOnWall");
-        isFallingHash = Animator.StringToHash("isFalling");
+		isFallingHash = Animator.StringToHash("isFalling");
+		isRollingHash = Animator.StringToHash("Rolling");
+		isCrouchedHash = Animator.StringToHash("Crouched");
 
     }
-
+    
+	
     //this is meant to allow a sort of buffer, so bools stay true for a set amount of time
     void BoolAdjuster(){
         isOnGround = sphere.OnGround;
@@ -71,9 +79,34 @@ public class AnimationStateController : MonoBehaviour
             isOnGroundADJ = true;
         }
     }
+	public void SetRollSpeed(){
+		sphere.body.velocity = new Vector3 (this.transform.forward.x * sphere.speedController.rollSpeed, sphere.body.velocity.y, this.transform.forward.z * sphere.speedController.rollSpeed );
+	}
+	public void SetRollingSpeedFalse(){
+		animator.SetBool("SettingRollingSpeed", false);
+	}
     float jumpCount;
     float jumpCap = .2f;
-    void Update() {
+	void Update() {
+	
+		if(animator.GetBool("MoveBlocked") == true){
+			if(!moveBlockGate){
+				rotation.SnapRotationToDirection();
+				sphere.blockMovement();
+				
+				moveBlockGate = true;	
+			}
+
+		}
+		else{
+			if(moveBlockGate){
+				sphere.unblockMovement();
+				moveBlockGate = false;
+			}
+		}
+		if(animator.GetBool("SettingRollingSpeed") == true){
+			SetRollSpeed();
+		}
         //Debug.Log(sphere.velocity.magnitude);
         BoolAdjuster();
 	    bool JumpPressed = sphere.jumpAction.IsPressed();
@@ -82,15 +115,21 @@ public class AnimationStateController : MonoBehaviour
         bool isOnWall = animator.GetBool(isOnWallHash);
 	    bool isRunning = animator.GetBool(isRunningHash);
 	    bool isWalking = animator.GetBool(isWalkingHash);
-        bool isJumping = animator.GetBool(isJumpingHash);
+		bool isJumping = animator.GetBool(isJumpingHash);
+		bool isCrouching = animator.GetBool(isCrouchedHash);
+		bool isRolling = animator.GetBool(isRollingHash);
 	    bool movementPressed = player.GetComponent<MovementSpeedController>().moving;
-	    bool WalkPressed = player.GetComponent<MovementSpeedController>().slowed;
+		bool WalkPressed = player.GetComponent<MovementSpeedController>().walking;
+		bool crouchPressed = player.GetComponent<MovementSpeedController>().crouching;
+		bool rollPressed = player.GetComponent<MovementSpeedController>().rolling;
 
         if (isOnGround){
             animator.SetBool(onGroundHash, true);
         }
         else if (!isOnGround){
-            animator.SetBool(onGroundHash, false);
+	        animator.SetBool(onGroundHash, false);
+	        animator.SetBool(isCrouchedHash, false);
+	        player.GetComponent<MovementSpeedController>().crouching = false;
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
         if (JumpPressed){
@@ -147,18 +186,32 @@ public class AnimationStateController : MonoBehaviour
             animator.SetBool("isOnSteep", false);
             animator.SetBool(isOnWallHash, false);
         }
-	    if (!isWalking && (movementPressed && WalkPressed)){
+		if(!isRolling && rollPressed && isOnGroundADJ){
+			animator.SetBool(isRollingHash, true);
+		}
+		if(isRolling && (!rollPressed || !isOnGroundADJ)){
+			animator.SetBool(isRollingHash, false);
+		}
+		if(!isCrouching && crouchPressed && isOnGroundADJ){
+			animator.SetBool(isCrouchedHash, true);
+		}
+		if(isCrouching && (!crouchPressed || !isOnGroundADJ || isRolling)){
+			animator.SetBool(isCrouchedHash, false);
+		}
+		
+        
+		if (!isWalking && (movementPressed && WalkPressed )){
 		    animator.SetBool(isWalkingHash, true);
             
 	    }
-	    if (isWalking && (!movementPressed || !WalkPressed)){
+		if (isWalking && (!movementPressed || !WalkPressed )){
 		    animator.SetBool(isWalkingHash, false);
 	    }
 
-	    if (!isRunning && movementPressed && !WalkPressed && sphere.velocity.magnitude > 0 ){
+		if (!isRunning && movementPressed && !WalkPressed && sphere.velocity.magnitude > 0 ){
             animator.SetBool(isRunningHash, true);
 	    }
-	    if ((isRunning && !movementPressed) || WalkPressed ||sphere.velocity.magnitude <= 0.08f){
+		if ((isRunning && !movementPressed) || WalkPressed ||sphere.velocity.magnitude <= 0.08f){
             animator.SetBool(isRunningHash, false);
 	    }
     }
