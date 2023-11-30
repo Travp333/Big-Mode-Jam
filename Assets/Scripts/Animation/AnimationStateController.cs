@@ -19,6 +19,8 @@ public class AnimationStateController : MonoBehaviour
 	int isWalkingHash;
 	int isRollingHash;
 	int isCrouchedHash;
+	int isHoldingHash;
+	int isThrowingHash;
 
     int isFallingHash;
     bool isOnGround;
@@ -37,13 +39,20 @@ public class AnimationStateController : MonoBehaviour
     float JumpBuffer = .5f;
     bool JumpSwitch = true;
     float Groundstopwatch = 0;
-    float Jumpstopwatch = 0;
+	float Jumpstopwatch = 0;
+    
 
 
 	public void JumpAnimEvent(){
 		sphere.JumpTrigger();
     }
 
+	public void BlockMovement(){
+		sphere.blockMovement();
+	}
+	public void UnBlockMovement(){
+		sphere.unblockMovement();
+	}
 
 	void Start() { 
 		rotation = player.transform.GetChild(0).GetComponent<UpdateRotation>();
@@ -57,6 +66,8 @@ public class AnimationStateController : MonoBehaviour
 		isFallingHash = Animator.StringToHash("isFalling");
 		isRollingHash = Animator.StringToHash("Rolling");
 		isCrouchedHash = Animator.StringToHash("Crouched");
+		isHoldingHash = Animator.StringToHash("HoldingItem");
+		isThrowingHash = Animator.StringToHash("Throwing");
 
     }
     
@@ -85,18 +96,19 @@ public class AnimationStateController : MonoBehaviour
 	public void SetRollingSpeedFalse(){
 		animator.SetBool("SettingRollingSpeed", false);
 	}
+	public void CancelHolding(){
+		player.GetComponent<MovementSpeedController>().holding = false;
+	}
     float jumpCount;
     float jumpCap = .2f;
 	void Update() {
-	
+
 		if(animator.GetBool("MoveBlocked") == true){
 			if(!moveBlockGate){
 				rotation.SnapRotationToDirection();
 				sphere.blockMovement();
-				
 				moveBlockGate = true;	
 			}
-
 		}
 		else{
 			if(moveBlockGate){
@@ -118,10 +130,14 @@ public class AnimationStateController : MonoBehaviour
 		bool isJumping = animator.GetBool(isJumpingHash);
 		bool isCrouching = animator.GetBool(isCrouchedHash);
 		bool isRolling = animator.GetBool(isRollingHash);
+		bool isHolding = animator.GetBool(isHoldingHash);
+		bool isThrowing = animator.GetBool(isThrowingHash);
 	    bool movementPressed = player.GetComponent<MovementSpeedController>().moving;
 		bool WalkPressed = player.GetComponent<MovementSpeedController>().walking;
 		bool crouchPressed = player.GetComponent<MovementSpeedController>().crouching;
 		bool rollPressed = player.GetComponent<MovementSpeedController>().rolling;
+		bool holdPressed = player.GetComponent<MovementSpeedController>().holding;
+		bool throwPressed = player.GetComponent<MovementSpeedController>().throwing;
 
         if (isOnGround){
             animator.SetBool(onGroundHash, true);
@@ -130,6 +146,7 @@ public class AnimationStateController : MonoBehaviour
 	        animator.SetBool(onGroundHash, false);
 	        animator.SetBool(isCrouchedHash, false);
 	        player.GetComponent<MovementSpeedController>().crouching = false;
+	        player.GetComponent<MovementSpeedController>().holding = false;
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
         if (JumpPressed){
@@ -153,7 +170,6 @@ public class AnimationStateController : MonoBehaviour
                 animator.SetBool(isJumpingHash, false);
             }
         }
-        
         // if you are in the air, adding timer to give a little time before the falling animation plays
         if (!isOnGroundADJ && !isOnSteep){
             jumpCount += Time.deltaTime;
@@ -163,51 +179,54 @@ public class AnimationStateController : MonoBehaviour
 	            animator.SetBool(isWalkingHash, false);
                 jumpCount = 0f;
             }
-
         }
         else if(isOnGroundADJ || isOnSteep){
             jumpCount = 0f;
         }
-
         else if (!isOnGroundADJ && isOnSteep){
             animator.SetBool(isOnWallHash, true);
         }
-
         if (isOnGroundADJ){
             animator.SetBool(isFallingHash, false);
             animator.SetBool(isOnWallHash, false);
         }
-
         if (isOnSteep){
             animator.SetBool("isOnSteep", true);
         }
-
         if (!isOnSteep){
             animator.SetBool("isOnSteep", false);
             animator.SetBool(isOnWallHash, false);
         }
-		if(!isRolling && rollPressed && isOnGroundADJ){
+		if(!isHolding && holdPressed && isOnGroundADJ && !isCrouching && !isRolling){
+			animator.SetBool(isHoldingHash, true);
+		}
+		if(isHolding && (!holdPressed || !isOnGroundADJ || isCrouching || isRolling)){
+			animator.SetBool(isHoldingHash, false);
+		}
+		if(!isThrowing && throwPressed && isHolding && isOnGroundADJ){
+			animator.SetBool(isThrowingHash, true);
+		}
+		if(isThrowing && (!throwPressed || !isOnGroundADJ)){
+			animator.SetBool(isThrowingHash, false);
+		}
+		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding){
 			animator.SetBool(isRollingHash, true);
 		}
-		if(isRolling && (!rollPressed || !isOnGroundADJ)){
+		if(isRolling && (!rollPressed || !isOnGroundADJ || isHolding)){
 			animator.SetBool(isRollingHash, false);
 		}
-		if(!isCrouching && crouchPressed && isOnGroundADJ){
+		if(!isCrouching && crouchPressed && isOnGroundADJ && !isHolding){
 			animator.SetBool(isCrouchedHash, true);
 		}
-		if(isCrouching && (!crouchPressed || !isOnGroundADJ || isRolling)){
+		if(isCrouching && (!crouchPressed || !isOnGroundADJ || isRolling || isHolding)){
 			animator.SetBool(isCrouchedHash, false);
 		}
-		
-        
-		if (!isWalking && (movementPressed && WalkPressed )){
+		if (!isWalking && (movementPressed && WalkPressed  && !isHolding)){
 		    animator.SetBool(isWalkingHash, true);
-            
 	    }
-		if (isWalking && (!movementPressed || !WalkPressed )){
+		if (isWalking && (!movementPressed || !WalkPressed || isHolding )){
 		    animator.SetBool(isWalkingHash, false);
 	    }
-
 		if (!isRunning && movementPressed && !WalkPressed && sphere.velocity.magnitude > 0 ){
             animator.SetBool(isRunningHash, true);
 	    }

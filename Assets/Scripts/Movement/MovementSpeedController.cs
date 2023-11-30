@@ -17,10 +17,13 @@ public class MovementSpeedController : MonoBehaviour
 	public bool crouching;
 	public bool moving;
 	public bool rolling;
-	
+	public bool holding;
+	public bool throwing;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
+	public InputAction interactAction;
+	public InputAction attackAction;
 	float lastPressTime;
 	[SerializeField]
 	
@@ -28,16 +31,20 @@ public class MovementSpeedController : MonoBehaviour
 	// Awake is called when the script instance is being loaded.
 	void Awake()
 	{
+		interactAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Interact");
+		attackAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Attack");
 		walkAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Walk");
 		movementAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Move");
 		crouchAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Crouch");
 	}
     
-	void resetRolling(){
+	void ResetRolling(){
 		rolling = false;
 		crouching = true;
 	}
-	
+	void ResetThrowing(){
+		throwing = false;
+	}
 
 	IEnumerator StartCrouch()
 	{
@@ -54,13 +61,12 @@ public class MovementSpeedController : MonoBehaviour
 
     void Update() {
 	    MovementState();
-	    if(crouchAction.WasPressedThisFrame() && movement.OnGround){
-	    	
+	    if(crouchAction.WasPressedThisFrame() && movement.OnGround && !holding){
 	    	if((Time.time - lastPressTime <= doublePressTime)&& moving){
 	    		StopCoroutine("StartCrouch");
 	    		Debug.Log("ROLL!");
 	    		rolling = true;
-	    		Invoke("resetRolling", doublePressTime);
+	    		Invoke("ResetRolling", doublePressTime);
 	    		crouching = true;
 	    	}
 	    	else{
@@ -73,6 +79,15 @@ public class MovementSpeedController : MonoBehaviour
 	    }
 	    else{
 	    	walking = false;
+	    }
+	    
+	    if(holding && attackAction.WasPerformedThisFrame()){
+	    	throwing = true;
+	    	Invoke("ResetThrowing", 1f);
+	    	holding = false;
+	    }
+	    else if(holding && interactAction.WasPerformedThisFrame()){
+	    	holding = false;
 	    }
     }
 
@@ -89,10 +104,10 @@ public class MovementSpeedController : MonoBehaviour
 	    if(!crouching ){
 	    	currentSpeed = baseSpeed;
 	    }
-	    if (!walking && !crouching){
+	    if (!walking && !crouching && !holding){
 			currentSpeed = baseSpeed;
 		}
-		else if(walking && ! crouching){
+	    else if((walking && !crouching) || (holding && !crouching)){
             currentSpeed = walkSpeed;
         }
         if(currentSpeed <= 0){

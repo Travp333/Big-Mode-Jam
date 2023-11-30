@@ -90,7 +90,7 @@ public class Movement : MonoBehaviour {
 
 	public bool moveBlocked;
 	public void blockMovement(){
-		Debug.Log("Blocked Movement in movement.cs!");
+		//Debug.Log("Blocked Movement in movement.cs!");
 		moveBlocked = true;
 		playerInput.x = 0f;
 		playerInput.y = 0f;
@@ -264,10 +264,10 @@ public class Movement : MonoBehaviour {
 	}
 	
 	void Jump(Vector3 gravity) {
-			if (OnGround && !speedController.crouching) {
+		if (OnGround && !speedController.crouching && !speedController.holding) {
 				jumpDirection = contactNormal;
 			}
-			else if (OnSteep && !speedController.crouching) {
+		else if (OnSteep && !speedController.crouching && !speedController.holding) {
 				jumpDirection = steepNormal;
 				// this was originally 0 but i changed it so that wall jumping doesnt count as one of your air jumps
 				jumpPhase -= 1;
