@@ -116,7 +116,6 @@ public class Movement : MonoBehaviour {
 		//responds to the jump keybind to allow jumping
 
 		desiredJump |= jumpAction.WasPressedThisFrame() && !moveBlocked;
-
 		//stores the horizontal and vertical input axes
 		if(!moveBlocked){
 			playerInput.x = speedController.movementAction.ReadValue<Vector2>().x;
@@ -265,10 +264,10 @@ public class Movement : MonoBehaviour {
 	}
 	
 	void Jump(Vector3 gravity) {
-			if (OnGround) {
+			if (OnGround && !speedController.crouching) {
 				jumpDirection = contactNormal;
 			}
-			else if (OnSteep) {
+			else if (OnSteep && !speedController.crouching) {
 				jumpDirection = steepNormal;
 				// this was originally 0 but i changed it so that wall jumping doesnt count as one of your air jumps
 				jumpPhase -= 1;
@@ -278,7 +277,7 @@ public class Movement : MonoBehaviour {
 				jumpPhase = 1;
 				}
 				jumpDirection = contactNormal;
-				}
+			}
 			else {
 				return;
 			}

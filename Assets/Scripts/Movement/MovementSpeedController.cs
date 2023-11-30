@@ -41,7 +41,7 @@ public class MovementSpeedController : MonoBehaviour
 
 	IEnumerator StartCrouch()
 	{
-		yield return new WaitForSeconds(.2f);
+		yield return new WaitForSeconds(doublePressTime);
 		Debug.Log("Croumch" + (Time.time - lastPressTime));
 		rolling = false;
 		if(crouching){
@@ -56,11 +56,11 @@ public class MovementSpeedController : MonoBehaviour
 	    MovementState();
 	    if(crouchAction.WasPressedThisFrame() && movement.OnGround){
 	    	
-	    	if(Time.time - lastPressTime <= doublePressTime){
+	    	if((Time.time - lastPressTime <= doublePressTime)&& moving){
 	    		StopCoroutine("StartCrouch");
 	    		Debug.Log("ROLL!");
 	    		rolling = true;
-	    		Invoke("resetRolling", .5f);
+	    		Invoke("resetRolling", doublePressTime);
 	    		crouching = true;
 	    	}
 	    	else{
