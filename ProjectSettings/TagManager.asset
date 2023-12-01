@@ -3,12 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Environment
+  - Unblendable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
   - Agent
+  - Player
   - Water
   - UI
   - CamIgnore
