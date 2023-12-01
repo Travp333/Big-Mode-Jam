@@ -17,12 +17,15 @@ public class playerStates : MonoBehaviour
 	public bool rolling;
 	public bool holding;
 	public bool throwing;
+	public bool aiming;
+	public bool armed;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
 	public InputAction interactAction;
 	public InputAction attackAction;
 	public InputAction aimAction;
+	public InputAction armAction;
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
@@ -30,6 +33,7 @@ public class playerStates : MonoBehaviour
 	void Awake()
 	{
 		move = this.GetComponent<Movement>();
+		armAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Arm");
 		aimAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Aim");
 		interactAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Interact");
 		attackAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Attack");
@@ -38,13 +42,17 @@ public class playerStates : MonoBehaviour
 		crouchAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Crouch");
 	}
 	public void Crouch(){
-		face.setSneaking();
+		if(!armed){
+			face.setSneaking();
+		}
 		crouching = true;
 		standingHitbox.SetActive(false);
 		crouchingHitbox.SetActive(true);
 	}
 	public void UnCrouch(){
-		face.setBase();
+		if(!armed){
+			face.setBase();
+		}
 		crouching = false;
 		standingHitbox.SetActive(true);
 		crouchingHitbox.SetActive(false);
@@ -76,9 +84,26 @@ public class playerStates : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
-		if(aimAction.IsPressed()){
-			face.setAiming();
+		if(armAction.WasPressedThisFrame() && move.OnGround && !holding){
+			
+			if(armed){
+				armed = false;
+				if(crouching){
+					face.setSneaking();
+				}
+				else{
+					face.setBase();
+				}
+			}
+			else{
+				armed = true;
+				face.setAiming();
+			}
 		}
+		
+		//if(aimAction.IsPressed()){
+			
+			//}
 		if(holding){
 			face.setStraining();
 		}
@@ -89,6 +114,7 @@ public class playerStates : MonoBehaviour
 				rolling = true;
 				Invoke("ResetRolling", doublePressTime);
 				Crouch();
+				armed = false;
 			}
 			else{
 				lastPressTime = Time.time;
@@ -100,6 +126,9 @@ public class playerStates : MonoBehaviour
 		}
 		else{
 			walking = false;
+		}
+		if(armed && attackAction.WasPerformedThisFrame()){
+			//shoot yo sling
 		}
 	    
 		if(holding && attackAction.WasPerformedThisFrame()){

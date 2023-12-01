@@ -35,7 +35,7 @@ public class FaceTexController : MonoBehaviour
 		isAiming = false;
 		isSneaking = false;
         //Debug.Log("angry");
-		this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
+		this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
         Base();
 
 	}
@@ -49,7 +49,7 @@ public class FaceTexController : MonoBehaviour
 		isHappy = false;
 		isTrance = false;
 		//Debug.Log("angry");
-		this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", aimingID);
+		this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingID);
 		Base();
 
 	}
@@ -63,7 +63,7 @@ public class FaceTexController : MonoBehaviour
 		isHappy = false;
 		isTrance = false;
 		//Debug.Log("angry");
-		this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingID);
+		this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingID);
 		Base();
 
 	}
@@ -77,7 +77,7 @@ public class FaceTexController : MonoBehaviour
         isHappy = false;
         isTrance = false;
         //Debug.Log("base");
-        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseID);
+        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseID);
 
         Base();
     }
@@ -91,7 +91,7 @@ public class FaceTexController : MonoBehaviour
         isHappy = false;
         isTrance = false;
         //Debug.Log("scared");
-        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredID);
+        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredID);
         Base();
     }
     public void setTrance(){
@@ -104,7 +104,7 @@ public class FaceTexController : MonoBehaviour
         isHappy = false;
         isTrance = true;
         //Debug.Log("trance");
-        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceID);
+        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceID);
         Base();
     }
     public void setHappy(){
@@ -117,7 +117,7 @@ public class FaceTexController : MonoBehaviour
         isHappy = true;
         isTrance = false;
         //Debug.Log("happy");
-        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyID);
+        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyID);
         Base();
     }
 	public void setStraining(){
@@ -130,18 +130,18 @@ public class FaceTexController : MonoBehaviour
 		isAiming = false;
 		isSneaking = false;
         //Debug.Log("sad");
-		this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedID);
+		this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedID);
         Base();
     }
 
     void tranceFlip(){
         if(isTrance && !isBlinking){
             if(flipFlop){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceID);
                 flipFlop = !flipFlop;
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipID);
                 flipFlop = !flipFlop;
             }
             Invoke("tranceFlip", .1f);
@@ -150,53 +150,53 @@ public class FaceTexController : MonoBehaviour
     }
     void Base(){
 	    if(isHoldingBreath){
-		    this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
+		    this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
         }
         else if(isScared){
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredID);
             }
         }
         else if(isStraining){
             if(isLookingLeft){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftID);
             }
             else if (isLookingRight){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightID);
             }
             else{
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedID);
             }
         }
         else if(isHappy){
             if(isLookingLeft){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftID);
             }
             else if (isLookingRight){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightID);
             }
             else{
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyID);
             }
         }
         else if(isAiming){
-			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", aimingID);
+			this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingID);
         }
         else if(isSneaking){
 	        if(isLookingLeft){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftID);
 	        }
 	        else if (isLookingRight){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightID);
 	        }
 	        else{
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingID);
 	        }
         }
         else if(isTrance){
@@ -204,13 +204,13 @@ public class FaceTexController : MonoBehaviour
         }
         else{
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseID);
             }
         }
         StartCoroutine(callBlinkDown());
@@ -219,169 +219,169 @@ public class FaceTexController : MonoBehaviour
 
     void BlinkDown(){
 	    if(isHoldingBreath){
-	             this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
+	             this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
 	     }
 	    else if(isScared){
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftBlinkID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink1ID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink1ID);
             }
         }
         else if(isStraining){
             if(isLookingLeft){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftBlinkID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftBlinkID);
             }
             else if (isLookingRight){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightID);
             }
             else{
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink1ID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink1ID);
             }
         }
         else if(isHappy){
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftBlinkID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink1ID);                
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink1ID);                
             }
         }
         else if(isTrance){
-            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
+            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
             Invoke("flipTrance", .025f);
         }
         else if(isAiming){
-	        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);
+	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);
         }
         else if(isSneaking){
 	        if(isLookingLeft){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftBlinkID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftBlinkID);
 	        }
 	        else if (isLookingRight){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightBlinkID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightBlinkID);
 	        }
 	        else{
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink1ID);                
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink1ID);                
 	        }
         }
         else{
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftBlinkID);
             }
             else if(isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink1ID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink1ID);
             }
         }
         StartCoroutine(callBlink());
     }
 	void Blink(){
 		if(isHoldingBreath){
-			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
+			this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
 		}
 		else if(isScared){
-            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink2ID);
+            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink2ID);
         }
         else if(isStraining){
-	        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink2ID);
+	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink2ID);
         }
         else if(isHappy){
-            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink2ID);
+            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink2ID);
         }
         else if(isTrance){
-	        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink2);
+	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink2);
         }
         else if(isAiming){
-	        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink2ID);
+	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink2ID);
         }
         else if(isSneaking){
-	        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink2ID);
+	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink2ID);
         }
         else{
-            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink2ID);
+            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink2ID);
         }
         StartCoroutine(callBlinkUp());
     }
 	void BlinkUp(){
 		if(isHoldingBreath){
-			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
+			this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", holdBreathID);
 		}
 		else if(isScared){
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredLeftBlinkID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink1ID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", scaredBlink1ID);
             }
         }
         else if(isStraining){
             if(isLookingLeft){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftBlinkID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedLeftBlinkID);
             }
             else if (isLookingRight){
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightBlinkID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedRightBlinkID);
             }
             else{
-	            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink1ID);
+	            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", strainedBlink1ID);
             }
         }
         else if(isHappy){
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyLeftBlinkID);
             }
             else if (isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink1ID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", happyBlink1ID);
             }
         }
         else if(isTrance){
-            this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
+            this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
             Invoke("flipTrance", .025f);
         }
         else if(isAiming){
-			this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);
+			this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);
         }
         else if(isSneaking){
 	        if(isLookingLeft){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftBlinkID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingLeftBlinkID);
 	        }
 	        else if (isLookingRight){
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightBlinkID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingRightBlinkID);
 	        }
 	        else{
-		        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink1ID);
+		        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", sneakingBlink1ID);
 	        }
         }
         else{
             if(isLookingLeft){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseLeftBlinkID);
             }
             else if(isLookingRight){
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightBlinkID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseRightBlinkID);
             }
             else{
-                this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink1ID);
+                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", baseBlink1ID);
             }
         }
         StartCoroutine(callBase());
     }
     void flipTrance(){
-        this.GetComponent<MeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipBlink1ID);
+        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipBlink1ID);
     }
 
     IEnumerator callBlink(){

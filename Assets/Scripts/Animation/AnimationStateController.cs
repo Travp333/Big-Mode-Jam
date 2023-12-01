@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class AnimationStateController : MonoBehaviour
 {
+	[SerializeField]
+	GameObject slingshot;
     public GameObject player = default;
 	Movement sphere = default; 
 	playerStates state;
@@ -22,7 +24,8 @@ public class AnimationStateController : MonoBehaviour
 	int isCrouchedHash;
 	int isHoldingHash;
 	int isThrowingHash;
-
+	int isArmedHash;
+	int isAimingHash;
     int isFallingHash;
     bool isOnGround;
     bool isOnWall;
@@ -70,6 +73,8 @@ public class AnimationStateController : MonoBehaviour
 		isCrouchedHash = Animator.StringToHash("Crouched");
 		isHoldingHash = Animator.StringToHash("HoldingItem");
 		isThrowingHash = Animator.StringToHash("Throwing");
+		isArmedHash = Animator.StringToHash("Armed");
+		isAimingHash = Animator.StringToHash("Aiming");
 
     }
     
@@ -100,6 +105,29 @@ public class AnimationStateController : MonoBehaviour
 	}
 	public void CancelHolding(){
 		state.holding = false;
+	}
+	public void ResetArmedLayerWeight(){
+		animator.SetLayerWeight(1, 0);
+	}
+	public void SpawnSlingShot(){
+		slingshot.SetActive(true);
+		state.face.setAiming();
+	}
+	public void HideSlingShot(){
+		slingshot.SetActive(false);
+		if(state.crouching){
+			state.face.setSneaking();
+		}
+		else{
+			state.face.setBase();
+		}
+		EnterNullState();
+	}
+	public void EnterNullState(){
+		animator.Play("NullState", 1);
+	}
+	public void ExitNullState(){
+		animator.Play("Sling empty", 1);
 	}
     float jumpCount;
     float jumpCap = .2f;
@@ -134,12 +162,15 @@ public class AnimationStateController : MonoBehaviour
 		bool isRolling = animator.GetBool(isRollingHash);
 		bool isHolding = animator.GetBool(isHoldingHash);
 		bool isThrowing = animator.GetBool(isThrowingHash);
+		bool isArmed = animator.GetBool(isArmedHash);
 	    bool movementPressed = state.moving;
 		bool WalkPressed = state.walking;
 		bool crouchPressed = state.crouching;
 		bool rollPressed = state.rolling;
 		bool holdPressed = state.holding;
 		bool throwPressed = state.throwing;
+		bool aimPressed = state.aiming;
+		bool armpressed = state.armed;
 
         if (isOnGround){
             animator.SetBool(onGroundHash, true);
@@ -149,7 +180,10 @@ public class AnimationStateController : MonoBehaviour
 	        animator.SetBool(isCrouchedHash, false);
 	        state.UnCrouch();
 	        state.holding = false;
-	        state.face.setBase();
+	        if(!state.armed && !armpressed && !isArmed){
+	        	Debug.Log("Forcing base animation as you are in the air and not armed");
+	        	state.face.setBase();
+	        }
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
         if (JumpPressed){
@@ -200,6 +234,15 @@ public class AnimationStateController : MonoBehaviour
             animator.SetBool("isOnSteep", false);
             animator.SetBool(isOnWallHash, false);
         }
+		if(!isArmed && armpressed && !isRolling){
+			animator.SetBool(isArmedHash, true);
+			animator.SetLayerWeight(1, 1);
+			ExitNullState();
+		}
+		if(isArmed && (!armpressed || isRolling)){
+			animator.SetBool(isArmedHash, false);
+			
+		}
 		if(!isHolding && holdPressed && isOnGroundADJ && !isCrouching && !isRolling){
 			animator.SetBool(isHoldingHash, true);
 		}
@@ -214,6 +257,9 @@ public class AnimationStateController : MonoBehaviour
 		}
 		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding){
 			animator.SetBool(isRollingHash, true);
+			ResetArmedLayerWeight();
+			state.face.setBase();
+			HideSlingShot();
 		}
 		if(isRolling && (!rollPressed || !isOnGroundADJ || isHolding)){
 			animator.SetBool(isRollingHash, false);

@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿/*
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(FaceTexController))]
@@ -36,3 +37,4 @@ public class customInspector : Editor
 	    }
     }
 }
+*/
