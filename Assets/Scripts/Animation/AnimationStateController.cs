@@ -147,8 +147,9 @@ public class AnimationStateController : MonoBehaviour
         else if (!isOnGround){
 	        animator.SetBool(onGroundHash, false);
 	        animator.SetBool(isCrouchedHash, false);
-	        state.crouching = false;
+	        state.UnCrouch();
 	        state.holding = false;
+	        state.face.setBase();
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
         if (JumpPressed){

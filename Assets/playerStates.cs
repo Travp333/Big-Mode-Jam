@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class playerStates : MonoBehaviour
 {
 	[SerializeField]
-	FaceTexController face;
+	public FaceTexController face;
 	[SerializeField]
 	GameObject standingHitbox;
 	[SerializeField]
@@ -22,6 +22,7 @@ public class playerStates : MonoBehaviour
 	public InputAction crouchAction;
 	public InputAction interactAction;
 	public InputAction attackAction;
+	public InputAction aimAction;
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
@@ -29,19 +30,20 @@ public class playerStates : MonoBehaviour
 	void Awake()
 	{
 		move = this.GetComponent<Movement>();
+		aimAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Aim");
 		interactAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Interact");
 		attackAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Attack");
 		walkAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Walk");
 		movementAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Move");
 		crouchAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Crouch");
 	}
-	void Crouch(){
+	public void Crouch(){
 		face.setSneaking();
 		crouching = true;
 		standingHitbox.SetActive(false);
 		crouchingHitbox.SetActive(true);
 	}
-	void UnCrouch(){
+	public void UnCrouch(){
 		face.setBase();
 		crouching = false;
 		standingHitbox.SetActive(true);
@@ -74,6 +76,9 @@ public class playerStates : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
+		if(aimAction.IsPressed()){
+			face.setAiming();
+		}
 		if(holding){
 			face.setStraining();
 		}
