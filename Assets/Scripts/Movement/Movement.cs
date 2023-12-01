@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour { 
 	//CAN I DIFFERENTIATE BETWEEN CERTAIN TYPES OF STEEPS? ie a straight wall vs a sloped ramp? this would be nice!
 	//This script controls the movement of the character. Adapted from https://catlikecoding.com/unity/tutorials/movement/ by Travis Parks
+	playerStates state;
 	[SerializeField]
 	GameObject feet;
 	public InputAction jumpAction;
@@ -102,6 +103,7 @@ public class Movement : MonoBehaviour {
 	}
 	//runs when object becomes active
 	void Awake () {
+		state = GetComponent<playerStates>();
 		jumpAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Jump");
 		
 		speedController = GetComponent<MovementSpeedController>();
@@ -118,8 +120,8 @@ public class Movement : MonoBehaviour {
 		desiredJump |= jumpAction.WasPressedThisFrame() && !moveBlocked;
 		//stores the horizontal and vertical input axes
 		if(!moveBlocked){
-			playerInput.x = speedController.movementAction.ReadValue<Vector2>().x;
-			playerInput.y = speedController.movementAction.ReadValue<Vector2>().y;
+			playerInput.x = state.movementAction.ReadValue<Vector2>().x;
+			playerInput.y = state.movementAction.ReadValue<Vector2>().y;
 			playerInput = Vector3.ClampMagnitude(playerInput, 1f);
 		}
 		//redirects the characters input to be relative to a "playerinputspace" object, if it is given. usually, this will be the camera
@@ -264,10 +266,10 @@ public class Movement : MonoBehaviour {
 	}
 	
 	void Jump(Vector3 gravity) {
-		if (OnGround && !speedController.crouching && !speedController.holding) {
+		if (OnGround && !state.crouching && !state.holding) {
 				jumpDirection = contactNormal;
 			}
-		else if (OnSteep && !speedController.crouching && !speedController.holding) {
+		else if (OnSteep && !state.crouching && !state.holding) {
 				jumpDirection = steepNormal;
 				// this was originally 0 but i changed it so that wall jumping doesnt count as one of your air jumps
 				jumpPhase -= 1;

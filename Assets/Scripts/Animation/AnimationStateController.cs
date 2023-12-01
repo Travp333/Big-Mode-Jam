@@ -9,6 +9,7 @@ public class AnimationStateController : MonoBehaviour
 {
     public GameObject player = default;
 	Movement sphere = default; 
+	playerStates state;
 	UpdateRotation rotation;
     Animator animator;
 	int isRunningHash;
@@ -55,6 +56,7 @@ public class AnimationStateController : MonoBehaviour
 	}
 
 	void Start() { 
+		state = player.GetComponent<playerStates>();
 		rotation = player.transform.GetChild(0).GetComponent<UpdateRotation>();
         sphere = player.GetComponent<Movement>();
         animator = GetComponent<Animator>();
@@ -97,7 +99,7 @@ public class AnimationStateController : MonoBehaviour
 		animator.SetBool("SettingRollingSpeed", false);
 	}
 	public void CancelHolding(){
-		player.GetComponent<MovementSpeedController>().holding = false;
+		state.holding = false;
 	}
     float jumpCount;
     float jumpCap = .2f;
@@ -132,12 +134,12 @@ public class AnimationStateController : MonoBehaviour
 		bool isRolling = animator.GetBool(isRollingHash);
 		bool isHolding = animator.GetBool(isHoldingHash);
 		bool isThrowing = animator.GetBool(isThrowingHash);
-	    bool movementPressed = player.GetComponent<MovementSpeedController>().moving;
-		bool WalkPressed = player.GetComponent<MovementSpeedController>().walking;
-		bool crouchPressed = player.GetComponent<MovementSpeedController>().crouching;
-		bool rollPressed = player.GetComponent<MovementSpeedController>().rolling;
-		bool holdPressed = player.GetComponent<MovementSpeedController>().holding;
-		bool throwPressed = player.GetComponent<MovementSpeedController>().throwing;
+	    bool movementPressed = state.moving;
+		bool WalkPressed = state.walking;
+		bool crouchPressed = state.crouching;
+		bool rollPressed = state.rolling;
+		bool holdPressed = state.holding;
+		bool throwPressed = state.throwing;
 
         if (isOnGround){
             animator.SetBool(onGroundHash, true);
@@ -145,8 +147,8 @@ public class AnimationStateController : MonoBehaviour
         else if (!isOnGround){
 	        animator.SetBool(onGroundHash, false);
 	        animator.SetBool(isCrouchedHash, false);
-	        player.GetComponent<MovementSpeedController>().crouching = false;
-	        player.GetComponent<MovementSpeedController>().holding = false;
+	        state.crouching = false;
+	        state.holding = false;
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
         if (JumpPressed){
