@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TrapBananPeel : EntityTrap
 {
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
     }
 
     // Update is called once per frame

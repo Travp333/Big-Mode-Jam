@@ -8,9 +8,9 @@ public class EntityTrap : EntityParent
     [Tooltip("Set to -1 for infinite")]
     public int numberOfUses;
     // Start is called before the first frame update
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
         trapIsTriggered = false;
     }
 

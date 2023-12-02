@@ -85,7 +85,6 @@ public class EnemyBaseAI : MonoBehaviour
             {
                 if (_hit.collider.tag == "Environment")
                 {
-                    Debug.Log("Name: " + _hit.collider.name + " Texture coord: " + _hit.textureCoord);
                     if ( PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
                     {
                         if (DebugCommentText) DebugCommentText.text = "Materials match!";
