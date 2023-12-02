@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using StateMachine;
 
 public class EnemyBaseAI : MonoBehaviour
@@ -9,6 +10,10 @@ public class EnemyBaseAI : MonoBehaviour
     public EnemyStateMachine AI = new EnemyStateMachine();
     public static EnemyIdleState IdleState = new EnemyIdleState();
     public static EnemySuspiciousState SuspiciousState = new EnemySuspiciousState();
+    public static EnemyChaseState ChaseState = new EnemyChaseState();
+    public static EnemyLostPlayerState LostPlayerState = new EnemyLostPlayerState();
+
+    public NavMeshAgent Agent;
     #endregion
 
     public EnemyData EnemyData;
@@ -46,6 +51,19 @@ public class EnemyBaseAI : MonoBehaviour
     private void Update()
     {
         AI.Update(this);
+    }
+
+    public void GoToPlayer()
+    {
+        if (Agent.isOnNavMesh) Agent.SetDestination(PlayerTransform.position);
+    }
+    public void GoToPointOfInterest()
+    {
+        if (Agent.isOnNavMesh) Agent.SetDestination(PointOfInterest);
+    }
+    public bool PlayerBehindCover()
+    {
+        return Physics.Linecast(EyeTransform.position, PlayerPosition, out _hit, PlayerDetectionMask) && _hit.collider.tag != "Player";
     }
     public bool PlayerVisible()
     {
@@ -124,12 +142,92 @@ public class EnemyBaseAI : MonoBehaviour
             owner.FaceObjectOfInterest();
 
             // Transition
-            if (_timer < owner.EnemyData.SuspiciousTime)
+            if (_timer < owner.EnemyData.ReactionTime)
                 _timer += Time.deltaTime;
-            else owner.AI.SetState(IdleState,owner);
+            else
+            {
+                if (owner.PlayerVisible())
+                {
+                    owner.AI.SetState(ChaseState, owner);
+                } else
+                {
+                    owner.AI.SetState(IdleState, owner);
+                }
+            }
         }
         public override void Exit(EnemyBaseAI owner)
         {
+        }
+    }
+    public class EnemyChaseState : EnemyBaseState
+    {
+        public override string Name() { return "Chasing"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            owner.GoToPlayer();
+            if (owner.PlayerBehindCover()) // if the player is behind cover! wow!
+            {
+                owner.AI.SetState(LostPlayerState, owner);
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+        }
+    }
+    public class EnemyLostPlayerState : EnemyBaseState
+    {
+        float _timer = 0;
+        float _lookTimer = 0;
+        bool _atDestination;
+        public override string Name() { return "Player Lost"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            _timer = 0;
+            _lookTimer = 0;
+            _atDestination = false;
+            owner.Agent.stoppingDistance = 0;
+            owner.PointOfInterest = owner.PlayerTransform.position;
+            owner.GoToPointOfInterest();
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (!_atDestination)
+            {
+                float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
+                if (dist < 1f)
+                    _atDestination = true;
+                else Debug.Log("Distance to target point: " + dist);
+            }
+            if (_atDestination)
+            {
+                if (_lookTimer <= 0) // Every couple of seconds, look in a random direction
+                {
+                    _lookTimer = Random.Range(1f, 3f);
+                    float randomAngle = Random.Range(40, 160);
+                    if (Random.Range(0, 2) == 0) // coin flip
+                        randomAngle = -randomAngle;
+                    owner.PointOfInterest = owner.transform.position + (Quaternion.Euler(0, randomAngle, 0) * owner.transform.forward);
+                    Debug.Log("Point of Interest: "+owner.PointOfInterest);
+                }
+                _lookTimer -= Time.deltaTime;
+
+                owner.FaceObjectOfInterest();
+
+                _timer += Time.deltaTime;
+                //Lose interest if the player's been lost for too long
+                if (_timer > owner.EnemyData.SuspiciousTime) owner.AI.SetState(IdleState, owner);
+
+                //Chase the player if they become visible again
+                if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            Debug.Log("Resetting agent stopping distance to 1.5f");
+            owner.Agent.stoppingDistance = 1.5f;
         }
     }
 }
