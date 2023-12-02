@@ -6,6 +6,7 @@ public class PlayerPickup : MonoBehaviour
 {
     public Transform pickupHoldingParent;
     public Transform placeObjectPosition;
+    public GameObject pickupIndicator;
 
     bool isCarryingObject;
     List<GameObject> objectsInTriggerSpace;
@@ -15,6 +16,7 @@ public class PlayerPickup : MonoBehaviour
     {
         isCarryingObject = false;
         objectsInTriggerSpace = new List<GameObject>();
+        pickupIndicator.SetActive(false);
     }
 
     // Update is called once per frame
@@ -32,12 +34,17 @@ public class PlayerPickup : MonoBehaviour
             }
             holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
             isCarryingObject = true;
+            pickupIndicator.SetActive(false);
         }
         else if (isCarryingObject && Input.GetKeyDown(KeyCode.E)) // Place object
         {
             isCarryingObject = false;
             holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+            pickupIndicator.SetActive(true);
         }
+
+        if (isCarryingObject)
+            pickupIndicator.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -45,6 +52,7 @@ public class PlayerPickup : MonoBehaviour
         if (other.gameObject.GetComponent<EntityParent>() && !objectsInTriggerSpace.Contains(other.gameObject))
         {
             objectsInTriggerSpace.Add(other.gameObject);
+            pickupIndicator.SetActive(true);
         }
     }
 
@@ -52,5 +60,10 @@ public class PlayerPickup : MonoBehaviour
     {
         if (objectsInTriggerSpace.Contains(other.gameObject))
             objectsInTriggerSpace.Remove(other.gameObject);
+
+        if (objectsInTriggerSpace.Count >= 1)
+            pickupIndicator.SetActive(true);
+        else
+            pickupIndicator.SetActive(false);
     }
 }
