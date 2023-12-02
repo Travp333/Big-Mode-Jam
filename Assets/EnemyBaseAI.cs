@@ -177,10 +177,41 @@ public class EnemyBaseAI : MonoBehaviour
         {
         }
     }
+    public class EnemyStunnedState: EnemyBaseState
+    {
+        float timer = 0;
+        public override string Name() { return "Stunned"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            timer = owner.EnemyData.StunTime;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (timer > 0)
+            {
+                timer -= Time.deltaTime;
+            } else
+            {
+                if (owner.PlayerVisible())
+                {
+                    owner.AI.SetState(ChaseState, owner);
+                } else
+                {
+                    owner.AI.SetState(SuspiciousState, owner);
+                }                
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = false;
+        }
+    }
     public class EnemyLostPlayerState : EnemyBaseState
     {
         float _timer = 0;
         float _lookTimer = 0;
+        float _agentStopDist;
         bool _atDestination;
         public override string Name() { return "Player Lost"; }
         public override void Enter(EnemyBaseAI owner)
@@ -188,6 +219,7 @@ public class EnemyBaseAI : MonoBehaviour
             _timer = 0;
             _lookTimer = 0;
             _atDestination = false;
+            _agentStopDist = owner.Agent.stoppingDistance;
             owner.Agent.stoppingDistance = 0;
             owner.PointOfInterest = owner.PlayerTransform.position;
             owner.GoToPointOfInterest();
@@ -226,8 +258,8 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            Debug.Log("Resetting agent stopping distance to 1.5f");
-            owner.Agent.stoppingDistance = 1.5f;
+            Debug.Log("Resetting agent stopping distance");
+            owner.Agent.stoppingDistance = _agentStopDist;
         }
     }
 }
