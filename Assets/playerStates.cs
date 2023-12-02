@@ -19,6 +19,7 @@ public class playerStates : MonoBehaviour
 	public bool throwing;
 	public bool aiming;
 	public bool armed;
+	public bool firing;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
@@ -63,6 +64,9 @@ public class playerStates : MonoBehaviour
 	}
 	void ResetThrowing(){
 		throwing = false;
+	}
+	public void ResetFiring(){
+		firing = false;
 	}
 	IEnumerator StartCrouch()
 	{
@@ -128,7 +132,7 @@ public class playerStates : MonoBehaviour
 			walking = false;
 		}
 		if(armed && attackAction.WasPerformedThisFrame()){
-			//shoot yo sling
+			firing = true;
 		}
 	    
 		if(holding && attackAction.WasPerformedThisFrame()){

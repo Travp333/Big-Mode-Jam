@@ -26,7 +26,8 @@ public class AnimationStateController : MonoBehaviour
 	int isThrowingHash;
 	int isArmedHash;
 	int isAimingHash;
-    int isFallingHash;
+	int isFallingHash;
+	int isFiringHash;
     bool isOnGround;
     bool isOnWall;
 	bool moveBlockGate;
@@ -75,6 +76,7 @@ public class AnimationStateController : MonoBehaviour
 		isThrowingHash = Animator.StringToHash("Throwing");
 		isArmedHash = Animator.StringToHash("Armed");
 		isAimingHash = Animator.StringToHash("Aiming");
+		isFiringHash = Animator.StringToHash("isFiring");
 
     }
     
@@ -129,6 +131,10 @@ public class AnimationStateController : MonoBehaviour
 	public void ExitNullState(){
 		animator.Play("Sling empty", 1);
 	}
+	public void ResetIsFiring(){
+		state.firing = false;
+		animator.SetBool(isFiringHash, false);
+	}
     float jumpCount;
     float jumpCap = .2f;
 	void Update() {
@@ -163,6 +169,7 @@ public class AnimationStateController : MonoBehaviour
 		bool isHolding = animator.GetBool(isHoldingHash);
 		bool isThrowing = animator.GetBool(isThrowingHash);
 		bool isArmed = animator.GetBool(isArmedHash);
+		bool isFiring = animator.GetBool(isFiringHash);
 	    bool movementPressed = state.moving;
 		bool WalkPressed = state.walking;
 		bool crouchPressed = state.crouching;
@@ -171,6 +178,7 @@ public class AnimationStateController : MonoBehaviour
 		bool throwPressed = state.throwing;
 		bool aimPressed = state.aiming;
 		bool armpressed = state.armed;
+		bool firePressed = state.firing;
 
         if (isOnGround){
             animator.SetBool(onGroundHash, true);
@@ -234,6 +242,9 @@ public class AnimationStateController : MonoBehaviour
             animator.SetBool("isOnSteep", false);
             animator.SetBool(isOnWallHash, false);
         }
+		if(!isFiring && firePressed && !isRolling){
+			animator.SetBool(isFiringHash, true);
+		}
 		if(!isArmed && armpressed && !isRolling){
 			animator.SetBool(isArmedHash, true);
 			animator.SetLayerWeight(1, 1);
