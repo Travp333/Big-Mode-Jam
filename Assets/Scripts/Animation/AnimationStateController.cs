@@ -75,7 +75,7 @@ public class AnimationStateController : MonoBehaviour
 		isHoldingHash = Animator.StringToHash("HoldingItem");
 		isThrowingHash = Animator.StringToHash("Throwing");
 		isArmedHash = Animator.StringToHash("Armed");
-		isAimingHash = Animator.StringToHash("Aiming");
+		isAimingHash = Animator.StringToHash("isAiming");
 		isFiringHash = Animator.StringToHash("isFiring");
 
     }
@@ -112,11 +112,14 @@ public class AnimationStateController : MonoBehaviour
 		animator.SetLayerWeight(1, 0);
 	}
 	public void SpawnSlingShot(){
-		slingshot.SetActive(true);
-		state.face.setAiming();
+		if(state.aiming != true){
+			slingshot.GetComponent<SkinnedMeshRenderer>().enabled = true;
+			state.face.setAiming();
+		}
+
 	}
 	public void HideSlingShot(){
-		slingshot.SetActive(false);
+		slingshot.GetComponent<SkinnedMeshRenderer>().enabled = false;
 		if(state.crouching){
 			state.face.setSneaking();
 		}
@@ -139,7 +142,12 @@ public class AnimationStateController : MonoBehaviour
     float jumpCount;
     float jumpCap = .2f;
 	void Update() {
-
+	
+		
+		if(animator.GetBool("AimCheck")){
+			SpawnSlingShot();
+			animator.SetBool("AimCheck", false);
+		}
 		if(animator.GetBool("MoveBlocked") == true){
 			if(!moveBlockGate){
 				rotation.SnapRotationToDirection();
@@ -171,6 +179,7 @@ public class AnimationStateController : MonoBehaviour
 		bool isThrowing = animator.GetBool(isThrowingHash);
 		bool isArmed = animator.GetBool(isArmedHash);
 		bool isFiring = animator.GetBool(isFiringHash);
+		bool isAiming = animator.GetBool(isAimingHash);
 	    bool movementPressed = state.moving;
 		bool WalkPressed = state.walking;
 		bool crouchPressed = state.crouching;
@@ -267,13 +276,13 @@ public class AnimationStateController : MonoBehaviour
 		if(isThrowing && (!throwPressed || !isOnGroundADJ)){
 			animator.SetBool(isThrowingHash, false);
 		}
-		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding){
+		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding && !aimPressed){
 			animator.SetBool(isRollingHash, true);
 			ResetArmedLayerWeight();
 			state.face.setBase();
 			HideSlingShot();
 		}
-		if(isRolling && (!rollPressed || !isOnGroundADJ || isHolding)){
+		if(isRolling && (!rollPressed || !isOnGroundADJ || isHolding || aimPressed)){
 			animator.SetBool(isRollingHash, false);
 		}
 		if(!isCrouching && crouchPressed && isOnGroundADJ && !isHolding){

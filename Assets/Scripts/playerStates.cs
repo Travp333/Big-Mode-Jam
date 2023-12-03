@@ -22,9 +22,13 @@ public class playerStates : MonoBehaviour
 	[SerializeField]
 	Camera FirstPersonCam;
 	[SerializeField]
-	GameObject FirstPersonHands;
+	SkinnedMeshRenderer FirstPersonHandsMesh;
+	[SerializeField]
+	SkinnedMeshRenderer FirstPersonSlingMesh;
 	[SerializeField]
 	Camera ThirdPersonCam;
+	[SerializeField]
+	Camera FirstPersonHandCam;
 	
 	[SerializeField]
 	public FaceTexController face;
@@ -128,21 +132,25 @@ public class playerStates : MonoBehaviour
 			}
 		}
 		
-		if(aimAction.WasPressedThisFrame()){
+		if(aimAction.WasPressedThisFrame() && !holding && !rolling){
 			if(FPSorTPS){
+				aiming = true;
+				//Swap to first person!
 				//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = false;
 				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().BlockCamInput();
-				FirstPersonHands.SetActive(true);
+				FirstPersonHandsMesh.enabled = true;
+				FirstPersonSlingMesh.enabled = true;
 				rot.enabled = false;
 				ThirdPersonBaseMesh.enabled=false;
 				ThirdPersonFaceMesh.enabled=false;
 				ThirdPersonSashMesh.enabled=false;
-				ThirdPersonSlingMesh.gameObject.SetActive(false);
+				ThirdPersonSlingMesh.enabled=false;
 				ThirdPersonCam.enabled=false;
 				ThirdPersonCam.GetComponent<AudioListener>().enabled = false;
 				fpscamscript.enabled = true;
 				fpscamscript.SnapFPStoTPS();
 				FirstPersonCam.enabled=true;
+				FirstPersonHandCam.enabled = true;
 				FirstPersonCam.GetComponent<AudioListener>().enabled = true;
 				move.playerInputSpace = FirstPersonCam.transform;
 				FPSorTPS = !FPSorTPS;
@@ -150,8 +158,11 @@ public class playerStates : MonoBehaviour
 				
 			}
 			else{
+				//swap to third person!
 				//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = true;
-				FirstPersonHands.SetActive(false);
+				aiming = false;
+				FirstPersonHandsMesh.enabled = false;
+				FirstPersonSlingMesh.enabled = false;
 				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().UnBlockCamInput();
 				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().ResetCameraAngles();
 				rot.enabled = true;
@@ -159,11 +170,12 @@ public class playerStates : MonoBehaviour
 				ThirdPersonFaceMesh.enabled=true;
 				ThirdPersonSashMesh.enabled=true;
 				if(armed){
-					ThirdPersonSlingMesh.gameObject.SetActive(true);
+					ThirdPersonSlingMesh.enabled=true;
 				}
 				ThirdPersonCam.enabled=true;
 				ThirdPersonCam.GetComponent<AudioListener>().enabled = true;
 				FirstPersonCam.enabled=false;
+				FirstPersonHandCam.enabled = false;
 				FirstPersonCam.GetComponent<AudioListener>().enabled = false;
 				move.playerInputSpace = ThirdPersonCam.transform;
 				FPSorTPS = !FPSorTPS;
@@ -177,7 +189,7 @@ public class playerStates : MonoBehaviour
 			face.setStraining();
 		}
 		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding){
-			if((Time.time - lastPressTime <= doublePressTime)&& moving){
+			if((Time.time - lastPressTime <= doublePressTime)&& moving && !aiming){
 				StopCoroutine("StartCrouch");
 				Debug.Log("ROLL!");
 				rolling = true;
