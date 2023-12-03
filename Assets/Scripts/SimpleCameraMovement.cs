@@ -37,7 +37,7 @@ public class SimpleCameraMovement : MonoBehaviour
         }
 
 	}
-	void FixedUpdate()
+	void Update()
 	{
 		UpdateMouseLook();
     }
