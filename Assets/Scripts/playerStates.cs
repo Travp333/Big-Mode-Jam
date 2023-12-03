@@ -5,6 +5,28 @@ using UnityEngine.InputSystem;
 public class playerStates : MonoBehaviour
 {
 	[SerializeField]
+	GameObject root;
+	[SerializeField]
+	SimpleCameraMovement fpscamscript;
+	Vector3 playerRotation;
+	[SerializeField]
+	UpdateRotation rot;
+	[SerializeField]
+	SkinnedMeshRenderer ThirdPersonBaseMesh;
+	[SerializeField]
+	SkinnedMeshRenderer ThirdPersonSashMesh;
+	[SerializeField]
+	SkinnedMeshRenderer ThirdPersonSlingMesh;
+	[SerializeField]
+	SkinnedMeshRenderer ThirdPersonFaceMesh;
+	[SerializeField]
+	Camera FirstPersonCam;
+	[SerializeField]
+	GameObject FirstPersonHands;
+	[SerializeField]
+	Camera ThirdPersonCam;
+	
+	[SerializeField]
 	public FaceTexController face;
 	[SerializeField]
 	GameObject standingHitbox;
@@ -19,6 +41,7 @@ public class playerStates : MonoBehaviour
 	public bool throwing;
 	public bool aiming;
 	public bool armed;
+	public bool firing;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
@@ -29,6 +52,7 @@ public class playerStates : MonoBehaviour
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
+	bool FPSorTPS = true;
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -63,6 +87,9 @@ public class playerStates : MonoBehaviour
 	}
 	void ResetThrowing(){
 		throwing = false;
+	}
+	public void ResetFiring(){
+		firing = false;
 	}
 	IEnumerator StartCrouch()
 	{
@@ -101,9 +128,51 @@ public class playerStates : MonoBehaviour
 			}
 		}
 		
-		//if(aimAction.IsPressed()){
-			
-			//}
+		if(aimAction.WasPressedThisFrame()){
+			if(FPSorTPS){
+				//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = false;
+				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().BlockCamInput();
+				FirstPersonHands.SetActive(true);
+				rot.enabled = false;
+				ThirdPersonBaseMesh.enabled=false;
+				ThirdPersonFaceMesh.enabled=false;
+				ThirdPersonSashMesh.enabled=false;
+				ThirdPersonSlingMesh.gameObject.SetActive(false);
+				ThirdPersonCam.enabled=false;
+				ThirdPersonCam.GetComponent<AudioListener>().enabled = false;
+				fpscamscript.enabled = true;
+				fpscamscript.SnapFPStoTPS();
+				FirstPersonCam.enabled=true;
+				FirstPersonCam.GetComponent<AudioListener>().enabled = true;
+				move.playerInputSpace = FirstPersonCam.transform;
+				FPSorTPS = !FPSorTPS;
+				ThirdPersonCam.transform.parent.parent = FirstPersonCam.transform;
+				
+			}
+			else{
+				//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = true;
+				FirstPersonHands.SetActive(false);
+				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().UnBlockCamInput();
+				ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().ResetCameraAngles();
+				rot.enabled = true;
+				ThirdPersonBaseMesh.enabled=true;
+				ThirdPersonFaceMesh.enabled=true;
+				ThirdPersonSashMesh.enabled=true;
+				if(armed){
+					ThirdPersonSlingMesh.gameObject.SetActive(true);
+				}
+				ThirdPersonCam.enabled=true;
+				ThirdPersonCam.GetComponent<AudioListener>().enabled = true;
+				FirstPersonCam.enabled=false;
+				FirstPersonCam.GetComponent<AudioListener>().enabled = false;
+				move.playerInputSpace = ThirdPersonCam.transform;
+				FPSorTPS = !FPSorTPS;
+				fpscamscript.enabled = false;
+				ThirdPersonCam.transform.parent.parent = root.transform;
+				
+			}
+
+		}
 		if(holding){
 			face.setStraining();
 		}
@@ -128,7 +197,7 @@ public class playerStates : MonoBehaviour
 			walking = false;
 		}
 		if(armed && attackAction.WasPerformedThisFrame()){
-			//shoot yo sling
+			firing = true;
 		}
 	    
 		if(holding && attackAction.WasPerformedThisFrame()){
