@@ -12,6 +12,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemySuspiciousState SuspiciousState = new EnemySuspiciousState();
     public static EnemyChaseState ChaseState = new EnemyChaseState();
     public static EnemyLostPlayerState LostPlayerState = new EnemyLostPlayerState();
+    public static EnemyStunnedState StunnedState = new EnemyStunnedState();
 
     public NavMeshAgent Agent;
     #endregion
@@ -41,6 +42,15 @@ public class EnemyBaseAI : MonoBehaviour
     }
     readonly Vector3 FLATVECTOR = new Vector3(1,0,1);
 
+    private void OnEnable()
+    {
+        ProjectileManager.ProjectileHit += LookAtProjectile;
+    }
+    private void OnDisable()
+    {
+        ProjectileManager.ProjectileHit -= LookAtProjectile;
+    }
+
     private void Awake()
     {
         PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();/*
@@ -64,6 +74,31 @@ public class EnemyBaseAI : MonoBehaviour
     public bool PlayerBehindCover()
     {
         return Physics.Linecast(EyeTransform.position, PlayerPosition, out _hit, PlayerDetectionMask) && _hit.collider.tag != "Player";
+    }
+    public void LookAtProjectile(object sender, ImpactParams parameters)
+    {
+        PointOfInterest = parameters.ImpactPoint;
+        if (PointOfInterestVisible(EnemyData.DistractionImmediateDetectionRadius, false))
+        {
+            AI.SetState(SuspiciousState, this);
+        } else if (PointOfInterestVisible(EnemyData.DistractionRadius))
+        {
+            AI.SetState(SuspiciousState, this);
+        }
+    }
+    public bool PointOfInterestVisible(float radius = -1, bool CheckIfPointVisible = true)
+    {
+        float distToPOI = Vector3.Distance(EyeTransform.position, PointOfInterest);
+        if (radius > 0)
+        {
+            if (distToPOI > radius) return false;
+            // if CheckIfPointVisible is false, alert this enemy if the projectile hit in the radius
+            else if (!CheckIfPointVisible) return true;
+        }
+        
+        // returns true if 
+        Physics.Linecast(EyeTransform.position, PointOfInterest, out _hit, PlayerDetectionMask);
+        return Vector3.Distance(EyeTransform.position, _hit.point) >= distToPOI;
     }
     public bool PlayerVisible()
     {

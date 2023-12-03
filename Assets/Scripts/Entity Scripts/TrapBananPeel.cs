@@ -17,10 +17,11 @@ public class TrapBananPeel : EntityTrap
 
     public override bool ActivateTrap(GameObject triggeredTrap)
     {
-        if (!base.ActivateTrap(triggeredTrap))
-            return false;
-        
-        Destroy(triggeredTrap);
+        if (!base.ActivateTrap(triggeredTrap)) {
+            Destroy(gameObject);
+        }
+        //Enemies should not be destroyed anymore :(
+        //Destroy(triggeredTrap);
 
         return true;
     }

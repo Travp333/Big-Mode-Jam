@@ -31,13 +31,24 @@ public class EntityTrap : EntityParent
         base.PlaceObject(newPos);
         trapIsTriggered = true;
     }
-
-    public virtual bool ActivateTrap(GameObject triggeredTrap)
+    public virtual bool ActivateTrap(GameObject triggeredTrap) // returns false if the trap should be destroyed
     {
         if (!trapIsTriggered || numberOfUses == 0)
             return false;
         numberOfUses--;
 
         return true;
+    }
+    public void OnCollisionEnter(Collision col)
+    {
+        EnemyBaseAI enemy;
+        if (col.collider.tag == "Enemy")
+        {
+            if (col.transform.root.TryGetComponent(out enemy))
+            {
+                ActivateTrap(col.gameObject);
+                enemy.AI.SetState(EnemyBaseAI.StunnedState, enemy);
+            }
+        }
     }
 }
