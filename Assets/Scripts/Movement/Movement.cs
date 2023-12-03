@@ -19,7 +19,7 @@ public class Movement : MonoBehaviour {
 
 	[SerializeField]
 	[Tooltip("determines what rotation is relative to, ideally the camera")]
-	Transform playerInputSpace = default;
+	public Transform playerInputSpace = default;
 
 	float minGroundDotProduct, minStairsDotProduct;
 

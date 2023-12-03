@@ -9,7 +9,8 @@ public class OrbitCamera : MonoBehaviour {
 	private InputAction mouseAction;
 	public GameObject player = default;
     Movement sphere = default; 
-	
+	[SerializeField]
+	GameObject FPS;
 
 	[SerializeField, Min(0f)]
 	[Tooltip("This is how many degrees per second your camera rotates to match you")]
@@ -59,7 +60,8 @@ public class OrbitCamera : MonoBehaviour {
 	float distance = 5f;
     Vector3 focusPoint, previousFocusPoint;
 	//PauseMenu pause;
-
+	bool blockInput;
+	Vector2 input;
 	Vector3 CameraHalfExtends {
 		get {
 			Vector3 halfExtends;
@@ -70,6 +72,29 @@ public class OrbitCamera : MonoBehaviour {
 			halfExtends.z = 0f;
 			return halfExtends;
 		}
+	}
+	
+	public void BlockCamInput(){
+		blockInput = true;
+	}
+	public void UnBlockCamInput(){
+		
+		orbitAngles = new Vector2 (FPS.transform.eulerAngles.x, FPS.transform.eulerAngles.y);
+		orbitRotation = Quaternion.Euler(orbitAngles);
+		//ResetCameraAngles();
+		//orbitRotation = Quaternion.Euler(this.transform.rotation.x, this.transform.rotation.y, this.transform.rotation.z);
+		blockInput = false;
+		//orbitAngles += rotationSpeed * Time.unscaledDeltaTime * input;
+		//lastManualRotationTime = Time.unscaledTime;
+		//input = new Vector2 (.00001f, .000001f);
+		
+	}
+	
+	public void ResetCameraAngles(){
+		Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
+		Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(FPS.transform.forward, gravity), gravity);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, 99999f * Time.deltaTime);
+		lastManualRotationTime = 0f;
 	}
 	bool AutomaticRotation () {
 		if(camAutoTurn == false){
@@ -136,7 +161,7 @@ public class OrbitCamera : MonoBehaviour {
 	}
 	//;
 	bool ManualRotation(){
-		Vector2 input = new Vector2(
+		input = new Vector2(
 			-mouseAction.ReadValue<Vector2>().y,
 			mouseAction.ReadValue<Vector2>().x
 		);
@@ -160,7 +185,7 @@ public class OrbitCamera : MonoBehaviour {
 		//	sphere.parent.transform.GetChild(1).GetChild(10).gameObject.SetActive(false);
 			//Debug.Log("aGGGH");
 		//}
-		//if(!pause.isPaused){
+		if(!blockInput){
 			UpdateGravityAlignment();
 			UpdateFocusPoint();
 			if(ManualRotation() || AutomaticRotation()){
@@ -187,7 +212,7 @@ public class OrbitCamera : MonoBehaviour {
 				lookPosition = rectPosition - rectOffset;
 			}
 			transform.SetPositionAndRotation(lookPosition, lookRotation);
-		//}
+		}
 		
 	}
 	void UpdateGravityAlignment(){
@@ -231,5 +256,8 @@ public class OrbitCamera : MonoBehaviour {
 	static float GetAngle (Vector2 direction) {
 		float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
 		return direction.x < 0f ? 360f - angle : angle;
+	}
+	Vector3 ProjectDirectionOnPlane (Vector3 direction, Vector3 normal) {
+		return (direction - normal * Vector3.Dot(direction, normal)).normalized;
 	}
 }

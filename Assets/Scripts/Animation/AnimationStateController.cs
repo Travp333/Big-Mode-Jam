@@ -135,6 +135,7 @@ public class AnimationStateController : MonoBehaviour
 		state.firing = false;
 		animator.SetBool(isFiringHash, false);
 	}
+	
     float jumpCount;
     float jumpCap = .2f;
 	void Update() {
@@ -189,7 +190,7 @@ public class AnimationStateController : MonoBehaviour
 	        state.UnCrouch();
 	        state.holding = false;
 	        if(!state.armed && !armpressed && !isArmed){
-	        	Debug.Log("Forcing base animation as you are in the air and not armed");
+	        	//Debug.Log("Forcing base animation as you are in the air and not armed");
 	        	state.face.setBase();
 	        }
         }
