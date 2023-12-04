@@ -104,6 +104,7 @@ public class AnimationStateController : MonoBehaviour
 	}
 	public void SetRollingSpeedFalse(){
 		animator.SetBool("SettingRollingSpeed", false);
+		state.rolling = false;
 	}
 	public void CancelHolding(){
 		state.holding = false;

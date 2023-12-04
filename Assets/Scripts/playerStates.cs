@@ -86,7 +86,7 @@ public class playerStates : MonoBehaviour
 		crouchingHitbox.SetActive(false);
 	}
 	void ResetRolling(){
-		rolling = false;
+		//rolling = false;
 		Crouch();
 	}
 	void ResetThrowing(){
