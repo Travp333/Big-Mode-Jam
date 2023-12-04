@@ -102,6 +102,11 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public bool PlayerVisible()
     {
+        if (!PlayerColorChangeBehavior.Instance)
+        {
+            Debug.Log("No PlayerColorChangeBehavior is in the scene.");
+            return false;
+        }
         if (PlayerColorChangeBehavior.Instance.IsChanging) return false; // The player's invisible when changing color
         _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
         if (Vector3.Angle(EyeTransform.forward, _playerRay.direction) > EnemyData.DetectionFOV)
@@ -167,7 +172,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            owner.PointOfInterest = owner.PlayerPosition;
+            //owner.PointOfInterest = owner.PlayerPosition;
             _timer = 0;
         }
         public override void Update(EnemyBaseAI owner)

@@ -52,6 +52,7 @@ public class ProjectileManager : MonoBehaviour
             } else
             {
                 if (ProjectileHit != null) ProjectileHit(this, new ImpactParams(_hit.point));
+                Destroy(gameObject);
             }
         }
     }
