@@ -271,6 +271,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &240235525 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7713729150953209519, guid: dc2b7792c81a737449de298b137a2ec6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725124465}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 617a066e8e0888d479370b9a08ec2a59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &496120498 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5046983326540063564, guid: dc2b7792c81a737449de298b137a2ec6,
@@ -3177,6 +3189,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -46.068737
       objectReference: {fileID: 0}
+    - target: {fileID: 1680089289062485124, guid: dc2b7792c81a737449de298b137a2ec6,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1709443192236506539, guid: dc2b7792c81a737449de298b137a2ec6,
         type: 3}
       propertyPath: m_Layer
@@ -3192,6 +3209,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2162748958538793524, guid: dc2b7792c81a737449de298b137a2ec6,
+        type: 3}
+      propertyPath: pickup
+      value: 
+      objectReference: {fileID: 240235525}
     - target: {fileID: 2162748958538793524, guid: dc2b7792c81a737449de298b137a2ec6,
         type: 3}
       propertyPath: FirstPersonHandCam
@@ -4457,11 +4479,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.x
       value: 4.9958973e-15
       objectReference: {fileID: 0}
-    - target: {fileID: 6648870725283935533, guid: dc2b7792c81a737449de298b137a2ec6,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6437580674171945252, guid: dc2b7792c81a737449de298b137a2ec6,
         type: 3}
       propertyPath: m_Layer
@@ -4471,6 +4488,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6648870725283935533, guid: dc2b7792c81a737449de298b137a2ec6,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6660822421041642246, guid: dc2b7792c81a737449de298b137a2ec6,
         type: 3}

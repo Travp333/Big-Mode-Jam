@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,12 +65,12 @@ public class EntityParent : MonoBehaviour
         isBeingPickedUp = false;
     }
 
-    public virtual void ThrowObject(float force)
+	public virtual void ThrowObject(float force, Vector3 direction)
     {
         
         boxCollider.enabled = true;
         rb.isKinematic = false; // Reenables physics
-        rb.AddForce(GameObject.FindGameObjectWithTag("Player").transform.forward * force);
+	    rb.AddForce(direction * force);
         transform.SetParent(null);
         isBeingPickedUp = false;
     }

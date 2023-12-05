@@ -14,15 +14,16 @@ public class PlayerPickup : MonoBehaviour
     public GameObject pickupIndicator;
     public float throwForce;
     public Slider throwMeter;
-
+	UpdateRotation rot;
     bool isCarryingObject;
-    List<GameObject> objectsInTriggerSpace;
+	public List<GameObject> objectsInTriggerSpace;
     GameObject holdingObject;
     float chargeThrow;
     bool cancelThrow;
     // Start is called before the first frame update
     void Start()
 	{
+		rot = Player.GetComponentInChildren<UpdateRotation>();
 		Pickup = Player.GetComponent<PlayerInput>().currentActionMap.FindAction("Interact");
         isCarryingObject = false;
         objectsInTriggerSpace = new List<GameObject>();
@@ -94,7 +95,7 @@ public class PlayerPickup : MonoBehaviour
 	    //  {
 	    Debug.Log("Throwing!");
         isCarryingObject = false;
-        holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce);
+	    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
 	    //chargeThrow = 1f;
 	    //cancelThrow = false;
 	    //throwMeter.value = chargeThrow;
