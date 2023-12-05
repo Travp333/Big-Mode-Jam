@@ -8,11 +8,15 @@ public class EnemyBaseAI : MonoBehaviour
 {
     #region AI
     public EnemyStateMachine AI = new EnemyStateMachine();
+    public EnemyAnimController AnimationStates;
     public static EnemyIdleState IdleState = new EnemyIdleState();
     public static EnemySuspiciousState SuspiciousState = new EnemySuspiciousState();
     public static EnemyChaseState ChaseState = new EnemyChaseState();
     public static EnemyLostPlayerState LostPlayerState = new EnemyLostPlayerState();
     public static EnemyStunnedState StunnedState = new EnemyStunnedState();
+    public static EnemyPlayerSpottedState PlayerSpotted = new EnemyPlayerSpottedState();
+    public static EnemySlipState SlipState = new EnemySlipState();
+    public static EnemyRiseState RiseState = new EnemyRiseState();
 
     public NavMeshAgent Agent;
     #endregion
@@ -77,6 +81,8 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void LookAtProjectile(object sender, ImpactParams parameters)
     {
+        // prevent getting locked in suspicious state
+        if (AI.CurrentState == SuspiciousState || AI.CurrentState == ChaseState) return;
         PointOfInterest = parameters.ImpactPoint;
         if (PointOfInterestVisible(EnemyData.DistractionImmediateDetectionRadius, false))
         {
@@ -160,7 +166,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
-            if (owner.PlayerVisible()) owner.AI.SetState(EnemyBaseAI.SuspiciousState, owner);
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner) {
         }
@@ -173,7 +179,8 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             //owner.PointOfInterest = owner.PlayerPosition;
-            _timer = 0;
+            owner.AnimationStates.susDesired = true;
+            _timer = owner.EnemyData.ReactionTime;
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -181,13 +188,13 @@ public class EnemyBaseAI : MonoBehaviour
             owner.FaceObjectOfInterest();
 
             // Transition
-            if (_timer < owner.EnemyData.ReactionTime)
-                _timer += Time.deltaTime;
+            if (_timer > 0)
+                _timer -= Time.deltaTime;
             else
             {
                 if (owner.PlayerVisible())
                 {
-                    owner.AI.SetState(ChaseState, owner);
+                    owner.AI.SetState(PlayerSpotted, owner);
                 } else
                 {
                     owner.AI.SetState(IdleState, owner);
@@ -196,6 +203,31 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
+            owner.AnimationStates.susDesired = false;
+        }
+    }
+    public class EnemyPlayerSpottedState : EnemyBaseState
+    {
+        float _timer;
+
+        public override string Name() { return "PlayerSpotted"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            _timer = owner.EnemyData.SurprisedDuration;
+
+            owner.AnimationStates.noticingDesired = true;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            //owner.PlayerVisible();
+            if (_timer > 0)
+                _timer -= Time.deltaTime;
+            else
+                owner.AI.SetState(ChaseState, owner);
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.AnimationStates.noticingDesired = false;
         }
     }
     public class EnemyChaseState : EnemyBaseState
@@ -203,6 +235,8 @@ public class EnemyBaseAI : MonoBehaviour
         public override string Name() { return "Chasing"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.Agent.speed = owner.EnemyData.RunSpeed;
+            owner.AnimationStates.chaseDesired = true;
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -214,6 +248,29 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
+            owner.Agent.speed = owner.EnemyData.WalkSpeed;
+            owner.AnimationStates.chaseDesired = false;
+        }
+    }
+    public class EnemySlipState : EnemyBaseState
+    {
+        float timer;
+        public override string Name() { return "Slipping"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            timer = owner.EnemyData.SlipDuration;
+            owner.AnimationStates.slipDesired = true;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (timer > 0) timer -= Time.deltaTime;
+            else  owner.AI.SetState(StunnedState, owner);
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.AnimationStates.slipDesired = false;
+            owner.AnimationStates.onBackDesired = true;
         }
     }
     public class EnemyStunnedState: EnemyBaseState
@@ -222,8 +279,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override string Name() { return "Stunned"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            owner.Agent.isStopped = true;
-            timer = owner.EnemyData.StunTime;
+            timer = owner.EnemyData.StunDuration;
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -232,13 +288,38 @@ public class EnemyBaseAI : MonoBehaviour
                 timer -= Time.deltaTime;
             } else
             {
+                owner.AI.SetState(RiseState, owner);             
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.AnimationStates.onBackDesired = false;
+        }
+    }
+    public class EnemyRiseState : EnemyBaseState
+    {
+        float timer = 0;
+        public override string Name() { return "Rising"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            timer = owner.EnemyData.RiseDuration;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (timer > 0)
+            {
+                timer -= Time.deltaTime;
+            }
+            else
+            {
                 if (owner.PlayerVisible())
                 {
                     owner.AI.SetState(ChaseState, owner);
-                } else
+                }
+                else
                 {
                     owner.AI.SetState(SuspiciousState, owner);
-                }                
+                }
             }
         }
         public override void Exit(EnemyBaseAI owner)
@@ -257,11 +338,16 @@ public class EnemyBaseAI : MonoBehaviour
         {
             _timer = 0;
             _lookTimer = 0;
-            _atDestination = false;
-            _agentStopDist = owner.Agent.stoppingDistance;
-            owner.Agent.stoppingDistance = 0;
-            owner.PointOfInterest = owner.PlayerTransform.position;
-            owner.GoToPointOfInterest();
+            //_atDestination = false;
+            _atDestination = true; // Skip the destination thing for debugging reasons
+            owner.Agent.isStopped = true;
+
+            //_agentStopDist = owner.Agent.stoppingDistance;
+            //owner.Agent.stoppingDistance = 0;
+            //owner.Agent.speed = owner.EnemyData.RunSpeed;
+            //owner.PointOfInterest = owner.PlayerTransform.position;
+            //owner.GoToPointOfInterest();
+            owner.AnimationStates.searchingDesired = true;
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -297,8 +383,11 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
+            //owner.Agent.speed = owner.EnemyData.WalkSpeed;
             Debug.Log("Resetting agent stopping distance");
-            owner.Agent.stoppingDistance = _agentStopDist;
+            owner.Agent.isStopped = false;
+            //owner.Agent.stoppingDistance = _agentStopDist;
+            owner.AnimationStates.searchingDesired = false;
         }
     }
 }
