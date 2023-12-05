@@ -35,7 +35,7 @@ public class Interactable : MonoBehaviour
             SetActionCommand();
         }
         MasterFunction();
-        useIndicator.SetActive(playerIsIn);
+        
     }
 
     private void SetActionCommand()
@@ -83,6 +83,7 @@ public class Interactable : MonoBehaviour
         if (other.tag == "Player")
         {
             playerIsIn = true;
+            useIndicator.SetActive(true);
         }
     }
 
@@ -91,6 +92,7 @@ public class Interactable : MonoBehaviour
         if (other.tag == "Player")
         {
             playerIsIn = false;
+            useIndicator.SetActive(false);
         }
     }
 
