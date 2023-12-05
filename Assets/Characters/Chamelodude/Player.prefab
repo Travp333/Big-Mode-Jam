@@ -255,6 +255,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617a066e8e0888d479370b9a08ec2a59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player: {fileID: 3414375860299764301}
+  Pickup:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   pickupHoldingParent: {fileID: 6806540569332817901}
   placeObjectPosition: {fileID: 1365764888967699573}
   pickupIndicator: {fileID: 370758717126259099}
@@ -3180,6 +3190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0316f09cc58f25e4a845451b443262af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickup: {fileID: 7713729150953209519}
   slingshot: {fileID: 5745425258105685870}
   player: {fileID: 3414375860299764301}
   isOnGroundADJ: 0

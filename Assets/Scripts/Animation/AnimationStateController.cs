@@ -8,6 +8,8 @@ using UnityEngine;
 public class AnimationStateController : MonoBehaviour
 {
 	[SerializeField]
+	PlayerPickup pickup;
+	[SerializeField]
 	GameObject slingshot;
     public GameObject player = default;
 	Movement sphere = default; 
@@ -57,6 +59,15 @@ public class AnimationStateController : MonoBehaviour
 	}
 	public void UnBlockMovement(){
 		sphere.unblockMovement();
+	}
+	public void ThrowHeldObject(){
+		pickup.ThrowInput();
+	}
+	public void PutDownObject(){
+		pickup.PutDown();
+	}
+	public void PickUpObject(){
+		pickup.PickUp();
 	}
 
 	void Start() { 
@@ -267,9 +278,11 @@ public class AnimationStateController : MonoBehaviour
 		}
 		if(!isHolding && holdPressed && isOnGroundADJ && !isCrouching && !isRolling){
 			animator.SetBool(isHoldingHash, true);
+			Debug.Log("Picking Up in animator");
 		}
 		if(isHolding && (!holdPressed || !isOnGroundADJ || isCrouching || isRolling)){
 			animator.SetBool(isHoldingHash, false);
+			Debug.Log("PuttingDown in animatior");
 		}
 		if(!isThrowing && throwPressed && isHolding && isOnGroundADJ){
 			animator.SetBool(isThrowingHash, true);

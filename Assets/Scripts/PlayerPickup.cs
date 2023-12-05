@@ -1,10 +1,14 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public class PlayerPickup : MonoBehaviour
 {
+	[SerializeField]
+	GameObject Player;
+	public InputAction Pickup;
     public Transform pickupHoldingParent;
     public Transform placeObjectPosition;
     public GameObject pickupIndicator;
@@ -18,81 +22,96 @@ public class PlayerPickup : MonoBehaviour
     bool cancelThrow;
     // Start is called before the first frame update
     void Start()
-    {
+	{
+		Pickup = Player.GetComponent<PlayerInput>().currentActionMap.FindAction("Interact");
         isCarryingObject = false;
         objectsInTriggerSpace = new List<GameObject>();
         pickupIndicator.SetActive(false);
-        chargeThrow = 1f;
-        cancelThrow = false;
-        throwMeter.value = 1;
+		//chargeThrow = 1f;
+		//cancelThrow = false;
+		//throwMeter.value = 1;
     }
 
     // Update is called once per frame
     void Update()
-    {
-        if (!isCarryingObject && Input.GetKeyDown(KeyCode.R) && objectsInTriggerSpace.Count > 0) // Pick up object
-        {
-            objectsInTriggerSpace.RemoveAll(s => s == null);
-            holdingObject = objectsInTriggerSpace[0];
-            
-            foreach(GameObject obj in objectsInTriggerSpace)
-            {
-                if (obj == null)
-                    continue;
-                if (obj && Vector3.Distance(transform.position, holdingObject.transform.position) > Vector3.Distance(transform.position, obj.transform.position))
-                {
-                    holdingObject = obj;
-                }
-            }
-            holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
-            isCarryingObject = true;
-            pickupIndicator.SetActive(false);
-            FindObjectOfType<playerStates>().holding = true;
-        }
-        else if (isCarryingObject && Input.GetKeyDown(KeyCode.R)) // Place object
-        {
-            isCarryingObject = false;
-            holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
-            pickupIndicator.SetActive(true);
-            FindObjectOfType<playerStates>().holding = false;
-        }
-        ThrowInput();
-
+	{
+		//again i am calling this on an animation now instead
+		// if (!isCarryingObject && Pickup.WasPressedThisFrame() && objectsInTriggerSpace.Count > 0) // Pick up object
+		    // {
+		    //    PickUp();
+		    //}
+	    // else if (isCarryingObject && Pickup.WasPressedThisFrame()) // Place object
+		    // {
+		    //PutDown();
+		    //}
+	    //ThrowInput();
         if (isCarryingObject)
             pickupIndicator.SetActive(false);
     }
-
-    private void ThrowInput()
+	public void PickUp(){
+		Debug.Log("PICKINGUP");
+		objectsInTriggerSpace.RemoveAll(s => s == null);
+		holdingObject = objectsInTriggerSpace[0];
+            
+		foreach(GameObject obj in objectsInTriggerSpace)
+		{
+			if (obj == null)
+				continue;
+			if (obj && Vector3.Distance(transform.position, holdingObject.transform.position) > Vector3.Distance(transform.position, obj.transform.position))
+			{
+				holdingObject = obj;
+			}
+		}
+		holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+		isCarryingObject = true;
+		pickupIndicator.SetActive(false);
+		FindObjectOfType<playerStates>().holding = true;
+	}
+    
+	public void PutDown(){
+		Debug.Log("PUTTINGDOWN");
+		isCarryingObject = false;
+		holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+		pickupIndicator.SetActive(true);
+		FindObjectOfType<playerStates>().holding = false;
+		FindObjectOfType<playerStates>().face.setBase();
+	}
+    
+	//Kinda gutted this, but basically I am gong to call this on the animation playing instead of the button press so it syncs better, 
+	//also removed charging for now
+	//travis
+	public void ThrowInput()
     {
-        if (isCarryingObject && Input.GetMouseButton(0) && !cancelThrow) // Charge throw
-        {
-            chargeThrow += Time.deltaTime * 4;
-            cancelThrow = false;
-            if (chargeThrow >= 5)
-                chargeThrow = 5;
-            throwMeter.value = chargeThrow;
-        }
-        if (isCarryingObject && Input.GetMouseButtonUp(0) && !cancelThrow) // Throw object
-        {
-            isCarryingObject = false;
-            holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce * chargeThrow);
-            chargeThrow = 1f;
-            cancelThrow = false;
-            throwMeter.value = chargeThrow;
-            FindObjectOfType<playerStates>().holding = false;
-        }
+	    //if (isCarryingObject && Input.GetMouseButton(0) && !cancelThrow) // Charge throw
+	    // {
+	    //     chargeThrow += Time.deltaTime * 4;
+	    //     cancelThrow = false;
+	    //     if (chargeThrow >= 5)
+	    //         chargeThrow = 5;
+	    //      throwMeter.value = chargeThrow;
+	    //  }
+	    // if (isCarryingObject && Input.GetMouseButtonUp(0) && !cancelThrow) // Throw object
+	    //  {
+	    Debug.Log("Throwing!");
+        isCarryingObject = false;
+        holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce);
+	    //chargeThrow = 1f;
+	    //cancelThrow = false;
+	    //throwMeter.value = chargeThrow;
+	    FindObjectOfType<playerStates>().holding = false;
+	    //  }
 
-        if (isCarryingObject && Input.GetMouseButtonDown(1)) // Cancel throw
-        {
-            chargeThrow = 1f;
-            cancelThrow = true;
-            throwMeter.value = chargeThrow;
-        }
-        if (cancelThrow && Input.GetMouseButtonUp(0)) // Let go of LMB after the throw was canceled
-        {
-            chargeThrow = 1f;
-            cancelThrow = false;
-        }
+	    // if (isCarryingObject && Input.GetMouseButtonDown(1)) // Cancel throw
+	    //  {
+	    //      chargeThrow = 1f;
+	    //     cancelThrow = true;
+	    //      throwMeter.value = chargeThrow;
+	    //  }
+	    //  if (cancelThrow && Input.GetMouseButtonUp(0)) // Let go of LMB after the throw was canceled
+	    //  {
+     //       chargeThrow = 1f;
+     //       cancelThrow = false;
+	    //   }
     }
 
     private void OnTriggerEnter(Collider other)
