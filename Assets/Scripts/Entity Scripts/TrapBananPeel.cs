@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class TrapBananPeel : EntityTrap
 {
-    public override void Start()
+    public override void Awake()
     {
-        base.Start();
+        base.Awake();
     }
 
     // Update is called once per frame
@@ -17,10 +17,11 @@ public class TrapBananPeel : EntityTrap
 
     public override bool ActivateTrap(GameObject triggeredTrap)
     {
-        if (!base.ActivateTrap(triggeredTrap))
-            return false;
-        
-        Destroy(triggeredTrap);
+        if (!base.ActivateTrap(triggeredTrap)) {
+            Destroy(gameObject);
+        }
+        //Enemies should not be destroyed anymore :(
+        //Destroy(triggeredTrap);
 
         return true;
     }

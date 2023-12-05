@@ -27,7 +27,7 @@ public class PlayerPickup : MonoBehaviour
             holdingObject = objectsInTriggerSpace[0];
             foreach(GameObject obj in objectsInTriggerSpace)
             {
-                if (Vector3.Distance(transform.position, holdingObject.transform.position) > Vector3.Distance(transform.position, obj.transform.position))
+                if (obj && Vector3.Distance(transform.position, holdingObject.transform.position) > Vector3.Distance(transform.position, obj.transform.position))
                 {
                     holdingObject = obj;
                 }

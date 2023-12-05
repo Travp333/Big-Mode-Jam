@@ -3,14 +3,22 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Environment
+  - Unblendable
+  - Enemy
+  - Trap
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Agent
   - Water
   - UI
+  - Enemy
+  - CamIgnore
+  - Hitbox
+  - Environment
   - 
   - 
   - 
@@ -31,11 +39,7 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Hands
   - 
   m_SortingLayers:
   - name: Default

@@ -10,8 +10,7 @@ using UnityEngine;
 public class EntityParent : MonoBehaviour
 {
     public bool canBePickedUp;
-    [SerializeField]
-    float pickUpTime;
+    [SerializeField] float pickUpTime;
 
     bool isBeingPickedUp;
     float beingPickedUpTime;
@@ -21,14 +20,15 @@ public class EntityParent : MonoBehaviour
     BoxCollider boxCollider;
 
     // Start is called before the first frame update
-    public virtual void Start()
+    // Switched to awake so references work even when not active
+    public virtual void Awake()
     {
         beingPickedUpTime = 0;
         rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
     }
 
-    // Update is called once per frame
+    // -almost_friday: setting the trap's parent to the player alone should make this unnecessary 
     public virtual void Update()
     {
         if (isBeingPickedUp)
@@ -44,12 +44,14 @@ public class EntityParent : MonoBehaviour
     public virtual void PickUpObject(Transform newParent)
     {
         transform.SetParent(newParent);
+        transform.position = newParent.position;
         isBeingPickedUp = true;
         beingPickedUpTime = 0;
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         boxCollider.enabled = false;
-        rb.constraints = RigidbodyConstraints.FreezePositionY;
+        rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
+        //rb.constraints = RigidbodyConstraints.FreezePositionY;
     }
 
     public virtual void PlaceObject(Transform newPos)
@@ -58,8 +60,9 @@ public class EntityParent : MonoBehaviour
         transform.position = newPos.position;
         transform.rotation = newPos.rotation;
         boxCollider.enabled = true;
-        rb.constraints = ~RigidbodyConstraints.FreezePositionY;
-        rb.velocity = new Vector3(0, -19.62f, 0);
+        //rb.constraints = ~RigidbodyConstraints.FreezePositionY;
+        //rb.velocity = new Vector3(0, -19.62f, 0); // Magic numbers are bad >:(
+        rb.isKinematic = false; // Reenables physics
         isBeingPickedUp = false;
     }
 }
