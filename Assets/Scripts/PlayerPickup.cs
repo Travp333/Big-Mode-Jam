@@ -30,7 +30,7 @@ public class PlayerPickup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isCarryingObject && Input.GetKeyDown(KeyCode.E) && objectsInTriggerSpace.Count > 0) // Pick up object
+        if (!isCarryingObject && Input.GetKeyDown(KeyCode.R) && objectsInTriggerSpace.Count > 0) // Pick up object
         {
             objectsInTriggerSpace.RemoveAll(s => s == null);
             holdingObject = objectsInTriggerSpace[0];
@@ -47,12 +47,14 @@ public class PlayerPickup : MonoBehaviour
             holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
             isCarryingObject = true;
             pickupIndicator.SetActive(false);
+            FindObjectOfType<playerStates>().holding = true;
         }
-        else if (isCarryingObject && Input.GetKeyDown(KeyCode.E)) // Place object
+        else if (isCarryingObject && Input.GetKeyDown(KeyCode.R)) // Place object
         {
             isCarryingObject = false;
             holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
             pickupIndicator.SetActive(true);
+            FindObjectOfType<playerStates>().holding = false;
         }
         ThrowInput();
 
@@ -77,6 +79,7 @@ public class PlayerPickup : MonoBehaviour
             chargeThrow = 1f;
             cancelThrow = false;
             throwMeter.value = chargeThrow;
+            FindObjectOfType<playerStates>().holding = false;
         }
 
         if (isCarryingObject && Input.GetMouseButtonDown(1)) // Cancel throw
