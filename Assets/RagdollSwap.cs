@@ -74,6 +74,24 @@ public class RagdollSwap : MonoBehaviour
 		}
 		
 	}
+	public void Kill(){
+		if(!ragdollBlock){
+			BaseEnemy.GetComponent<Animator>().enabled = false;
+			BaseEnemy.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+			Ragdoll.GetComponent<Animator>().enabled = false;
+			ragdollRig.SetActive(true);
+			baseRig.SetActive(false);
+			foreach(SkinnedMeshRenderer s in BaseMeshes){
+				s.enabled = false;
+			}
+			foreach(SkinnedMeshRenderer s in RagdollMeshes){
+				s.enabled = true;
+			}
+			GetComponent<CapsuleCollider>().enabled = false;
+			gameObject.tag = "Untagged";
+		}
+		
+	}
 	
 	public void RevertRagdoll(){
 		if(RagdollPelvis.velocity.magnitude < 5f){
