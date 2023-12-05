@@ -40,9 +40,9 @@ public class PlayerColorChangeBehavior : MonoBehaviour
         IsChanging = true;
         Invoke("StopChanging", ColorTransitionTime);
         _colorChangeTimer = ColorTransitionTime;
-        StartCoroutine(Canvas.ShowColorChangeIndicator(ColorTransitionTime));
+        if (Canvas) StartCoroutine(Canvas.ShowColorChangeIndicator(ColorTransitionTime));
         IsBlack = !IsBlack;
-        mesh.material = IsBlack ? SceneData.Instance.Black : SceneData.Instance.White;
+        if (mesh) mesh.material = IsBlack ? SceneData.Instance.Black : SceneData.Instance.White;
     }
     void StopChanging()
     {

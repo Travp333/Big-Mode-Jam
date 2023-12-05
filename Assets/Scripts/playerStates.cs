@@ -56,7 +56,8 @@ public class playerStates : MonoBehaviour
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
-	bool FPSorTPS = true;
+	// Accessed by slingshot manager -almost_friday
+	public bool FPSorTPS { get; private set; } = true; // True for first person
 	// Start is called before the first frame update
 	void Awake()
 	{

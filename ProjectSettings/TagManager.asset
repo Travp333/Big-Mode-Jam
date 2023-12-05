@@ -8,6 +8,9 @@ TagManager:
   - Unblendable
   - AI
   - ragdoll
+
+  - Enemy
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -15,32 +18,32 @@ TagManager:
   - Agent
   - Water
   - UI
-  - 
+  - Enemy
   - CamIgnore
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Hitbox
+  - Environment
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
   - Ragdoll
   - Hands
+  -
   m_SortingLayers:
   - name: Default
     uniqueID: 0
