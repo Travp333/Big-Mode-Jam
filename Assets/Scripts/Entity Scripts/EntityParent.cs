@@ -18,6 +18,7 @@ public class EntityParent : MonoBehaviour
     Quaternion initialRotation;
     Rigidbody rb;
     BoxCollider boxCollider;
+    float placeDownGravity = -19.62f;
 
     // Start is called before the first frame update
     // Switched to awake so references work even when not active
@@ -44,14 +45,13 @@ public class EntityParent : MonoBehaviour
     public virtual void PickUpObject(Transform newParent)
     {
         transform.SetParent(newParent);
-        transform.position = newParent.position;
+        //transform.position = newParent.position; // Surpy: Taking this out so it smooth transitions into picking to match closer to animation time
         isBeingPickedUp = true;
         beingPickedUpTime = 0;
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         boxCollider.enabled = false;
         rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
-        //rb.constraints = RigidbodyConstraints.FreezePositionY;
     }
 
     public virtual void PlaceObject(Transform newPos)
@@ -60,9 +60,18 @@ public class EntityParent : MonoBehaviour
         transform.position = newPos.position;
         transform.rotation = newPos.rotation;
         boxCollider.enabled = true;
-        //rb.constraints = ~RigidbodyConstraints.FreezePositionY;
-        //rb.velocity = new Vector3(0, -19.62f, 0); // Magic numbers are bad >:(
         rb.isKinematic = false; // Reenables physics
+        rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
+        isBeingPickedUp = false;
+    }
+
+    public virtual void ThrowObject(float force)
+    {
+        
+        boxCollider.enabled = true;
+        rb.isKinematic = false; // Reenables physics
+        rb.AddForce(GameObject.FindGameObjectWithTag("Player").transform.forward * force);
+        transform.SetParent(null);
         isBeingPickedUp = false;
     }
 }
