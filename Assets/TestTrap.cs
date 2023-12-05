@@ -5,8 +5,6 @@ using UnityEngine;
 public class TestTrap : MonoBehaviour
 {
 	[SerializeField]
-	Transform ExplodeOrigin;
-	[SerializeField]
 	float radius = 6f;
 	[SerializeField]
 	float power = 3500f;
@@ -15,11 +13,11 @@ public class TestTrap : MonoBehaviour
 	
 	protected void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.gameObject.name);
+		//Debug.Log(other.gameObject.name);
 		if(other.tag == "AI"){
 			if(other.gameObject.GetComponent<RagdollSwap>() != null){
 				other.gameObject.GetComponent<RagdollSwap>().StartRagdoll();
-				Collider[] colliders = Physics.OverlapSphere(ExplodeOrigin.position, radius);
+				Collider[] colliders = Physics.OverlapSphere(this.transform.position, radius);
 				foreach (Collider hit in colliders)
 				{
 					Rigidbody rb = hit.GetComponent<Rigidbody>();

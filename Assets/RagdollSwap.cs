@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.AI;
 
 public class RagdollSwap : MonoBehaviour
 {
+	UnityEngine.AI.NavMeshAgent agent;
 	[SerializeField]
 	Rigidbody RagdollPelvis;
 	[SerializeField]
@@ -26,12 +28,21 @@ public class RagdollSwap : MonoBehaviour
 	GameObject Player;
 	[SerializeField]
 	LayerMask mask;
+	public bool ragdollBlock;
 	// Start is called before the first frame update
-	void Awake(){
+	void ResetRagdollBlock(){
+		ragdollBlock = false;
+	}
+	void SnapToGround(){
 		RaycastHit hit;
 		if(Physics.Raycast(this.transform.position, -this.transform.up, out hit, 10f, mask)){
-			BaseEnemy.transform.position = hit.point;
+			BaseEnemy.transform.position = new Vector3(BaseEnemy.transform.position.x, hit.point.y, BaseEnemy.transform.position.z);
 		}
+	}
+	void Awake(){
+		ragdollBlock = true;
+
+		Invoke("ResetRagdollBlock", 2f);
 	}
     void Start()
     {
@@ -41,34 +52,59 @@ public class RagdollSwap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+	    //this.transform.position = RagdollPelvis.transform.position;
     }
 	public void StartRagdoll(){
-		BaseEnemy.GetComponent<Animator>().enabled = false;
-		Ragdoll.GetComponent<Animator>().enabled = false;
-		ragdollRig.SetActive(true);
-		baseRig.SetActive(false);
-		foreach(SkinnedMeshRenderer s in BaseMeshes){
-			s.enabled = false;
+		if(!ragdollBlock){
+			BaseEnemy.GetComponent<Animator>().enabled = false;
+			BaseEnemy.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+			Ragdoll.GetComponent<Animator>().enabled = false;
+			ragdollRig.SetActive(true);
+			baseRig.SetActive(false);
+			foreach(SkinnedMeshRenderer s in BaseMeshes){
+				s.enabled = false;
+			}
+			foreach(SkinnedMeshRenderer s in RagdollMeshes){
+				s.enabled = true;
+			}
+			GetComponent<CapsuleCollider>().enabled = false;
+			gameObject.tag = "Untagged";
+			
+			Invoke("RevertRagdoll", 10f);
 		}
-		foreach(SkinnedMeshRenderer s in RagdollMeshes){
-			s.enabled = true;
-		}
-		GetComponent<CapsuleCollider>().enabled = false;
-		gameObject.tag = "Untagged";
-		
-		Invoke("RevertRagdoll", 10f);
 		
 	}
 	
 	public void RevertRagdoll(){
 		if(RagdollPelvis.velocity.magnitude < 5f){
-			GameObject g = Instantiate(EnemyPrefab, RagdollPelvis.transform.position, Quaternion.identity);
 			
-			if(g.GetComponent<Animator>()!=null){
-				g.GetComponent<Animator>().Play("Get Up");
+			ragdollRig.SetActive(false);
+			BaseEnemy.transform.position = RagdollPelvis.transform.position;
+			Ragdoll.transform.position = this.transform.position;
+			//SnapToGround();
+			BaseEnemy.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = true;
+			BaseEnemy.GetComponent<Animator>().enabled = true;
+			Ragdoll.GetComponent<Animator>().enabled = true;
+			ragdollRig.transform.position = baseRig.transform.position;
+			
+			baseRig.SetActive(true);
+			foreach(SkinnedMeshRenderer s in BaseMeshes){
+				s.enabled = true;
 			}
-				Destroy(BaseEnemy);
+			foreach(SkinnedMeshRenderer s in RagdollMeshes){
+				s.enabled = false;
+			}
+			GetComponent<CapsuleCollider>().enabled = true;
+			gameObject.tag = "AI";
+;
+			BaseEnemy.GetComponent<Animator>().Play("Get Up");
+			
+			//GameObject g = Instantiate(EnemyPrefab, this.transform.position, Quaternion.identity);
+			
+			//if(g.GetComponent<Animator>()!=null){
+			//	g.GetComponent<Animator>().
+			//}
+			//	Destroy(BaseEnemy);
 		}
 		else{
 			Invoke("RevertRagdoll", 3f);
