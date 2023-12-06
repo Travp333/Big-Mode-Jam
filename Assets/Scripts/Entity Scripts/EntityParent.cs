@@ -36,7 +36,7 @@ public class EntityParent : MonoBehaviour
         {
             beingPickedUpTime += Time.deltaTime;
             transform.position = Vector3.Lerp(initialPosition, transform.parent.position, beingPickedUpTime / pickUpTime);
-            transform.rotation = Quaternion.Lerp(initialRotation, transform.parent.rotation, beingPickedUpTime / pickUpTime);
+	        //transform.rotation = Quaternion.Lerp(initialRotation, transform.parent.rotation, beingPickedUpTime / pickUpTime);
             if (transform.position == transform.parent.position)
                 isBeingPickedUp = false;
         }

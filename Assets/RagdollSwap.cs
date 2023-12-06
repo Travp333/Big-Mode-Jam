@@ -5,6 +5,9 @@ using Unity.AI;
 
 public class RagdollSwap : MonoBehaviour
 {
+	[SerializeField]
+	[Tooltip("How long the ai stays ragdolled")]
+	float downTime = 4f;
 	UnityEngine.AI.NavMeshAgent agent;
 	[SerializeField]
 	Rigidbody RagdollPelvis;
@@ -70,7 +73,7 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
 			
-			Invoke("RevertRagdoll", 10f);
+			Invoke("RevertRagdoll", downTime);
 		}
 		
 	}
