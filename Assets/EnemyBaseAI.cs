@@ -173,6 +173,7 @@ public class EnemyBaseAI : MonoBehaviour
     {
         public override string Name() { return "Idle"; }
         public override void Enter(EnemyBaseAI owner) {
+            owner.AnimationStates.chaseDesired = false;
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
@@ -372,7 +373,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public class EnemyLostPlayerState : EnemyBaseState
     {
-
+        const float DISTANCETHATISCLOSEENOUGH = 8;
         float _agentStopDist;
         public override string Name() { return "Player Lost"; }
         public override void Enter(EnemyBaseAI owner)
@@ -389,10 +390,11 @@ public class EnemyBaseAI : MonoBehaviour
         {
             // Check if near where the player was last seen
             float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
-            if (dist < 3f)
+            if (dist < DISTANCETHATISCLOSEENOUGH)
             {
                 owner.AI.SetState(LookAround, owner);
             }
+            else Debug.Log(dist);
 
             //Chase the player if they become visible again
             if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
