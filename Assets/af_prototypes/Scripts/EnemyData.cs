@@ -15,6 +15,8 @@ public class EnemyData : ScriptableObject
     public float SuspiciousTime = 6;
     [Tooltip("How long this enemy will be surprised")]
     public float SurprisedDuration = 0.5f;
+    [Tooltip("How long this enemy will freeze after hit with the slingshot")]
+    public float HitFlinchDuration = 2;
     [Tooltip("How long this enemy will take to slip")]
     public float SlipDuration = 1;
     [Tooltip("How long this enemy will stay stunned by a trap")]
