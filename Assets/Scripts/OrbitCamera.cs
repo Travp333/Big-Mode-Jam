@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
-[RequireComponent(typeof(Camera))]
+
 //script that makes the camera movement more dynamic and less messy 
 public class OrbitCamera : MonoBehaviour {
 	[SerializeField]
@@ -24,7 +24,7 @@ public class OrbitCamera : MonoBehaviour {
 
 	LayerMask obstructionMask = -1;
 
-	Camera regularCamera;
+	public Camera regularCamera;
 
 	[SerializeField, Range(0f, 90f)]
 	float alignSmoothRange = 45f;
@@ -155,7 +155,7 @@ public class OrbitCamera : MonoBehaviour {
         }
 		Prevfocus = focus;
 		sphere = player.GetComponent<Movement>();
-		regularCamera = GetComponent<Camera>();
+		if (!regularCamera) regularCamera = GetComponent<Camera>();
 		focusPoint = focus.position;
 		transform.localRotation = orbitRotation = Quaternion.Euler(orbitAngles);
 	}
