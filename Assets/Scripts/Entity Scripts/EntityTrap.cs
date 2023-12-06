@@ -44,12 +44,12 @@ public class EntityTrap : EntityParent
         return true;
     }
 	void DisableVolumeTrigger(){
-		launchVolume.SetActive(true);
+		launchVolume.SetActive(false);
 	}
 	// OnTriggerEnter is called when the Collider other enters the trigger.
 	protected void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.gameObject.name);
+		//Debug.Log(other.gameObject.name);
 		if(other.gameObject.tag == "AI"){
 			if(numberOfUses > 0){
 				numberOfUses = numberOfUses - 1;
@@ -58,8 +58,9 @@ public class EntityTrap : EntityParent
 					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isSmashed", true);
 				}
 				else if(isBananna){
-					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("IsSlipping", true);
-					
+					EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
+					baseAi.AI.SetState(EnemyBaseAI.SlipState, baseAi);
+					//other.transform.parent.gameObject.GetComponent<Animator>().SetBool("IsSlipping", true);
 				}
 				else if(isHole){
 					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isFalling", true);
