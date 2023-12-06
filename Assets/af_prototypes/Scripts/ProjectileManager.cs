@@ -44,9 +44,13 @@ public class ProjectileManager : MonoBehaviour
 
         if (Physics.Linecast(_previousPos, transform.position, out _hit, collisionMask, QueryTriggerInteraction.Collide))
         {
-            if (_hit.collider.tag == "Enemy")
+            if (_hit.collider.tag == "AI")
             {
-                //logic for gitting an enemy goes here
+                EnemyBaseAI enemy;
+                if (_hit.transform.root.TryGetComponent(out enemy))
+                {
+                    enemy.TakeDamage();
+                }
                 if (ImpactEffects) Instantiate(ImpactEffects, _hit.point, Quaternion.LookRotation(_hit.normal));
                 Destroy(gameObject);
             } else
