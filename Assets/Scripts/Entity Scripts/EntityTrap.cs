@@ -25,13 +25,15 @@ public class EntityTrap : EntityParent
     }
 
     public override void PickUpObject(Transform newParent)
-    {
+	{
+		gameObject.layer = 11;
         base.PickUpObject(newParent);
         trapIsTriggered = false;
     }
 
     public override void PlaceObject(Transform newPos)
-    {
+	{
+		gameObject.layer = 12;
         base.PlaceObject(newPos);
         trapIsTriggered = true;
     }
@@ -55,7 +57,15 @@ public class EntityTrap : EntityParent
 				numberOfUses = numberOfUses - 1;
 				this.GetComponent<Animator>().SetBool("Triggered", true);
 				if(isHammer){
+					//state dont exist yet
+					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
+					//baseAi.AI.SetState(EnemyBaseAI.SmashedState, baseAi);
 					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isSmashed", true);
+				}
+				else if (isGlue){
+					//state dont exist yet
+					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
+					//baseAi.AI.SetState(EnemyBaseAI.StuckState, baseAi);
 				}
 				else if(isBananna){
 					EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
@@ -63,7 +73,10 @@ public class EntityTrap : EntityParent
 					//other.transform.parent.gameObject.GetComponent<Animator>().SetBool("IsSlipping", true);
 				}
 				else if(isHole){
-					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isFalling", true);
+					//state dont exist yet
+					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
+					//baseAi.AI.SetState(EnemyBaseAI.FallingState, baseAi);
+					//other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isFalling", true);
 				}
 				else if(isGlove){
 					launchVolume.SetActive(true);

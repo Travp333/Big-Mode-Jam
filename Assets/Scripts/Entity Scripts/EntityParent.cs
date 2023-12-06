@@ -43,7 +43,8 @@ public class EntityParent : MonoBehaviour
     }
 
     public virtual void PickUpObject(Transform newParent)
-    {
+	{
+		
         transform.SetParent(newParent);
         //transform.position = newParent.position; // Surpy: Taking this out so it smooth transitions into picking to match closer to animation time
         isBeingPickedUp = true;

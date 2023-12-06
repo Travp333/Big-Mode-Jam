@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ public class PlayerColorChangeBehavior : MonoBehaviour
     public static PlayerColorChangeBehavior Instance;
     public CanvasManager Canvas;
 
-    public MeshRenderer mesh;
+	public SkinnedMeshRenderer mesh;
     public bool IsBlack { get; private set; } = true; // true for black, false for white
     public bool IsChanging{ get; private set; } = false; // true for black, false for white
     public float ColorTransitionTime = 0.3f;
