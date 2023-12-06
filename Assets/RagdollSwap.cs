@@ -28,6 +28,7 @@ public class RagdollSwap : MonoBehaviour
 	GameObject Player;
 	[SerializeField]
 	LayerMask mask;
+	public EnemyBaseAI enemyAI;
 	public bool ragdollBlock;
 	// Start is called before the first frame update
 	void ResetRagdollBlock(){
@@ -70,7 +71,7 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
 			
-			Invoke("RevertRagdoll", 10f);
+			//Invoke("RevertRagdoll", 10f); // Temporarily getting replaced by AI state change
 		}
 		
 	}
@@ -115,7 +116,7 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = true;
 			gameObject.tag = "AI";
 ;
-			BaseEnemy.GetComponent<Animator>().Play("Get Up");
+			//BaseEnemy.GetComponent<Animator>().Play("Get Up"); // Gets called in RiseState
 			
 			//GameObject g = Instantiate(EnemyPrefab, this.transform.position, Quaternion.identity);
 			
@@ -135,7 +136,7 @@ public class RagdollSwap : MonoBehaviour
 		if(collisionInfo.gameObject.tag == "Player"){
 			if(collisionInfo.gameObject.GetComponent<playerStates>() != null){
 				if(collisionInfo.gameObject.GetComponent<playerStates>().rolling){
-					StartRagdoll();
+					enemyAI.AI.SetState(EnemyBaseAI.RagdollState, enemyAI);
 				}
 			}
 		}

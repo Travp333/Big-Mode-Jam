@@ -19,8 +19,10 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyRiseState RiseState = new EnemyRiseState();
     public static EnemyDamagedState DamagedState = new EnemyDamagedState();
     public static EnemyLookAroundState LookAround = new EnemyLookAroundState();
+    public static EnemyRagdollState RagdollState = new EnemyRagdollState();
 
     public NavMeshAgent Agent;
+    public RagdollSwap RagdollScript;
     #endregion
 
     public EnemyData EnemyData;
@@ -314,6 +316,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             timer = owner.EnemyData.RiseDuration;
+            owner.GetComponent<Animator>()?.Play("Get Up");
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -447,6 +450,30 @@ public class EnemyBaseAI : MonoBehaviour
         {
             owner.AnimationStates.searchingDesired = false;
             owner.Agent.isStopped = false;
+        }
+    }
+    public class EnemyRagdollState : EnemyBaseState
+    {
+        float _timer;
+
+        public override string Name() { return "PlayerSpotted"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.RagdollScript.StartRagdoll();
+            _timer = owner.EnemyData.StunDuration;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            //owner.PlayerVisible();
+            if (_timer > 0)
+                _timer -= Time.deltaTime;
+            else
+                owner.AI.SetState(RiseState, owner);
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.AnimationStates.noticingDesired = false;
+            owner.RagdollScript.RevertRagdoll();
         }
     }
 }
