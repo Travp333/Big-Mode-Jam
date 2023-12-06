@@ -18,6 +18,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemySlipState SlipState = new EnemySlipState();
     public static EnemyRiseState RiseState = new EnemyRiseState();
     public static EnemyDamagedState DamagedState = new EnemyDamagedState();
+    public static EnemyLookAroundState LookAround = new EnemyLookAroundState();
 
     public NavMeshAgent Agent;
     #endregion
@@ -31,7 +32,7 @@ public class EnemyBaseAI : MonoBehaviour
 
     [HideInInspector] public Vector3 PointOfInterest;
 
-    Transform PlayerTransform;
+    [SerializeField ]Transform PlayerTransform;
     Ray _playerRay;
     RaycastHit _hit;
     Vector3 PlayerPosition {
@@ -58,7 +59,7 @@ public class EnemyBaseAI : MonoBehaviour
 
     private void Awake()
     {
-        PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();/*
+        if (!PlayerTransform) PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();/*
         Debug.Log(AI);
         Debug.Log(IdleState);*/
         AI.SetState(IdleState, this);
@@ -163,6 +164,10 @@ public class EnemyBaseAI : MonoBehaviour
     {
         Vector3 objectVector = PointOfInterest- transform.position;
         transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation(Vector3.Scale(objectVector, FLATVECTOR)), Time.deltaTime * EnemyData.TurnSpeed );
+    }
+    private void OnDrawGizmos()
+    {
+            Gizmos.DrawWireSphere(PointOfInterest, 2);
     }
     public class EnemyIdleState : EnemyBaseState
     {
@@ -367,65 +372,79 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public class EnemyLostPlayerState : EnemyBaseState
     {
-        float _timer = 0;
-        float _lookTimer = 0;
+
         float _agentStopDist;
-        bool _atDestination;
         public override string Name() { return "Player Lost"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            _timer = 0;
-            _lookTimer = 0;
-            _atDestination = false;
-            //_atDestination = true; // Skip the destination thing for debugging reasons
-            owner.Agent.isStopped = true;
-
             _agentStopDist = owner.Agent.stoppingDistance;
             owner.Agent.stoppingDistance = 0;
             owner.Agent.speed = owner.EnemyData.RunSpeed;
+
+            // Go to the place the player was last seen at
             owner.PointOfInterest = owner.PlayerTransform.position;
             owner.GoToPointOfInterest();            
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (!_atDestination)
+            // Check if near where the player was last seen
+            float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
+            if (dist < 3f)
             {
-                float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
-                if (dist < 3f)
-                    _atDestination = true;
-                else Debug.Log("Distance to target point: " + dist);
+                owner.AI.SetState(LookAround, owner);
             }
-            if (_atDestination)
-            {
-                owner.AnimationStates.searchingDesired = true;
-                if (_lookTimer <= 0) // Every couple of seconds, look in a random direction
-                {
-                    _lookTimer = Random.Range(1f, 3f);
-                    float randomAngle = Random.Range(40, 160);
-                    if (Random.Range(0, 2) == 0) // coin flip
-                        randomAngle = -randomAngle;
-                    owner.PointOfInterest = owner.transform.position + (Quaternion.Euler(0, randomAngle, 0) * owner.transform.forward);
-                    Debug.Log("Point of Interest: "+owner.PointOfInterest);
-                }
-                _lookTimer -= Time.deltaTime;
 
-                owner.FaceObjectOfInterest();
-
-                _timer += Time.deltaTime;
-                //Lose interest if the player's been lost for too long
-                if (_timer > owner.EnemyData.SuspiciousTime) owner.AI.SetState(IdleState, owner);
-
-                //Chase the player if they become visible again
-                if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
-            }
+            //Chase the player if they become visible again
+            if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
+            //if (owner.PlayerVisible()) owner.AI.SetState(ChaseState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            //owner.Agent.speed = owner.EnemyData.WalkSpeed;
-            Debug.Log("Resetting agent stopping distance");
-            owner.Agent.isStopped = false;
             owner.Agent.stoppingDistance = _agentStopDist;
+        }
+    }
+    public class EnemyLookAroundState : EnemyBaseState
+    {
+        float _timer = 0;
+        float _lookTimer = 0;
+        public override string Name() { return "Lookin' Around"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.searchingDesired = true;
+            _timer = owner.EnemyData.SuspiciousTime;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (_lookTimer > 0)
+            {
+                _lookTimer -= Time.deltaTime;
+            }
+            else
+            {
+                _lookTimer = Random.Range(1f, 3f);
+                float randomAngle = Random.Range(40, 160);
+                if (Random.Range(0, 2) == 0) // coin flip
+                    randomAngle = -randomAngle;
+                owner.PointOfInterest = owner.transform.position + (Quaternion.Euler(0, randomAngle, 0) * owner.transform.forward);
+            }
+
+            owner.FaceObjectOfInterest();
+
+            if (_timer > 0)
+            {
+                _timer -= Time.deltaTime;
+            }
+            else
+            {
+                owner.AI.SetState(IdleState, owner);
+            }
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
             owner.AnimationStates.searchingDesired = false;
+            owner.Agent.isStopped = false;
         }
     }
 }

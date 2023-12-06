@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DetectionFOV: 80
   TurnSpeed: 20
-  WalkSpeed: 3.5
+  WalkSpeed: 6
   RunSpeed: 16
   ReactionTime: 0.8
   SuspiciousTime: 5
   SurprisedDuration: 0.5
+  HitFlinchDuration: 0.4
   SlipDuration: 1
   StunDuration: 6
   RiseDuration: 6
-  DistractionRadius: 25
-  DistractionImmediateDetectionRadius: 6
+  DistractionRadius: 55
+  DistractionImmediateDetectionRadius: 12
