@@ -26,11 +26,12 @@ public class RagdollSwap : MonoBehaviour
 	[SerializeField]
 	GameObject ragdollRig;
 	[SerializeField]
-	Transform ragdollSpawnPos; 
+	Transform ragdollSpawnPos;
 	[SerializeField]
 	GameObject Player;
 	[SerializeField]
 	LayerMask mask;
+	public EnemyBaseAI enemyAI;
 	public bool ragdollBlock;
 	// Start is called before the first frame update
 	void ResetRagdollBlock(){
@@ -49,7 +50,7 @@ public class RagdollSwap : MonoBehaviour
 	}
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -72,10 +73,10 @@ public class RagdollSwap : MonoBehaviour
 			}
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
-			
-			Invoke("RevertRagdoll", downTime);
+
+			//Invoke("RevertRagdoll", 10f); // Temporarily getting replaced by AI state change
 		}
-		
+
 	}
 	public void Kill(){
 		if(!ragdollBlock){
@@ -93,12 +94,12 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
 		}
-		
+
 	}
-	
+
 	public void RevertRagdoll(){
 		if(RagdollPelvis.velocity.magnitude < 5f){
-			
+
 			ragdollRig.SetActive(false);
 			BaseEnemy.transform.position = RagdollPelvis.transform.position;
 			Ragdoll.transform.position = this.transform.position;
@@ -107,7 +108,7 @@ public class RagdollSwap : MonoBehaviour
 			BaseEnemy.GetComponent<Animator>().enabled = true;
 			Ragdoll.GetComponent<Animator>().enabled = true;
 			ragdollRig.transform.position = baseRig.transform.position;
-			
+
 			baseRig.SetActive(true);
 			foreach(SkinnedMeshRenderer s in BaseMeshes){
 				s.enabled = true;
@@ -118,10 +119,10 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = true;
 			gameObject.tag = "AI";
 ;
-			BaseEnemy.GetComponent<Animator>().Play("Get Up");
-			
+			//BaseEnemy.GetComponent<Animator>().Play("Get Up"); // Gets called in RiseState
+
 			//GameObject g = Instantiate(EnemyPrefab, this.transform.position, Quaternion.identity);
-			
+
 			//if(g.GetComponent<Animator>()!=null){
 			//	g.GetComponent<Animator>().
 			//}
@@ -138,7 +139,7 @@ public class RagdollSwap : MonoBehaviour
 		if(collisionInfo.gameObject.tag == "Player"){
 			if(collisionInfo.gameObject.GetComponent<playerStates>() != null){
 				if(collisionInfo.gameObject.GetComponent<playerStates>().rolling){
-					StartRagdoll();
+					enemyAI.AI.SetState(EnemyBaseAI.RagdollState, enemyAI);
 				}
 			}
 		}

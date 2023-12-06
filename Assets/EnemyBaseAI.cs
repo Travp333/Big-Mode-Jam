@@ -8,7 +8,7 @@ public class EnemyBaseAI : MonoBehaviour
 {
     #region AI
     public EnemyStateMachine AI = new EnemyStateMachine();
-    public EnemyAnimController AnimationStates;
+    public NewEnemyAnimStateController AnimationStates;
     public static EnemyIdleState IdleState = new EnemyIdleState();
     public static EnemySuspiciousState SuspiciousState = new EnemySuspiciousState();
     public static EnemyChaseState ChaseState = new EnemyChaseState();
@@ -19,8 +19,10 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyRiseState RiseState = new EnemyRiseState();
     public static EnemyDamagedState DamagedState = new EnemyDamagedState();
     public static EnemyLookAroundState LookAround = new EnemyLookAroundState();
+    public static EnemyRagdollState RagdollState = new EnemyRagdollState();
 
     public NavMeshAgent Agent;
+    public RagdollSwap RagdollScript;
     #endregion
 
     public EnemyData EnemyData;
@@ -173,6 +175,8 @@ public class EnemyBaseAI : MonoBehaviour
     {
         public override string Name() { return "Idle"; }
         public override void Enter(EnemyBaseAI owner) {
+            //owner.AnimationStates.chaseDesired = false;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
@@ -189,7 +193,8 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             //owner.PointOfInterest = owner.PlayerPosition;
-            owner.AnimationStates.susDesired = true;
+            //owner.AnimationStates.susDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
             _timer = owner.EnemyData.ReactionTime;
         }
         public override void Update(EnemyBaseAI owner)
@@ -213,7 +218,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.AnimationStates.susDesired = false;
+            //owner.AnimationStates.susDesired = false;
         }
     }
     public class EnemyPlayerSpottedState : EnemyBaseState
@@ -225,7 +230,9 @@ public class EnemyBaseAI : MonoBehaviour
         {
             _timer = owner.EnemyData.SurprisedDuration;
 
-            owner.AnimationStates.noticingDesired = true;
+            //owner.AnimationStates.noticingDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.startledHash, 0.1f);
+
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -237,7 +244,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.AnimationStates.noticingDesired = false;
+            //owner.AnimationStates.noticingDesired = false;
         }
     }
     public class EnemyChaseState : EnemyBaseState
@@ -246,7 +253,9 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.speed = owner.EnemyData.RunSpeed;
-            owner.AnimationStates.chaseDesired = true;
+            //owner.AnimationStates.chaseDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.chaseHash, 0.1f);
+
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -259,7 +268,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Exit(EnemyBaseAI owner)
         {
             owner.Agent.speed = owner.EnemyData.WalkSpeed;
-            owner.AnimationStates.chaseDesired = false;
+            //owner.AnimationStates.chaseDesired = false;
         }
     }
     public class EnemySlipState : EnemyBaseState
@@ -270,7 +279,9 @@ public class EnemyBaseAI : MonoBehaviour
         {
             owner.Agent.isStopped = true;
             timer = owner.EnemyData.SlipDuration;
-            owner.AnimationStates.slipDesired = true;
+            //owner.AnimationStates.slipDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.slipHash, 0.1f);
+
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -279,8 +290,10 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.AnimationStates.slipDesired = false;
-            owner.AnimationStates.onBackDesired = true;
+            //owner.AnimationStates.slipDesired = false;
+            //owner.AnimationStates.onBackDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.onBackHash, 0.1f);
+
         }
     }
     public class EnemyStunnedState: EnemyBaseState
@@ -303,7 +316,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.AnimationStates.onBackDesired = false;
+            //owner.AnimationStates.onBackDesired = false;
         }
     }
     public class EnemyRiseState : EnemyBaseState
@@ -313,6 +326,8 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             timer = owner.EnemyData.RiseDuration;
+            //owner.GetComponent<Animator>()?.Play("Get Up");
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.getUpHash, 0.1f);
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -345,7 +360,9 @@ public class EnemyBaseAI : MonoBehaviour
         {
             timer = owner.EnemyData.HitFlinchDuration;
             owner.Agent.isStopped = true;
-            owner.AnimationStates.damageDesired = true;
+            //owner.AnimationStates.damageDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.gettingHitHash, 0.1f);
+
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -367,12 +384,12 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Exit(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = false;
-            owner.AnimationStates.damageDesired = false;
+            //owner.AnimationStates.damageDesired = false;
         }
     }
     public class EnemyLostPlayerState : EnemyBaseState
     {
-
+        const float DISTANCETHATISCLOSEENOUGH = 8;
         float _agentStopDist;
         public override string Name() { return "Player Lost"; }
         public override void Enter(EnemyBaseAI owner)
@@ -389,10 +406,11 @@ public class EnemyBaseAI : MonoBehaviour
         {
             // Check if near where the player was last seen
             float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
-            if (dist < 3f)
+            if (dist < DISTANCETHATISCLOSEENOUGH)
             {
                 owner.AI.SetState(LookAround, owner);
             }
+            else Debug.Log(dist);
 
             //Chase the player if they become visible again
             if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
@@ -411,7 +429,9 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = true;
-            owner.AnimationStates.searchingDesired = true;
+            //owner.AnimationStates.searchingDesired = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.searchingHash, 0.1f);
+
             _timer = owner.EnemyData.SuspiciousTime;
         }
         public override void Update(EnemyBaseAI owner)
@@ -443,8 +463,32 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.AnimationStates.searchingDesired = false;
+            //owner.AnimationStates.searchingDesired = false;
             owner.Agent.isStopped = false;
+        }
+    }
+    public class EnemyRagdollState : EnemyBaseState
+    {
+        float _timer;
+
+        public override string Name() { return "PlayerSpotted"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.RagdollScript.StartRagdoll();
+            _timer = owner.EnemyData.StunDuration;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            //owner.PlayerVisible();
+            if (_timer > 0)
+                _timer -= Time.deltaTime;
+            else
+                owner.AI.SetState(RiseState, owner);
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            //owner.AnimationStates.noticingDesired = false;
+            owner.RagdollScript.RevertRagdoll();
         }
     }
 }
