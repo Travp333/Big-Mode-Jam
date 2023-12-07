@@ -63,17 +63,31 @@ public class PlayerPickup : MonoBehaviour
 				holdingObject = obj;
 			}
 		}
-		holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+		if(holdingObject.GetComponent<EntityParent>() != null){
+			holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+		}
+		else if(holdingObject.transform.parent.GetComponent<EntityParent>() != null){
+			holdingObject.transform.parent.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+		}
 		isCarryingObject = true;
 		pickupIndicator.SetActive(false);
 		FindObjectOfType<playerStates>().holding = true;
 	}
     
 	public void PutDown(){
-		Debug.Log("PUTTINGDOWN");
+		//Debug.Log("PUTTINGDOWN");
 		isCarryingObject = false;
-		holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
-		pickupIndicator.SetActive(true);
+		//RugTrap!
+		if(holdingObject.transform.parent.GetComponent<EntityParent>()){
+			holdingObject.transform.parent.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+			pickupIndicator.SetActive(false);
+			objectsInTriggerSpace.Clear();
+			holdingObject.transform.parent.GetComponent<EntityParent>().canBePickedUp = false;
+		}
+		else if(holdingObject.GetComponent<EntityParent>() != null){
+			holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+			pickupIndicator.SetActive(true);
+		}
 		FindObjectOfType<playerStates>().holding = false;
 		FindObjectOfType<playerStates>().face.setBase();
 	}
@@ -94,8 +108,16 @@ public class PlayerPickup : MonoBehaviour
 	    // if (isCarryingObject && Input.GetMouseButtonUp(0) && !cancelThrow) // Throw object
 	    //  {
 	    Debug.Log("Throwing!");
-        isCarryingObject = false;
-	    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+	    isCarryingObject = false;
+	    
+	    
+	    if(holdingObject.GetComponent<EntityParent>() != null){
+		    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+	    }
+	    else if(holdingObject.transform.parent.gameObject.GetComponent<EntityParent>()!= null)
+	    {
+	    	holdingObject.transform.parent.gameObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+	    }
 	    //chargeThrow = 1f;
 	    //cancelThrow = false;
 	    //throwMeter.value = chargeThrow;
@@ -116,18 +138,40 @@ public class PlayerPickup : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.GetComponent<EntityParent>() && !objectsInTriggerSpace.Contains(other.gameObject))
-        {
-            objectsInTriggerSpace.Add(other.gameObject);
-            pickupIndicator.SetActive(true);
+	{
+		
+		//Duplicated this so that the rug trap can work, the collider had to be on a child object
+		if(other.transform.parent != null){
+			if(other.transform.parent.gameObject.GetComponent<EntityParent>()){
+				if(other.transform.parent.gameObject.GetComponent<EntityParent>().canBePickedUp){
+					if(!objectsInTriggerSpace.Contains(other.transform.parent.gameObject)){
+						objectsInTriggerSpace.Add(other.transform.parent.gameObject);
+						pickupIndicator.SetActive(true);
+					}
+				}
+			}
+		}
+		if(other.gameObject.GetComponent<EntityParent>())
+		{
+			if(!objectsInTriggerSpace.Contains(other.gameObject)){
+				if(other.gameObject.GetComponent<EntityParent>().canBePickedUp){
+					objectsInTriggerSpace.Add(other.gameObject);
+					pickupIndicator.SetActive(true);
+				}
+			}
+
         }
     }
 
     private void OnTriggerExit(Collider other)
-    {
+	{
+    	
         if (objectsInTriggerSpace.Contains(other.gameObject))
-            objectsInTriggerSpace.Remove(other.gameObject);
+	        objectsInTriggerSpace.Remove(other.gameObject);
+		if(other.transform.parent != null){
+			if (objectsInTriggerSpace.Contains(other.transform.parent.gameObject))
+				objectsInTriggerSpace.Remove(other.transform.parent.gameObject);
+		}
 
         if (objectsInTriggerSpace.Count >= 1)
             pickupIndicator.SetActive(true);
