@@ -5,6 +5,9 @@ using Unity.AI;
 
 public class RagdollSwap : MonoBehaviour
 {
+	[SerializeField]
+	[Tooltip("How long the ai stays ragdolled")]
+	float downTime = 4f;
 	UnityEngine.AI.NavMeshAgent agent;
 	[SerializeField]
 	Rigidbody RagdollPelvis;
@@ -23,7 +26,7 @@ public class RagdollSwap : MonoBehaviour
 	[SerializeField]
 	GameObject ragdollRig;
 	[SerializeField]
-	Transform ragdollSpawnPos; 
+	Transform ragdollSpawnPos;
 	[SerializeField]
 	GameObject Player;
 	[SerializeField]
@@ -47,7 +50,7 @@ public class RagdollSwap : MonoBehaviour
 	}
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -70,10 +73,10 @@ public class RagdollSwap : MonoBehaviour
 			}
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
-			
+
 			//Invoke("RevertRagdoll", 10f); // Temporarily getting replaced by AI state change
 		}
-		
+
 	}
 	public void Kill(){
 		if(!ragdollBlock){
@@ -91,12 +94,12 @@ public class RagdollSwap : MonoBehaviour
 			GetComponent<CapsuleCollider>().enabled = false;
 			gameObject.tag = "Untagged";
 		}
-		
+
 	}
-	
+
 	public void RevertRagdoll(){
 		if(RagdollPelvis.velocity.magnitude < 5f){
-			
+
 			ragdollRig.SetActive(false);
 			BaseEnemy.transform.position = RagdollPelvis.transform.position;
 			Ragdoll.transform.position = this.transform.position;
@@ -105,7 +108,7 @@ public class RagdollSwap : MonoBehaviour
 			BaseEnemy.GetComponent<Animator>().enabled = true;
 			Ragdoll.GetComponent<Animator>().enabled = true;
 			ragdollRig.transform.position = baseRig.transform.position;
-			
+
 			baseRig.SetActive(true);
 			foreach(SkinnedMeshRenderer s in BaseMeshes){
 				s.enabled = true;
@@ -117,9 +120,9 @@ public class RagdollSwap : MonoBehaviour
 			gameObject.tag = "AI";
 ;
 			//BaseEnemy.GetComponent<Animator>().Play("Get Up"); // Gets called in RiseState
-			
+
 			//GameObject g = Instantiate(EnemyPrefab, this.transform.position, Quaternion.identity);
-			
+
 			//if(g.GetComponent<Animator>()!=null){
 			//	g.GetComponent<Animator>().
 			//}

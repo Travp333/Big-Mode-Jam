@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class playerStates : MonoBehaviour
-{
+{   
+	[SerializeField]
+	PlayerPickup pickup;
 	[SerializeField]
 	GameObject root;
 	[SerializeField]
@@ -212,17 +214,24 @@ public class playerStates : MonoBehaviour
 		if(armed && attackAction.WasPerformedThisFrame()){
 			firing = true;
 		}
-	    
+		if(!holding && interactAction.WasPerformedThisFrame()){
+			if(pickup.objectsInTriggerSpace.Count > 0){
+				holding = true;
+				face.setStraining();			
+			}
+
+		}
+		else if(holding && interactAction.WasPerformedThisFrame()){
+			holding = false;
+			face.setBase();
+		}
 		if(holding && attackAction.WasPerformedThisFrame()){
 			throwing = true;
 			Invoke("ResetThrowing", 1f);
 			holding = false;
 			face.setBase();
 		}
-		else if(holding && interactAction.WasPerformedThisFrame()){
-			holding = false;
-			face.setBase();
-		}
+
         
     }
 }

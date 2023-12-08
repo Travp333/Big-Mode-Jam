@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 //this script will just keep track of the player's various stats and allow other scripts to access and edit them
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : MonoBehaviour, IDataPersistence
 {
     public float hp = 100;
 	//public HealthBar healthBar;
@@ -33,7 +33,16 @@ public class PlayerStats : MonoBehaviour
             }
         }
     }
+    public void LoadData(GameData data) {
+        this.hp = data.playerHp;
+        this.transform.position = data.playerPos;
+    }
+    public void SaveData(ref GameData data) {
+        data.playerHp = this.hp;
+        data.playerPos = this.transform.position;
 
+
+    }
     void Start()
     {
         //Test line to see if we can set a default start point
