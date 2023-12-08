@@ -18,7 +18,7 @@ public class EntityParent : MonoBehaviour
     Quaternion initialRotation;
     Rigidbody rb;
     BoxCollider boxCollider;
-    float placeDownGravity = -19.62f;
+	float placeDownGravity = -50f;
 
     // Start is called before the first frame update
     // Switched to awake so references work even when not active
@@ -52,27 +52,47 @@ public class EntityParent : MonoBehaviour
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         boxCollider.enabled = false;
-        rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
-    }
+        
+		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
+		gameObject.layer = 11;
+	}
+    
+	void LockCheck(){
+		if(GetComponent<Rigidbody>().velocity.magnitude < 1f){
+			//would be nice to have somr sort of snap to ground method here, if you get it leaning on something the velocity is zero and it will snap its rotation and lock floating in the ground
+			gameObject.layer = 12;
+			transform.rotation = new Quaternion (0,0,0,0);
+			GetComponent<Rigidbody>().isKinematic = true;
+		}
+		else{
+			Invoke("LockCheck", 1f);
+		}
+	}
 
     public virtual void PlaceObject(Transform newPos)
     {
         transform.SetParent(null);
         transform.position = newPos.position;
-        transform.rotation = newPos.rotation;
+	    //transform.rotation = newPos.rotation;
         boxCollider.enabled = true;
         rb.isKinematic = false; // Reenables physics
         rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
-        isBeingPickedUp = false;
+	    isBeingPickedUp = false;
+	    transform.rotation = new Quaternion (0,0,0,0);
+	    
+	    //attempts to lock the traps rigidbody in place
+	    Invoke("LockCheck", 1f);
     }
 
 	public virtual void ThrowObject(float force, Vector3 direction)
-    {
-        
+	{
         boxCollider.enabled = true;
         rb.isKinematic = false; // Reenables physics
 	    rb.AddForce(direction * force);
         transform.SetParent(null);
-        isBeingPickedUp = false;
+		isBeingPickedUp = false;
+		transform.rotation = new Quaternion (0,0,0,0);
+		gameObject.layer = 12;
+		Invoke("LockCheck", 1f);
     }
 }

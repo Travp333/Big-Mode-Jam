@@ -28,7 +28,7 @@ public class EntityTrap : EntityParent
 
     public override void PickUpObject(Transform newParent)
 	{
-		gameObject.layer = 11;
+		//gameObject.layer = 11;
 		if(isHole){
 			gameObject.transform.GetChild(1).gameObject.layer = 11;
 		}
@@ -38,7 +38,7 @@ public class EntityTrap : EntityParent
 
     public override void PlaceObject(Transform newPos)
 	{
-		gameObject.layer = 12;
+		//gameObject.layer = 12;
 		if(isHole){
 			//gameObject.transform.GetChild(1).gameObject.layer = 12;
 			this.GetComponent<BoxCollider>().enabled = true;
