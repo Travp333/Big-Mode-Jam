@@ -8,8 +8,10 @@ public class EntityTrap : EntityParent
 	BoxCollider holeCollider;
 	[SerializeField]
 	GameObject launchVolume;
-	[SerializeField]
-	bool isHammer, isBananna, isHole, isGlove, isGlue;
+/*	[SerializeField]
+	bool isHammer, isBananna, isHole, isGlove, isGlue;*/ //replaced with enum below
+	[SerializeField] TrapType Type;
+	public enum TrapType { Hammer, Banana, Hole, PunchGlove, Glue }
     public bool trapIsTriggered;
     [Tooltip("Set to -1 for infinite")]
     public int numberOfUses;
@@ -29,17 +31,22 @@ public class EntityTrap : EntityParent
     public override void PickUpObject(Transform newParent)
 	{
 		//gameObject.layer = 11;
-		if(isHole){
+		/*		if(isHole){
+					gameObject.transform.GetChild(1).gameObject.layer = 11;
+				}*/
+		if (Type == TrapType.Hole)
+		{
 			gameObject.transform.GetChild(1).gameObject.layer = 11;
 		}
-        base.PickUpObject(newParent);
+		base.PickUpObject(newParent);
         trapIsTriggered = false;
     }
 
     public override void PlaceObject(Transform newPos)
 	{
 		//gameObject.layer = 12;
-		if(isHole){
+		if(Type == TrapType.Hole)
+		{
 			//gameObject.transform.GetChild(1).gameObject.layer = 12;
 			this.GetComponent<BoxCollider>().enabled = true;
 			this.GetComponent<Animator>().SetBool("Armed", true);
@@ -70,40 +77,32 @@ public class EntityTrap : EntityParent
 		//Debug.Log(other.gameObject.name);
 		if(other.gameObject.tag == "AI"){
 			if(numberOfUses > 0){
-				numberOfUses = numberOfUses - 1;
-				
-				if(isHammer){
-					this.GetComponent<Animator>().SetBool("Triggered", true);
-					//state dont exist yet
-					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
-					//baseAi.AI.SetState(EnemyBaseAI.SmashedState, baseAi);
-					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isSmashed", true);
+				numberOfUses --;
+				EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
+
+				if (baseAi)
+                {
+					switch (Type)
+					{
+						case TrapType.Hammer:
+							baseAi.AI.SetState(EnemyBaseAI.SmashedState,baseAi);
+							break;
+						case TrapType.Glue:
+							baseAi.AI.SetState(EnemyBaseAI.gluedState, baseAi);
+							break;
+						case TrapType.Banana:
+							baseAi.AI.SetState(EnemyBaseAI.SlipState, baseAi);
+							break;
+						case TrapType.PunchGlove:
+							launchVolume.SetActive(true);
+							Invoke("DisableVolumeTrigger", .5f);
+							baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
+							break;
+						case TrapType.Hole:
+							break;
+					}
 				}
-				else if (isGlue){
-					//state dont exist yet
-					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
-					//baseAi.AI.SetState(EnemyBaseAI.StuckState, baseAi);
-				}
-				else if(isBananna){
-					this.GetComponent<Animator>().SetBool("Triggered", true);
-					EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
-					baseAi.AI.SetState(EnemyBaseAI.SlipState, baseAi);
-					//other.transform.parent.gameObject.GetComponent<Animator>().SetBool("IsSlipping", true);
-				}
-				else if(isHole){
-					Invoke("DespawnHole", 3f);
-					//state dont exist yet
-					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
-					//baseAi.AI.SetState(EnemyBaseAI.FallingState, baseAi);
-					//other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isFalling", true);
-				}
-				else if(isGlove){
-					this.GetComponent<Animator>().SetBool("Triggered", true);
-					launchVolume.SetActive(true);
-					//just get fuckin ragdolled kid lmao
-					Invoke("DisableVolumeTrigger", .5f);
-				}
-				
+
 			}
 		}
 	}

@@ -16,12 +16,19 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyLostPlayerState LostPlayerState = new EnemyLostPlayerState();
     public static EnemyStunnedState StunnedState = new EnemyStunnedState();
     public static EnemyPlayerSpottedState PlayerSpotted = new EnemyPlayerSpottedState();
-    public static EnemySlipState SlipState = new EnemySlipState();
     public static EnemyRiseState RiseState = new EnemyRiseState();
     public static EnemyDamagedState DamagedState = new EnemyDamagedState();
     public static EnemyLookAroundState LookAround = new EnemyLookAroundState();
-    public static EnemyRagdollState RagdollState = new EnemyRagdollState();
     public static EnemyPatrolState PatrolState = new EnemyPatrolState();
+
+    public static EnemyRagdollState RagdollState = new EnemyRagdollState();
+    public static EnemySlipState SlipState = new EnemySlipState();
+    public static EnemySmashedState SmashedState = new EnemySmashedState();
+    public static EnemyGluedState gluedState = new EnemyGluedState();
+    //public static EnemySlipState SlipState = new EnemySlipState();
+
+
+
 
     public NavMeshAgent Agent;
     public RagdollSwap RagdollScript;
@@ -199,6 +206,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.Agent.isStopped = true;
             //owner.PointOfInterest = owner.PlayerPosition;
             //owner.AnimationStates.susDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
@@ -225,7 +233,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            //owner.AnimationStates.susDesired = false;
+            owner.Agent.isStopped = false;
         }
     }
     public class EnemyPlayerSpottedState : EnemyBaseState
@@ -303,7 +311,7 @@ public class EnemyBaseAI : MonoBehaviour
 
         }
     }
-    public class EnemyFlattenedState : EnemyBaseState
+    public class EnemySmashedState : EnemyBaseState
     {
         public override string Name() { return "Pulverized"; }
         public override void Enter(EnemyBaseAI owner)
@@ -364,7 +372,13 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.speed = owner.EnemyData.WalkSpeed;
-            owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+            if (owner.PatrolPoints != null)
+                owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+            else
+            {
+                Debug.LogError("Must have a reference to " + owner.PatrolPoints.GetType().Name);
+                owner.AI.SetState(IdleState, owner);
+            }
             owner.Agent.stoppingDistance = 0;
             owner.GoToPointOfInterest();
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.walkHash, 0.1f);
@@ -377,12 +391,12 @@ public class EnemyBaseAI : MonoBehaviour
                 owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
                 owner.GoToPointOfInterest();
             }
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
             //owner.AnimationStates.onBackDesired = false;
             owner.Agent.stoppingDistance = owner.EnemyData.StoppingDistance;
-
         }
     }
 

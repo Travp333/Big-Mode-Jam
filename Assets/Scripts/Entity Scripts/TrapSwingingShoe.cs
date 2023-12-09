@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrapSwingingShoe : MonoBehaviour
+public class TrapSwingingShoe : EntityTrap
 {
-    // Start is called before the first frame update
-    void Start()
+    public override bool ActivateTrap(GameObject triggeredTrap)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return base.ActivateTrap(triggeredTrap);
     }
 }

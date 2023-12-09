@@ -401,6 +401,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5854716622368848200, guid: bee103ecf9cefd545964f016d370fbc8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -573,6 +578,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5854716622368848200, guid: bee103ecf9cefd545964f016d370fbc8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -651,6 +661,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5854716622368848200, guid: bee103ecf9cefd545964f016d370fbc8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -728,6 +743,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bananna (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -915,6 +935,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -987,11 +1012,7 @@ MonoBehaviour:
   pickUpTime: 0.01
   holeCollider: {fileID: 0}
   launchVolume: {fileID: 0}
-  isHammer: 0
-  isBananna: 0
-  isHole: 0
-  isGlove: 0
-  isGlue: 1
+  Type: 4
   trapIsTriggered: 0
   numberOfUses: 1
 --- !u!54 &837768481
@@ -1512,11 +1533,7 @@ MonoBehaviour:
   pickUpTime: 0.01
   holeCollider: {fileID: 63269917}
   launchVolume: {fileID: 0}
-  isHammer: 0
-  isBananna: 0
-  isHole: 1
-  isGlove: 0
-  isGlue: 0
+  Type: 2
   trapIsTriggered: 0
   numberOfUses: 0
 --- !u!54 &1448878053
@@ -1601,6 +1618,11 @@ PrefabInstance:
       propertyPath: TestPatrol
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1179106578674607780, guid: cc2fcfd3e5ebcd44e8498434a028511c,
+        type: 3}
+      propertyPath: PatrolPoints
+      value: 
+      objectReference: {fileID: 1196594450}
     - target: {fileID: 8353792663379342854, guid: cc2fcfd3e5ebcd44e8498434a028511c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1727,6 +1749,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bananna (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5854716622368848200, guid: bee103ecf9cefd545964f016d370fbc8,
         type: 3}
@@ -1923,6 +1950,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bananna (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3196,6 +3228,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3716,6 +3753,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2332587659168038746, guid: bac606d34bf6ef141bedca7f039f91f8,
+        type: 3}
+      propertyPath: Type
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4488109609452650060, guid: bac606d34bf6ef141bedca7f039f91f8,
         type: 3}
       propertyPath: m_Constraints
@@ -3844,6 +3886,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bananna
       objectReference: {fileID: 0}
+    - target: {fileID: 3972386471711788473, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: Type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5854716622368848200, guid: bee103ecf9cefd545964f016d370fbc8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -3934,10 +3981,7 @@ SceneRoots:
   - {fileID: 1438828263}
   - {fileID: 1130329154}
   - {fileID: 1725124465}
-  - {fileID: 845540057}
-  - {fileID: 6132994237273143080}
   - {fileID: 1890705482}
-  - {fileID: 3038636976763313967}
   - {fileID: 1429277261}
   - {fileID: 1713545769}
   - {fileID: 2144433954}
@@ -3957,5 +4001,8 @@ SceneRoots:
   - {fileID: 1636645249}
   - {fileID: 99718964}
   - {fileID: 1734134780}
-  - {fileID: 63269914}
   - {fileID: 1285652146}
+  - {fileID: 845540057}
+  - {fileID: 6132994237273143080}
+  - {fileID: 63269914}
+  - {fileID: 3038636976763313967}
