@@ -99,7 +99,7 @@ public class EntityTrap : EntityParent
 							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							launchVolume.SetActive(true);
 							Invoke("DisableVolumeTrigger", .5f);
-							baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
+						//baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
 							break;
 					case TrapType.Hole:
 							Invoke("DespawnHole", 3f);
