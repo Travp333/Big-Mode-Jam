@@ -84,21 +84,25 @@ public class EntityTrap : EntityParent
                 {
 					switch (Type)
 					{
-						case TrapType.Hammer:
+					case TrapType.Hammer:
+							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							baseAi.AI.SetState(EnemyBaseAI.SmashedState,baseAi);
 							break;
 						case TrapType.Glue:
 							baseAi.AI.SetState(EnemyBaseAI.gluedState, baseAi);
 							break;
-						case TrapType.Banana:
+					case TrapType.Banana:
+							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							baseAi.AI.SetState(EnemyBaseAI.SlipState, baseAi);
 							break;
-						case TrapType.PunchGlove:
+					case TrapType.PunchGlove:
+							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							launchVolume.SetActive(true);
 							Invoke("DisableVolumeTrigger", .5f);
-							baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
+						//baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
 							break;
-						case TrapType.Hole:
+					case TrapType.Hole:
+							Invoke("DespawnHole", 3f);
 							break;
 					}
 				}
