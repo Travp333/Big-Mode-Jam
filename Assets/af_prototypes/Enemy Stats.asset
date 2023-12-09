@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c600f4b776771942a748a00f5f2e74f, type: 3}
-  m_Name: Generic Enemy Stats
+  m_Name: Enemy Stats
   m_EditorClassIdentifier: 
   DetectionFOV: 80
   TurnSpeed: 20
-  WalkSpeed: 6
+  WalkSpeed: 10
   RunSpeed: 16
+  StoppingDistance: 8
   ReactionTime: 0.8
   SuspiciousTime: 5
   SurprisedDuration: 0.5

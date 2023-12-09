@@ -6,6 +6,7 @@ using StateMachine;
 
 public class EnemyBaseAI : MonoBehaviour
 {
+    public const float DISTANCETHATISCLOSEENOUGH = 8;
     #region AI
     public EnemyStateMachine AI = new EnemyStateMachine();
     public NewEnemyAnimStateController AnimationStates;
@@ -20,10 +21,14 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyDamagedState DamagedState = new EnemyDamagedState();
     public static EnemyLookAroundState LookAround = new EnemyLookAroundState();
     public static EnemyRagdollState RagdollState = new EnemyRagdollState();
+    public static EnemyPatrolState PatrolState = new EnemyPatrolState();
 
     public NavMeshAgent Agent;
     public RagdollSwap RagdollScript;
     #endregion
+    public bool TestPatrol;
+    public PatrolData PatrolPoints;
+
 
     public EnemyData EnemyData;
     public Transform EyeTransform; // Where detection raycasts originate
@@ -64,7 +69,9 @@ public class EnemyBaseAI : MonoBehaviour
         if (!PlayerTransform) PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();/*
         Debug.Log(AI);
         Debug.Log(IdleState);*/
-        AI.SetState(IdleState, this);
+        if (TestPatrol) {
+            AI.SetState(PatrolState, this);
+        } else AI.SetState(IdleState, this);
     }
     private void Update()
     {
@@ -296,6 +303,36 @@ public class EnemyBaseAI : MonoBehaviour
 
         }
     }
+    public class EnemyFlattenedState : EnemyBaseState
+    {
+        public override string Name() { return "Pulverized"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.squashedHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+        }
+    }
+    public class EnemyGluedState : EnemyBaseState
+    {
+        public override string Name() { return "Glued"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.stuckHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+        }
+    }
     public class EnemyStunnedState: EnemyBaseState
     {
         float timer = 0;
@@ -319,6 +356,36 @@ public class EnemyBaseAI : MonoBehaviour
             //owner.AnimationStates.onBackDesired = false;
         }
     }
+
+    public class EnemyPatrolState : EnemyBaseState
+    {
+        float timer = 0;
+        public override string Name() { return "Patrolling"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.speed = owner.EnemyData.WalkSpeed;
+            owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+            owner.Agent.stoppingDistance = 0;
+            owner.GoToPointOfInterest();
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.walkHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (Vector3.Distance(owner.transform.position, owner.PointOfInterest) < DISTANCETHATISCLOSEENOUGH)
+            {
+                owner.PatrolPoints.SetNextPatrolPoint();
+                owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+                owner.GoToPointOfInterest();
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            //owner.AnimationStates.onBackDesired = false;
+            owner.Agent.stoppingDistance = owner.EnemyData.StoppingDistance;
+
+        }
+    }
+
     public class EnemyRiseState : EnemyBaseState
     {
         float timer = 0;
@@ -389,12 +456,9 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public class EnemyLostPlayerState : EnemyBaseState
     {
-        const float DISTANCETHATISCLOSEENOUGH = 8;
-        float _agentStopDist;
         public override string Name() { return "Player Lost"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            _agentStopDist = owner.Agent.stoppingDistance;
             owner.Agent.stoppingDistance = 0;
             owner.Agent.speed = owner.EnemyData.RunSpeed;
 
@@ -418,7 +482,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            owner.Agent.stoppingDistance = _agentStopDist;
+            owner.Agent.stoppingDistance = owner.EnemyData.StoppingDistance;
         }
     }
     public class EnemyLookAroundState : EnemyBaseState

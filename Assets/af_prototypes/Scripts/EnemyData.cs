@@ -9,6 +9,8 @@ public class EnemyData : ScriptableObject
     public float TurnSpeed = 20;
     public float WalkSpeed = 3.5f;
     public float RunSpeed = 8;
+    [Tooltip("Navmesh Agent Stopping Distance")] 
+    public float StoppingDistance = 8;
     [Tooltip("How long this enemy will take to start chasing the player")]
     public float ReactionTime = 1;
     [Tooltip("How long this enemy will stay suspicious before losing interest")]
