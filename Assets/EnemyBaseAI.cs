@@ -191,12 +191,14 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner) {
             //owner.AnimationStates.chaseDesired = false;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
+            owner.Agent.isStopped = false;
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
             if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner) {
+            owner.Agent.isStopped = true;
         }
     }
     public class EnemySuspiciousState : EnemyBaseState
