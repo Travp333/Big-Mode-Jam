@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.AI;
 using StateMachine;
 
@@ -46,7 +47,8 @@ public class EnemyBaseAI : MonoBehaviour
 
     [HideInInspector] public Vector3 PointOfInterest;
 
-    [SerializeField ]Transform PlayerTransform;
+    [SerializeField] Transform PlayerTransform;
+    [SerializeField] playerStates PlayerStates;
     Ray _playerRay;
     RaycastHit _hit;
     Vector3 PlayerPosition {
@@ -73,16 +75,18 @@ public class EnemyBaseAI : MonoBehaviour
 
     private void Awake()
     {
-        if (!PlayerTransform) PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();/*
-        Debug.Log(AI);
-        Debug.Log(IdleState);*/
-        if (TestPatrol) {
+        if (!PlayerTransform) PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+
+        if (TestPatrol)
+        {
             AI.SetState(PatrolState, this);
-        } else AI.SetState(IdleState, this);
+        }
+        else AI.SetState(IdleState, this);
     }
     private void Update()
     {
         AI.Update(this);
+        //PlayerVisible();
     }
 
     public void GoToPlayer()
@@ -128,64 +132,99 @@ public class EnemyBaseAI : MonoBehaviour
         Physics.Linecast(EyeTransform.position, PointOfInterest, out _hit, PlayerDetectionMask);
         return Vector3.Distance(EyeTransform.position, _hit.point) >= distToPOI;
     }
+    public bool PlayerWalkingNear()
+    {
+        if (PlayerStates.moving)
+        {
+            PointOfInterest = PlayerPosition;
+
+            if (PlayerStates.walking)
+            {
+                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.WalkingFootstepDetectionRange)
+                {
+                    return true;
+                }
+            } else
+            {
+                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.RunningFootstepDetectionRange)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public bool PlayerVisible()
     {
+        _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
+        float angle = Vector3.Angle(EyeTransform.forward, _playerRay.direction);
+        if (angle > EnemyData.DetectionFOV)
+        {
+            if (DebugCommentText) DebugCommentText.text = "Player out of FOV";
+            return false;
+        }
         if (!PlayerColorChangeBehavior.Instance)
         {
             Debug.Log("No PlayerColorChangeBehavior is in the scene.");
             return false;
         }
         if (PlayerColorChangeBehavior.Instance.IsChanging) return false; // The player's invisible when changing color
-        _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
-        if (Vector3.Angle(EyeTransform.forward, _playerRay.direction) > EnemyData.DetectionFOV)
-        {
-            if (DebugCommentText) DebugCommentText.text = "Player out of FOV";
-            return false;
-        }
+        if (ScanPlayer(Vector3.up*2)) return true;
+        if (ScanPlayer(Vector3.up*6)) return true;
+        return false;
 
-        Debug.DrawLine(EyeTransform.position, PlayerPosition, Color.green);
-        if (Physics.Linecast(EyeTransform.position, PlayerPosition, out _hit, PlayerDetectionMask) && _hit.collider.tag == "Player")
+        bool ScanPlayer(Vector3 position)
         {
-            if (DebugCommentText) DebugCommentText.text = "Player Visible";
-            Debug.DrawRay(EyeTransform.position, _playerRay.direction, Color.red);
-
-            if (Physics.Raycast(EyeTransform.position, _playerRay.direction, out _hit, 100, EnvironmentDetectionMask))
+            _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position + position);
+            Debug.DrawLine(EyeTransform.position, PlayerPosition + position, Color.green);
+            if (Physics.Linecast(EyeTransform.position, PlayerPosition + position, out _hit, PlayerDetectionMask) && _hit.collider.tag == "Player")
             {
-                if (_hit.collider.tag == "Environment")
+                if (DebugCommentText) DebugCommentText.text = "Player Visible";
+
+                if (Physics.Raycast(EyeTransform.position, _playerRay.direction, out _hit, 100, EnvironmentDetectionMask))
                 {
-                    if ( PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
+
+                    Debug.DrawLine(EyeTransform.position, _hit.point, Color.red);
+                    if (_hit.collider.tag == "Environment")
                     {
-                        if (DebugCommentText) DebugCommentText.text = "Materials match!";
-                        return false;
+                        Debug.Log(_hit.collider.name + " u coord: " + _hit.textureCoord.x);
+                        if (PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
+                        {
+                            if (DebugCommentText) DebugCommentText.text = "Materials match!";
+                            return false;
+                        }
+                        else
+                        {
+                            if (DebugCommentText) DebugCommentText.text = "Materials DO NOT match";
+                            return true;
+                        }
                     }
-                    else
+                    if (_hit.collider.tag == "Unblendable")
                     {
-                        if (DebugCommentText) DebugCommentText.text = "Materials DO NOT match";
+                        if (DebugCommentText) DebugCommentText.text = "Player in front of unblendable wall";
                         return true;
                     }
                 }
-                if (_hit.collider.tag == "Unblendable")
-                {
-                    if (DebugCommentText) DebugCommentText.text = "Player in front of unblendable wall";
-                    return true;
-                }
             }
-        } else
-        {
-            if (DebugCommentText) DebugCommentText.text = "Player Not Visible";
-        }            
-        return false;
+            else
+            {
+                if (DebugCommentText) DebugCommentText.text = "Player Not Visible";
+            }
+            return false;
+        }
     }
     public void FaceObjectOfInterest()
     {
         Vector3 objectVector = PointOfInterest- transform.position;
         transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation(Vector3.Scale(objectVector, FLATVECTOR)), Time.deltaTime * EnemyData.TurnSpeed );
     }
-    private void OnDrawGizmos()
+
+    private void OnDrawGizmosSelected()
     {
-            Gizmos.DrawWireSphere(PointOfInterest, 2);
+        Gizmos.DrawWireSphere(PointOfInterest, 2);
+        Handles.Label(PointOfInterest + Vector3.up, "Point Of Interest");
     }
-    public class EnemyIdleState : EnemyBaseState
+public class EnemyIdleState : EnemyBaseState
     {
         public override string Name() { return "Idle"; }
         public override void Enter(EnemyBaseAI owner) {
@@ -196,6 +235,10 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
             if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.PlayerWalkingNear())
+            {
+                owner.AI.SetState(SuspiciousState, owner);
+            }
         }
         public override void Exit(EnemyBaseAI owner) {
             owner.Agent.isStopped = true;
@@ -209,8 +252,6 @@ public class EnemyBaseAI : MonoBehaviour
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = true;
-            //owner.PointOfInterest = owner.PlayerPosition;
-            //owner.AnimationStates.susDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
             _timer = owner.EnemyData.ReactionTime;
         }
@@ -227,7 +268,11 @@ public class EnemyBaseAI : MonoBehaviour
                 if (owner.PlayerVisible())
                 {
                     owner.AI.SetState(PlayerSpotted, owner);
-                } else
+                } else if (owner.TestPatrol)
+                {
+                    owner.AI.SetState(PatrolState, owner);
+                }
+                else 
                 {
                     owner.AI.SetState(IdleState, owner);
                 }
@@ -245,6 +290,7 @@ public class EnemyBaseAI : MonoBehaviour
         public override string Name() { return "PlayerSpotted"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.Agent.isStopped = true;
             _timer = owner.EnemyData.SurprisedDuration;
 
             //owner.AnimationStates.noticingDesired = true;
@@ -261,7 +307,7 @@ public class EnemyBaseAI : MonoBehaviour
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            //owner.AnimationStates.noticingDesired = false;
+            owner.Agent.isStopped = false;
         }
     }
     public class EnemyChaseState : EnemyBaseState
@@ -379,6 +425,7 @@ public class EnemyBaseAI : MonoBehaviour
             else
             {
                 Debug.LogError("Must have a reference to " + owner.PatrolPoints.GetType().Name);
+                owner.TestPatrol = false;
                 owner.AI.SetState(IdleState, owner);
             }
             owner.Agent.stoppingDistance = 0;
@@ -394,6 +441,7 @@ public class EnemyBaseAI : MonoBehaviour
                 owner.GoToPointOfInterest();
             }
             if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.PlayerWalkingNear()) owner.AI.SetState(SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -537,7 +585,11 @@ public class EnemyBaseAI : MonoBehaviour
             }
             else
             {
-                owner.AI.SetState(IdleState, owner);
+                if (owner.TestPatrol)
+                {
+                    owner.AI.SetState(PatrolState, owner);
+                }
+                else owner.AI.SetState(IdleState, owner);
             }
             if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
         }
