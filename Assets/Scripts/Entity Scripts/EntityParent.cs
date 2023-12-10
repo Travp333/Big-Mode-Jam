@@ -9,6 +9,12 @@ using UnityEngine;
 /// </summary>
 public class EntityParent : MonoBehaviour
 {
+	public void SnapRotationToDirection(){
+		Vector3 player2Pointer = ProjectDirectionOnPlane(CustomGravity.GetUpAxis(transform.position), CustomGravity.GetUpAxis(transform.position));
+		Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
+		Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(player2Pointer, gravity), gravity);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, 99999f * Time.deltaTime);
+	}
     public bool canBePickedUp;
     [SerializeField] float pickUpTime;
 
@@ -31,7 +37,8 @@ public class EntityParent : MonoBehaviour
 
     // -almost_friday: setting the trap's parent to the player alone should make this unnecessary 
     public virtual void Update()
-    {
+	{
+		//Debug.Log(GetComponent<Rigidbody>().velocity.magnitude);
         if (isBeingPickedUp)
         {
             beingPickedUpTime += Time.deltaTime;
@@ -50,12 +57,17 @@ public class EntityParent : MonoBehaviour
         isBeingPickedUp = true;
         beingPickedUpTime = 0;
         initialPosition = transform.position;
-        initialRotation = transform.rotation;
+		SnapRotationToDirection();
         boxCollider.enabled = false;
         
 		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
 		gameObject.layer = 11;
 	}
+	
+	void ResetLayer(){
+		gameObject.layer = 12;
+	}
+	/*
     
 	void LockCheck(){
 		if(GetComponent<Rigidbody>().velocity.magnitude < 1f){
@@ -68,31 +80,40 @@ public class EntityParent : MonoBehaviour
 			Invoke("LockCheck", 1f);
 		}
 	}
+	*/
 
     public virtual void PlaceObject(Transform newPos)
     {
         transform.SetParent(null);
         transform.position = newPos.position;
 	    //transform.rotation = newPos.rotation;
+	    SnapRotationToDirection();
+	    //transform.rotation = new Quaternion (0,0,0,0);
         boxCollider.enabled = true;
         rb.isKinematic = false; // Reenables physics
         rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
 	    isBeingPickedUp = false;
-	    transform.rotation = new Quaternion (0,0,0,0);
+	    Invoke("ResetLayer", 1f);
+	    //gameObject.layer = 12;
 	    
 	    //attempts to lock the traps rigidbody in place
-	    Invoke("LockCheck", 1f);
+	    //Invoke("LockCheck", 1f);
     }
 
 	public virtual void ThrowObject(float force, Vector3 direction)
 	{
-        boxCollider.enabled = true;
-        rb.isKinematic = false; // Reenables physics
+		transform.SetParent(null);
+		SnapRotationToDirection();
+		//transform.rotation = new Quaternion (0,0,0,0);
+		boxCollider.enabled = true;
+		rb.isKinematic = false; // Reenables physics
 	    rb.AddForce(direction * force);
-        transform.SetParent(null);
 		isBeingPickedUp = false;
-		transform.rotation = new Quaternion (0,0,0,0);
-		gameObject.layer = 12;
-		Invoke("LockCheck", 1f);
-    }
+		Invoke("ResetLayer", 1f);
+		//gameObject.layer = 12;
+		//Invoke("LockCheck", 1f);
+	}
+	Vector3 ProjectDirectionOnPlane (Vector3 direction, Vector3 normal) {
+		return (direction - normal * Vector3.Dot(direction, normal)).normalized;
+	}
 }

@@ -9,7 +9,7 @@ public class EntityTrap : EntityParent
 	[SerializeField]
 	GameObject launchVolume;
 	[SerializeField]
-	bool isHammer, isBananna, isHole, isGlove, isGlue;
+	public bool isHammer, isBananna, isHole, isGlove, isGlue;
     public bool trapIsTriggered;
     [Tooltip("Set to -1 for infinite")]
     public int numberOfUses;
@@ -80,6 +80,7 @@ public class EntityTrap : EntityParent
 					other.transform.parent.gameObject.GetComponent<Animator>().SetBool("isSmashed", true);
 				}
 				else if (isGlue){
+					this.GetComponent<Rigidbody>().isKinematic = true;
 					//state dont exist yet
 					//EnemyBaseAI baseAi = other.transform.parent.gameObject.GetComponent<EnemyBaseAI>();
 					//baseAi.AI.SetState(EnemyBaseAI.StuckState, baseAi);
