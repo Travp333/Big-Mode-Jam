@@ -51,7 +51,8 @@ public class EntityParent : MonoBehaviour
 
     public virtual void PickUpObject(Transform newParent)
 	{
-		
+		CancelInvoke();
+		//Debug.Log("testing");
         transform.SetParent(newParent);
         //transform.position = newParent.position; // Surpy: Taking this out so it smooth transitions into picking to match closer to animation time
         isBeingPickedUp = true;
@@ -94,6 +95,7 @@ public class EntityParent : MonoBehaviour
         rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
 	    isBeingPickedUp = false;
 	    Invoke("ResetLayer", 1f);
+	    
 	    //gameObject.layer = 12;
 	    
 	    //attempts to lock the traps rigidbody in place

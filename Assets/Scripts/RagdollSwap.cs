@@ -135,7 +135,7 @@ public class RagdollSwap : MonoBehaviour
 	}
 	protected void OnCollisionEnter(Collision collisionInfo)
 	{
-		Debug.Log(collisionInfo.gameObject.name);
+		//Debug.Log(collisionInfo.gameObject.name);
 		if(collisionInfo.gameObject.tag == "Player"){
 			if(collisionInfo.gameObject.GetComponent<playerStates>() != null){
 				if(collisionInfo.gameObject.GetComponent<playerStates>().rolling){

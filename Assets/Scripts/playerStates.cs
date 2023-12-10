@@ -101,7 +101,7 @@ public class playerStates : MonoBehaviour
 	IEnumerator StartCrouch()
 	{
 		yield return new WaitForSeconds(doublePressTime);
-		Debug.Log("Croumch" + (Time.time - lastPressTime));
+		//Debug.Log("Croumch" + (Time.time - lastPressTime));
 		rolling = false;
 		if(crouching){
 			UnCrouch();

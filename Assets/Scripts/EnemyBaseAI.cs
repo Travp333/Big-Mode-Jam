@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -187,7 +187,7 @@ public class EnemyBaseAI : MonoBehaviour
                     Debug.DrawLine(EyeTransform.position, _hit.point, Color.red);
                     if (_hit.collider.tag == "Environment")
                     {
-                        Debug.Log(_hit.collider.name + " u coord: " + _hit.textureCoord.x);
+	                    //Debug.Log(_hit.collider.name + " u coord: " + _hit.textureCoord.x);
                         if (PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
                         {
                             if (DebugCommentText) DebugCommentText.text = "Materials match!";
