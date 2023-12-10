@@ -8,7 +8,7 @@ public class PlayerColorChangeBehavior : MonoBehaviour
     public CanvasManager Canvas;
 
 	public SkinnedMeshRenderer mesh;
-    public bool IsBlack { get; private set; } = true; // true for black, false for white
+    public bool IsBlack { get; private set; } = false; // true for black, false for white
     public bool IsChanging{ get; private set; } = false; // true for black, false for white
     public float ColorTransitionTime = 0.3f;
 

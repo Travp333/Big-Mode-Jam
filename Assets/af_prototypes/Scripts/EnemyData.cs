@@ -9,6 +9,12 @@ public class EnemyData : ScriptableObject
     public float TurnSpeed = 20;
     public float WalkSpeed = 3.5f;
     public float RunSpeed = 8;
+    [Tooltip("Navmesh Agent Stopping Distance")] 
+    public float StoppingDistance = 8;
+    [Tooltip("How far away the enemy will detect a running player")]
+    public float RunningFootstepDetectionRange = 50;
+    [Tooltip("How far away the enemy will detect a walking player")]
+    public float WalkingFootstepDetectionRange = 10;
     [Tooltip("How long this enemy will take to start chasing the player")]
     public float ReactionTime = 1;
     [Tooltip("How long this enemy will stay suspicious before losing interest")]
@@ -27,4 +33,5 @@ public class EnemyData : ScriptableObject
     public float DistractionRadius = 25;
     [Tooltip("How far away a slingshot projectile will alert this guy without the hit point being visible")]
     public float DistractionImmediateDetectionRadius = 6;
+
 }
