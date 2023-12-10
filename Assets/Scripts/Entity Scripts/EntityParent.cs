@@ -9,12 +9,8 @@ using UnityEngine;
 /// </summary>
 public class EntityParent : MonoBehaviour
 {
-	public void SnapRotationToDirection(){
-		Vector3 player2Pointer = ProjectDirectionOnPlane(CustomGravity.GetUpAxis(transform.position), CustomGravity.GetUpAxis(transform.position));
-		Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
-		Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(player2Pointer, gravity), gravity);
-		transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, 99999f * Time.deltaTime);
-	}
+	[SerializeField]
+	public bool isPickedUp;
     public bool canBePickedUp;
     [SerializeField] float pickUpTime;
 
@@ -25,11 +21,25 @@ public class EntityParent : MonoBehaviour
     Rigidbody rb;
     BoxCollider boxCollider;
 	float placeDownGravity = -50f;
-
+	
+	UpdateRotation player;
+	
+	public void SnapRotationToDirection(){
+		Vector3 player2Pointer = ProjectDirectionOnPlane(player.transform.forward, CustomGravity.GetUpAxis(transform.position));
+		Vector3 gravity = CustomGravity.GetUpAxis(this.transform.position);
+		Quaternion toRotation = Quaternion.LookRotation(ProjectDirectionOnPlane(player2Pointer, gravity), gravity);
+		transform.rotation = Quaternion.RotateTowards (transform.rotation, toRotation, 99999f * Time.deltaTime);
+	}
     // Start is called before the first frame update
     // Switched to awake so references work even when not active
     public virtual void Awake()
-    {
+	{
+		foreach( GameObject g in GameObject.FindGameObjectsWithTag("Player")){
+			if(g.GetComponent<UpdateRotation>() != null){
+				player = g.GetComponent<UpdateRotation>();
+			}
+		}
+		
         beingPickedUpTime = 0;
         rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
@@ -60,7 +70,7 @@ public class EntityParent : MonoBehaviour
         initialPosition = transform.position;
 		SnapRotationToDirection();
         boxCollider.enabled = false;
-        
+		isPickedUp = true;
 		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
 		gameObject.layer = 11;
 	}
@@ -95,7 +105,7 @@ public class EntityParent : MonoBehaviour
         rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
 	    isBeingPickedUp = false;
 	    Invoke("ResetLayer", 1f);
-	    
+	    isPickedUp = false;
 	    //gameObject.layer = 12;
 	    
 	    //attempts to lock the traps rigidbody in place
@@ -114,6 +124,7 @@ public class EntityParent : MonoBehaviour
 		Invoke("ResetLayer", 1f);
 		//gameObject.layer = 12;
 		//Invoke("LockCheck", 1f);
+		isPickedUp = false;
 	}
 	Vector3 ProjectDirectionOnPlane (Vector3 direction, Vector3 normal) {
 		return (direction - normal * Vector3.Dot(direction, normal)).normalized;

@@ -215,7 +215,7 @@ public class playerStates : MonoBehaviour
 			firing = true;
 		}
 		if(!holding && interactAction.WasPerformedThisFrame()){
-			if(pickup.objectsInTriggerSpace.Count > 0){
+			if(pickup.objectsInTriggerSpace.Count > 0 && !aiming && !armed){
 				holding = true;
 				face.setStraining();			
 			}

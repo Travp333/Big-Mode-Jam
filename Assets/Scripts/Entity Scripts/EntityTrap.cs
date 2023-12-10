@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EntityTrap : EntityParent
 {
+	//[SerializeField]
+	//public bool isPickedUp;
 	[SerializeField]
 	BoxCollider holeCollider;
 	[SerializeField]
@@ -35,6 +37,7 @@ public class EntityTrap : EntityParent
 		{
 			gameObject.transform.GetChild(1).gameObject.layer = 11;
 		}
+		//isPickedUp = true;
 		base.PickUpObject(newParent);
         trapIsTriggered = false;
     }
@@ -51,9 +54,10 @@ public class EntityTrap : EntityParent
 			this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX |RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			canBePickedUp = false;
 		}
+		//isPickedUp = false;
         base.PlaceObject(newPos);
         trapIsTriggered = true;
-    }
+	}
     public virtual bool ActivateTrap(GameObject triggeredTrap) // returns false if the trap should be destroyed
     {
         if (!trapIsTriggered || numberOfUses == 0)

@@ -60,9 +60,11 @@ public class RagdollSwap : MonoBehaviour
     }
 	public void StartRagdoll(){
 		if(!ragdollBlock){
+			this.transform.parent.gameObject.tag = "BeltIgnore";
 			BaseEnemy.GetComponent<Animator>().enabled = false;
 			BaseEnemy.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
 			Ragdoll.GetComponent<Animator>().enabled = false;
+			ragdollRig.tag = "ragdoll";
 			ragdollRig.SetActive(true);
 			baseRig.SetActive(false);
 			foreach(SkinnedMeshRenderer s in BaseMeshes){
@@ -98,8 +100,11 @@ public class RagdollSwap : MonoBehaviour
 	}
 
 	public void RevertRagdoll(){
-		if(RagdollPelvis.velocity.magnitude < 5f){
-
+		//temporarily removing the magnitude check so that the ragdoll will just stand up no matter what
+		//if(RagdollPelvis.velocity.magnitude < 5f){
+			this.transform.parent.gameObject.tag = "AI";
+			gameObject.tag = "AI";
+			ragdollRig.tag = "BeltIgnore";
 			ragdollRig.SetActive(false);
 			BaseEnemy.transform.position = RagdollPelvis.transform.position;
 			Ragdoll.transform.position = this.transform.position;
@@ -117,7 +122,7 @@ public class RagdollSwap : MonoBehaviour
 				s.enabled = false;
 			}
 			GetComponent<CapsuleCollider>().enabled = true;
-			gameObject.tag = "AI";
+			
 ;
 			//BaseEnemy.GetComponent<Animator>().Play("Get Up"); // Gets called in RiseState
 
@@ -127,10 +132,10 @@ public class RagdollSwap : MonoBehaviour
 			//	g.GetComponent<Animator>().
 			//}
 			//	Destroy(BaseEnemy);
-		}
-		else{
-			Invoke("RevertRagdoll", 3f);
-		}
+		//}
+		//else{
+			//	Invoke("RevertRagdoll", 3f);
+			//}
 
 	}
 	protected void OnCollisionEnter(Collision collisionInfo)
