@@ -35,9 +35,9 @@ public class playerStates : MonoBehaviour
 	[SerializeField]
 	public FaceTexController face;
 	[SerializeField]
-	GameObject standingHitbox;
+	public GameObject standingHitbox;
 	[SerializeField]
-	GameObject crouchingHitbox;
+	public GameObject crouchingHitbox;
 	Movement move;
 	public bool walking;
 	public bool crouching;
@@ -48,6 +48,7 @@ public class playerStates : MonoBehaviour
 	public bool aiming;
 	public bool armed;
 	public bool firing;
+	public bool choked;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
@@ -118,7 +119,7 @@ public class playerStates : MonoBehaviour
     // Update is called once per frame
     void Update()
 	{
-		if(armAction.WasPressedThisFrame() && move.OnGround && !holding){
+		if(armAction.WasPressedThisFrame() && move.OnGround && !holding && !choked){
 			
 			if(armed){
 				armed = false;
@@ -135,7 +136,7 @@ public class playerStates : MonoBehaviour
 			}
 		}
 		
-		if(aimAction.WasPressedThisFrame() && !holding && !rolling){
+		if(aimAction.WasPressedThisFrame() && !holding && !rolling  && !choked){
 			if(FPSorTPS){
 				aiming = true;
 				//Swap to first person!
@@ -191,7 +192,7 @@ public class playerStates : MonoBehaviour
 		if(holding){
 			face.setStraining();
 		}
-		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding){
+		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding  && !choked){
 			if((Time.time - lastPressTime <= doublePressTime)&& moving && !aiming){
 				StopCoroutine("StartCrouch");
 				Debug.Log("ROLL!");
@@ -205,27 +206,27 @@ public class playerStates : MonoBehaviour
 				StartCoroutine("StartCrouch");
 			}
 		}
-		if(walkAction.IsPressed()){
+		if(walkAction.IsPressed() && !choked){
 			walking = true;
 		}
 		else{
 			walking = false;
 		}
-		if(armed && attackAction.WasPerformedThisFrame()){
+		if(armed && attackAction.WasPerformedThisFrame() && !choked){
 			firing = true;
 		}
-		if(!holding && interactAction.WasPerformedThisFrame()){
+		if(!holding && interactAction.WasPerformedThisFrame()  && !choked){
 			if(pickup.objectsInTriggerSpace.Count > 0 && !aiming && !armed){
 				holding = true;
 				face.setStraining();			
 			}
 
 		}
-		else if(holding && interactAction.WasPerformedThisFrame()){
+		else if(holding && interactAction.WasPerformedThisFrame() && !choked){
 			holding = false;
 			face.setBase();
 		}
-		if(holding && attackAction.WasPerformedThisFrame()){
+		if(holding && attackAction.WasPerformedThisFrame() && !choked){
 			throwing = true;
 			Invoke("ResetThrowing", 1f);
 			holding = false;

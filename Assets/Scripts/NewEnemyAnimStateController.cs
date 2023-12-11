@@ -1,9 +1,13 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class NewEnemyAnimStateController : MonoBehaviour
 {
+	[SerializeField]
+	GameObject HandVolume;
+	//[SerializeField]
+	GameObject player;
     public Animator Anim;
     public int walkHash { get; private set; }
     public int idleHash { get; private set; }
@@ -18,9 +22,26 @@ public class NewEnemyAnimStateController : MonoBehaviour
     public int susHash { get; private set; }
     public int susWalkHash { get; private set; }
     public int searchingHash { get; private set; }
-
+	
+	public void SpawnVolume(){
+		HandVolume.GetComponent<GrabPlayer>().EnableVolume();
+		//HandVolume.SetActive(true);
+	}
+	public void DespawnVolume(){
+		HandVolume.GetComponent<GrabPlayer>().DisableVolume();
+		//HandVolume.SetActive(false);
+	}
+	public void ReleasePlayer(){
+		HandVolume.GetComponent<GrabPlayer>().ReleasePlayer(player);
+	}
+	
     private void Awake()
-    {
+	{
+		foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player")){
+			if(g.GetComponent<playerStates>()!= null){
+				player = g;
+			}
+		}
         if (Anim)
         {
             walkHash = Animator.StringToHash("Walk");

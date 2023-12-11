@@ -389,6 +389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aea7bba569602849ae08bb9a27b3a0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  neck: {fileID: 7057391532759809383}
   feet: {fileID: 7006723991508690684}
   jumpAction:
     m_Name: Jump
@@ -3632,6 +3633,12 @@ SkinnedMeshRenderer:
 --- !u!1 &5745425258105685870 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8513859187771203891, guid: 8bec97738c3e8c34e826267c5c35ad60,
+    type: 3}
+  m_PrefabInstance: {fileID: 4151355711130838621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7057391532759809383 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6371590938590010170, guid: 8bec97738c3e8c34e826267c5c35ad60,
     type: 3}
   m_PrefabInstance: {fileID: 4151355711130838621}
   m_PrefabAsset: {fileID: 0}

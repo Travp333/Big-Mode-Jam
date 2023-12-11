@@ -6,6 +6,10 @@ public class Movement : MonoBehaviour {
 	//This script controls the movement of the character. Adapted from https://catlikecoding.com/unity/tutorials/movement/ by Travis Parks
 	playerStates state;
 	[SerializeField]
+	public GameObject center;
+	[SerializeField]
+	public GameObject neck;
+	[SerializeField]
 	GameObject feet;
 	public InputAction jumpAction;
 	//reference to the script that controls limits on your movement speed
