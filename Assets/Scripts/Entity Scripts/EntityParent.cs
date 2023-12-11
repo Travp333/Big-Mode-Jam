@@ -19,7 +19,8 @@ public class EntityParent : MonoBehaviour
     Vector3 initialPosition;
     Quaternion initialRotation;
     Rigidbody rb;
-    BoxCollider boxCollider;
+	BoxCollider boxCollider;
+	MeshCollider meshCollider;
 	float placeDownGravity = -50f;
 	
 	UpdateRotation player;
@@ -41,8 +42,13 @@ public class EntityParent : MonoBehaviour
 		}
 		
         beingPickedUpTime = 0;
-        rb = GetComponent<Rigidbody>();
-        boxCollider = GetComponent<BoxCollider>();
+		rb = GetComponent<Rigidbody>();
+		if(GetComponent<BoxCollider>() != null){
+			boxCollider = GetComponent<BoxCollider>();
+		}
+		else if(GetComponent<MeshCollider>() != null){
+			meshCollider = GetComponent<MeshCollider>();
+		}
     }
 
     // -almost_friday: setting the trap's parent to the player alone should make this unnecessary 
@@ -69,7 +75,12 @@ public class EntityParent : MonoBehaviour
         beingPickedUpTime = 0;
         initialPosition = transform.position;
 		SnapRotationToDirection();
-        boxCollider.enabled = false;
+		if(boxCollider != null){
+			boxCollider.enabled = false;
+		}
+		else if(meshCollider != null){
+			meshCollider.enabled = false;
+		}
 		isPickedUp = true;
 		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
 		gameObject.layer = 11;
@@ -100,7 +111,12 @@ public class EntityParent : MonoBehaviour
 	    //transform.rotation = newPos.rotation;
 	    SnapRotationToDirection();
 	    //transform.rotation = new Quaternion (0,0,0,0);
-        boxCollider.enabled = true;
+	    if(boxCollider != null){
+		    boxCollider.enabled = true;
+	    }
+	    else if(meshCollider != null){
+		    meshCollider.enabled = true;
+	    }
         rb.isKinematic = false; // Reenables physics
         rb.velocity = new Vector3(0, placeDownGravity, 0); // Surpy: when placing it floats down, this gives it a little force going down, it feels better
 	    isBeingPickedUp = false;
@@ -117,7 +133,12 @@ public class EntityParent : MonoBehaviour
 		transform.SetParent(null);
 		SnapRotationToDirection();
 		//transform.rotation = new Quaternion (0,0,0,0);
-		boxCollider.enabled = true;
+		if(boxCollider != null){
+			boxCollider.enabled = true;
+		}
+		else if(meshCollider != null){
+			meshCollider.enabled = true;
+		}
 		rb.isKinematic = false; // Reenables physics
 	    rb.AddForce(direction * force);
 		isBeingPickedUp = false;

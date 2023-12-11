@@ -105,12 +105,19 @@ public class ConveyorBelt : MonoBehaviour
                 //Debug.Log("REMOVED VIA DESTRUCTION");
 	            //     pushingObjects.Remove(pushingObjects[i].gameObject);
 		         //}
-            
-	        if(pushingObjects[i].tag == "Trap" && pushingObjects[i].GetComponent<EntityParent>().isPickedUp){
-		        //Debug.Log("REMOVED VIA PICKUP");
-	            pushingObjects.Remove(pushingObjects[i].gameObject);
-		     }
-	        if(pushingObjects[i].tag == "BeltIgnore"){
+	        if(pushingObjects[i].GetComponent<EntityParent>() != null){
+		        if(pushingObjects[i].GetComponent<EntityParent>().isPickedUp){
+			        //Debug.Log("REMOVED VIA PICKUP");
+		            pushingObjects.Remove(pushingObjects[i].gameObject);
+		        }
+		        else if(speed != 0){
+			        pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
+		        }
+		        if(spinAmount != 0){
+			        pushingObjects[i].transform.Rotate(new Vector3(0f, Time.deltaTime * spinAmount), Space.World);
+		        }
+	        }
+	        else if(pushingObjects[i].tag == "BeltIgnore"){
 		        //Debug.Log("REMOVED VIA RAGDOLL");
 			    pushingObjects.Remove(pushingObjects[i].gameObject);
 	        }

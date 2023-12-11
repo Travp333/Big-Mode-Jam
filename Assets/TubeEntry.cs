@@ -5,6 +5,8 @@ using UnityEngine;
 public class TubeEntry : MonoBehaviour
 {
 	[SerializeField]
+	GameObject safeZoneVolume;
+	[SerializeField]
 	GameObject tubeExit;
 	[SerializeField]
 	GameObject safeRoom;
@@ -31,16 +33,23 @@ public class TubeEntry : MonoBehaviour
 		tubeExit.transform.parent.GetComponent<Animator>().SetBool("Exit", false);
 	}
 	public void SetCamToExit(){
+		
 		Orbitcam.focus = tubeExit.transform;
 		Invoke("SpawnAtExit", 2f);
 	}
+	public void DisableHitbox(){
+		safeZoneVolume.GetComponent<SafeRoomHitBox>().DisableHitbox();
+	}
 	public void SpawnAtExit(){
+		safeZoneVolume.GetComponent<SafeRoomHitBox>().EnableHitbox(tubeExit.transform);
+		player.GetComponent<Movement>().unblockMovement();
+		player.transform.position = tubeExit.transform.position;
 		tubeExit.transform.parent.GetComponent<Animator>().SetBool("Exit", true);
 		//this.GetComponent<Animator>().SetBool("Exit", true);
 		Invoke("ResetExit", .1f);
-		player.transform.position = tubeExit.transform.position;
 		Orbitcam.focus = player.GetComponent<Movement>().center.transform;
-		player.GetComponent<Movement>().unblockMovement();
+		Invoke("DisableHitbox", 1f);
+		
 	}
 	// OnTriggerEnter is called when the Collider other enters the trigger.
 	protected void OnTriggerEnter(Collider other)

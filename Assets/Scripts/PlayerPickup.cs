@@ -19,7 +19,12 @@ public class PlayerPickup : MonoBehaviour
 	public List<GameObject> objectsInTriggerSpace;
     GameObject holdingObject;
     float chargeThrow;
-    bool cancelThrow;
+	bool cancelThrow;
+	[SerializeField]
+	float keyRadius = 5f;
+	[SerializeField]
+	LayerMask mask;
+	Collider[] colliders;
     // Start is called before the first frame update
     void Start()
 	{
@@ -58,11 +63,11 @@ public class PlayerPickup : MonoBehaviour
 				holdingObject = obj;
 			}
 		}
-		if(holdingObject.GetComponent<EntityTrap>() != null){
-			holdingObject.GetComponent<EntityTrap>().PickUpObject(pickupHoldingParent);
+		if(holdingObject.GetComponent<EntityParent>() != null){
+			holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
 		}
-		else if(holdingObject.transform.parent.GetComponent<EntityTrap>() != null){
-			holdingObject.transform.parent.GetComponent<EntityTrap>().PickUpObject(pickupHoldingParent);
+		else if(holdingObject.transform.parent.GetComponent<EntityParent>() != null){
+			holdingObject.transform.parent.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
 		}
 		isCarryingObject = true;
 		FindObjectOfType<playerStates>().holding = true;
@@ -72,14 +77,37 @@ public class PlayerPickup : MonoBehaviour
 	public void PutDown(){
 		isCarryingObject = false;
 		//RugTrap!
-		if(holdingObject.GetComponent<EntityTrap>()!= null){
-			if(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole){
-				holdingObject.GetComponent<EntityTrap>().PlaceObject(placeObjectPosition);
-				holdingObject.GetComponent<EntityTrap>().canBePickedUp = false;
+		if(holdingObject.GetComponent<EntityParent>()!= null){
+			if(holdingObject.GetComponent<EntityTrap>()!= null){
+				if(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole){
+					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+					holdingObject.GetComponent<EntityParent>().canBePickedUp = false;
+				}
+				else if(!(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole)){
+					//objectsInTriggerSpace.Add(holdingObject);
+					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+				}
 			}
-			else if(!(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole)){
-				//objectsInTriggerSpace.Add(holdingObject);
-				holdingObject.GetComponent<EntityTrap>().PlaceObject(placeObjectPosition);
+			else{
+				if(holdingObject.tag == "Key"){
+					Debug.Log("Droped Key");
+					colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
+					foreach(Collider hit in colliders){
+						if(hit.gameObject.GetComponent<Lock>()){
+							hit.gameObject.GetComponent<Lock>().Unlock();
+							if(objectsInTriggerSpace.Contains(holdingObject)){
+								objectsInTriggerSpace.Remove(holdingObject);
+							}
+							Destroy(holdingObject);
+						}
+					}
+					if(holdingObject != null){
+						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+					}
+				}
+				else{
+					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+				}
 			}
 		}
 		else{
@@ -108,30 +136,31 @@ public class PlayerPickup : MonoBehaviour
 	protected void OnTriggerStay(Collider other)
 	{
 		if(other.transform.parent != null){
-			if(other.transform.parent.gameObject.GetComponent<EntityTrap>()){
-				if(other.transform.parent.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+			if(other.transform.parent.gameObject.GetComponent<EntityParent>()){
+				if(other.transform.parent.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					if(!objectsInTriggerSpace.Contains(other.transform.parent.gameObject)){
 						objectsInTriggerSpace.Add(other.transform.parent.gameObject);
 					}
 				}
 			}
-			if(other.transform.parent.gameObject.GetComponent<EntityTrap>()){
-				if(!other.transform.parent.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+			if(other.transform.parent.gameObject.GetComponent<EntityParent>()){
+				if(!other.transform.parent.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					if(objectsInTriggerSpace.Contains(other.transform.parent.gameObject)){
 						objectsInTriggerSpace.Remove(other.transform.parent.gameObject);
 					}
 				}
 			}
 		}
-		if(other.gameObject.GetComponent<EntityTrap>())
+		if(other.gameObject.GetComponent<EntityParent>())
 		{
+			//Debug.Log("AGHHHHHH");
 			if(!objectsInTriggerSpace.Contains(other.gameObject)){
-				if(other.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+				if(other.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					objectsInTriggerSpace.Add(other.gameObject);
 				}
 			}
 			if(objectsInTriggerSpace.Contains(other.gameObject)){
-				if(!other.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+				if(!other.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					objectsInTriggerSpace.Remove(other.gameObject);
 				}
 			}
@@ -146,18 +175,18 @@ public class PlayerPickup : MonoBehaviour
     private void OnTriggerEnter(Collider other)
 	{
 		if(other.transform.parent != null){
-			if(other.transform.parent.gameObject.GetComponent<EntityTrap>()){
-				if(other.transform.parent.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+			if(other.transform.parent.gameObject.GetComponent<EntityParent>()){
+				if(other.transform.parent.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					if(!objectsInTriggerSpace.Contains(other.transform.parent.gameObject)){
 						objectsInTriggerSpace.Add(other.transform.parent.gameObject);
 					}
 				}
 			}
 		}
-		if(other.gameObject.GetComponent<EntityTrap>())
+		if(other.gameObject.GetComponent<EntityParent>())
 		{
 			if(!objectsInTriggerSpace.Contains(other.gameObject)){
-				if(other.gameObject.GetComponent<EntityTrap>().canBePickedUp){
+				if(other.gameObject.GetComponent<EntityParent>().canBePickedUp){
 					objectsInTriggerSpace.Add(other.gameObject);
 				}
 			}
