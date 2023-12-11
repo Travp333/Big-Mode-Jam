@@ -59,8 +59,10 @@ public class playerStates : MonoBehaviour
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
+	[SerializeField]
 	// Accessed by slingshot manager -almost_friday
-	public bool FPSorTPS { get; private set; } = true; // True for first person
+	public bool FPSorTPS = true; // True for third person
+	public bool FPSBlocked;
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -99,6 +101,9 @@ public class playerStates : MonoBehaviour
 	public void ResetFiring(){
 		firing = false;
 	}
+	public void SetFPSBlock(bool plug){
+		FPSBlocked = plug;
+	}
 	IEnumerator StartCrouch()
 	{
 		yield return new WaitForSeconds(doublePressTime);
@@ -111,14 +116,46 @@ public class playerStates : MonoBehaviour
 			Crouch();
 		}
 	}
-    void Start()
-    {
-        
-    }
+	public void ForceThirdPerson(){
+		//swap to third person!
+		//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = true;
+		aiming = false;
+		FirstPersonHandsMesh.enabled = false;
+		FirstPersonSlingMesh.enabled = false;
+		ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().UnBlockCamInput();
+		ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().ResetCameraAngles();
+		rot.enabled = true;
+		ThirdPersonBaseMesh.enabled=true;
+		ThirdPersonFaceMesh.enabled=true;
+		ThirdPersonSashMesh.enabled=true;
+		if(armed){
+			ThirdPersonSlingMesh.enabled=true;
+		}
+		ThirdPersonCam.enabled=true;
+		ThirdPersonCam.GetComponent<AudioListener>().enabled = true;
+		FirstPersonCam.enabled=false;
+		FirstPersonHandCam.enabled = false;
+		FirstPersonCam.GetComponent<AudioListener>().enabled = false;
+		move.playerInputSpace = ThirdPersonCam.transform;
+		FPSorTPS = true;
+		fpscamscript.enabled = false;
+		ThirdPersonCam.transform.parent.parent = root.transform;
+	}
 
     // Update is called once per frame
     void Update()
 	{
+		//if(choked){
+			//	if(FPSorTPS = false){
+				//		ForceThirdPerson();
+				//		FPSBlocked = true;
+				//	}
+			//}
+		//else{
+			//	if(FPSBlocked = true){
+				//		FPSBlocked = false;
+				//	}
+			//}
 		if(armAction.WasPressedThisFrame() && move.OnGround && !holding && !choked){
 			
 			if(armed){
@@ -136,7 +173,7 @@ public class playerStates : MonoBehaviour
 			}
 		}
 		
-		if(aimAction.WasPressedThisFrame() && !holding && !rolling  && !choked){
+		if(aimAction.WasPressedThisFrame() && !holding && !rolling  && !choked && !FPSBlocked){
 			if(FPSorTPS){
 				aiming = true;
 				//Swap to first person!

@@ -105,21 +105,20 @@ public class ConveyorBelt : MonoBehaviour
 				pushingObjects.Remove(other.gameObject.transform.parent.parent.parent.parent.parent.parent.parent.gameObject);
 			}
 		}
-    }
+	}
+	public void EnableBelt(){
+		Debug.Log("Changing Mat");
+		mainMat.GetComponent<MeshRenderer>().material = movingMat;
+		isEnabled = true;
+	}
+	public void DisableBelt(){
+		Debug.Log("Changing Mat");
+		mainMat.GetComponent<MeshRenderer>().material = nonMovingMat;
+		isEnabled = false;
+	}
     void FixedUpdate()
 	{
-		if(isEnabled){
-			if(mainMat.GetComponent<MeshRenderer>().material != movingMat){
-				Debug.Log("Changing Mat");
-				mainMat.GetComponent<MeshRenderer>().material = movingMat;
-			}
-		}
-		else{
-			if(mainMat.GetComponent<MeshRenderer>().material != nonMovingMat){
-				Debug.Log("Changing Mat");
-				mainMat.GetComponent<MeshRenderer>().material = nonMovingMat;
-			}
-		}
+
         for (int i = 0; i < pushingObjects.Count; i++){
 	        //if (pushingObjects[i] == null){
                 //Debug.Log("REMOVED VIA DESTRUCTION");

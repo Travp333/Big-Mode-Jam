@@ -11,14 +11,21 @@ public class TubeEntry : MonoBehaviour
 	[SerializeField]
 	GameObject safeRoom;
 	OrbitCamera Orbitcam;
-	GameObject player;
+	Movement player;
 	[SerializeField]
 	
 	GameObject tubeCamSpot;
     // Start is called before the first frame update
     void Start()
-    {
-        
+	{
+		foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player")){
+			if(g.GetComponent<Movement>()!= null){
+				player = g.GetComponent<Movement>();
+			}
+			if(g.GetComponent<OrbitCamera>()!= null){
+				Orbitcam = g.GetComponent<OrbitCamera>();
+			}
+		}
     }
 
     // Update is called once per frame
@@ -49,6 +56,7 @@ public class TubeEntry : MonoBehaviour
 		Invoke("ResetExit", .1f);
 		Orbitcam.focus = player.GetComponent<Movement>().center.transform;
 		Invoke("DisableHitbox", 1f);
+		player.gameObject.GetComponent<playerStates>().SetFPSBlock(false);
 		
 	}
 	// OnTriggerEnter is called when the Collider other enters the trigger.
@@ -58,15 +66,16 @@ public class TubeEntry : MonoBehaviour
 		if(other.gameObject.tag == "Player"){
 			if(other.transform.parent.parent.gameObject.GetComponent<Movement>() != null){
 				if(other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject != null){
-					Debug.Log("TESTTTT");
+					if(other.transform.parent.parent.gameObject.GetComponent<playerStates>().FPSorTPS == false){
+						other.transform.parent.parent.gameObject.GetComponent<playerStates>().ForceThirdPerson();
+					}
+					player.gameObject.GetComponent<playerStates>().SetFPSBlock(true);
 					this.GetComponent<Animator>().SetBool("Enter", true);
 					Invoke("ResetEnter", .1f);
-					other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject.GetComponent<OrbitCamera>().focus = tubeCamSpot.transform;
-					Orbitcam = other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject.GetComponent<OrbitCamera>();
-					player = other.transform.parent.parent.gameObject;
-					other.transform.parent.parent.gameObject.GetComponent<Movement>().blockMovement();
+					Orbitcam.focus = tubeCamSpot.transform;
+					player.GetComponent<Movement>().blockMovement();
 					player.transform.position = safeRoom.transform.position;
-						Invoke("SetCamToExit", 2f);
+					Invoke("SetCamToExit", 2f);
 				}
 			}
 		}
