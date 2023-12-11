@@ -118,9 +118,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b00c707bbaadd4ba0c51c156950e1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainMat: {fileID: 38305092346115025}
+  movingMat: {fileID: 2100000, guid: 5714c7e32854f7b458fc70346366fa9f, type: 2}
+  nonMovingMat: {fileID: 2100000, guid: e3fd555afc67fcd488eceee3ace1c11e, type: 2}
+  isEnabled: 0
   isEndPiece: 1
   speed: 5
   spinAmount: 0
+  pushingObjects: []
 --- !u!1001 &7016993197461285985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -202,7 +207,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 3ba784a7005b0d54299b16addbf496ee,
         type: 3}
       propertyPath: m_Name
-      value: NewCOnmveyor
+      value: Conveyor
       objectReference: {fileID: 0}
     - target: {fileID: 7641595171491635003, guid: 3ba784a7005b0d54299b16addbf496ee,
         type: 3}

@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
 {
+	[SerializeField]
+	GameObject mainMat;
+	[SerializeField]
+	Material movingMat;
+	[SerializeField]
+	Material nonMovingMat;
+	[SerializeField]
+	bool isEnabled;
 	GameObject g;
     [SerializeField]
     bool isEndPiece = false;
@@ -99,7 +107,19 @@ public class ConveyorBelt : MonoBehaviour
 		}
     }
     void FixedUpdate()
-    {
+	{
+		if(isEnabled){
+			if(mainMat.GetComponent<MeshRenderer>().material != movingMat){
+				Debug.Log("Changing Mat");
+				mainMat.GetComponent<MeshRenderer>().material = movingMat;
+			}
+		}
+		else{
+			if(mainMat.GetComponent<MeshRenderer>().material != nonMovingMat){
+				Debug.Log("Changing Mat");
+				mainMat.GetComponent<MeshRenderer>().material = nonMovingMat;
+			}
+		}
         for (int i = 0; i < pushingObjects.Count; i++){
 	        //if (pushingObjects[i] == null){
                 //Debug.Log("REMOVED VIA DESTRUCTION");
@@ -110,8 +130,9 @@ public class ConveyorBelt : MonoBehaviour
 			        //Debug.Log("REMOVED VIA PICKUP");
 		            pushingObjects.Remove(pushingObjects[i].gameObject);
 		        }
-		        else if(speed != 0){
+		        else if(speed != 0 && isEnabled){
 			        pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
+
 		        }
 		        if(spinAmount != 0){
 			        pushingObjects[i].transform.Rotate(new Vector3(0f, Time.deltaTime * spinAmount), Space.World);
@@ -121,7 +142,7 @@ public class ConveyorBelt : MonoBehaviour
 		        //Debug.Log("REMOVED VIA RAGDOLL");
 			    pushingObjects.Remove(pushingObjects[i].gameObject);
 	        }
-	        else if(speed != 0){
+	        else if(speed != 0 && isEnabled){
                 pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
             }
             if(spinAmount != 0){
