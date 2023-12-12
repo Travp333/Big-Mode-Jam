@@ -5,7 +5,7 @@ using UnityEngine;
 public class NewEnemyAnimStateController : MonoBehaviour
 {
 	[SerializeField]
-	GameObject HandVolume;
+	public GameObject HandVolume;
 	//[SerializeField]
 	GameObject player;
     public Animator Anim;

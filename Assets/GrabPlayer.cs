@@ -6,10 +6,10 @@ public class GrabPlayer : MonoBehaviour
 {
 	[SerializeField]
 	GameObject playerDummy;
-	bool isHolding;
+	public bool isHolding;
 	GameObject player2 = null;
 	Movement move;
-	OrbitCamera camera;
+	OrbitCamera orbCam;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +18,7 @@ public class GrabPlayer : MonoBehaviour
 	    		move = g.GetComponent<Movement>();
 	    	}
 	    	if(g.GetComponent<OrbitCamera>()){
-	    		camera = g.GetComponent<OrbitCamera>();
+	    		orbCam = g.GetComponent<OrbitCamera>();
 	    	}
 	    }
     }
@@ -44,7 +44,7 @@ public class GrabPlayer : MonoBehaviour
 		if(other.gameObject.transform.parent != null){
 			if(other.gameObject.transform.parent.parent != null){
 				if(other.gameObject.transform.parent.parent.GetComponent<Movement>()!= null){
-					if(camera.focus != null){
+					if(orbCam.focus != null){
 						if(move.gameObject.GetComponent<playerStates>().FPSorTPS == false){
 							//Debug.Log("Grabbed in first person!");
 							move.gameObject.GetComponent<playerStates>().ForceThirdPerson();
@@ -60,7 +60,7 @@ public class GrabPlayer : MonoBehaviour
 						//Debug.Log("Grabbed Player Neck");
 						playerDummy.SetActive(true);
 						//update camera position
-						camera.focus = this.transform;
+						orbCam.focus = this.transform;
 						//disable player movement
 						move.blockMovement();
 						//other.gameObject.transform.parent.parent.gameObject.GetComponent<Movement>().enabled = false;
@@ -87,7 +87,7 @@ public class GrabPlayer : MonoBehaviour
 		//enable fake player
 		playerDummy.SetActive(false);
 		//update camera position
-		camera.focus = move.center.transform;
+		orbCam.focus = move.center.transform;
 		//disable player movement
 		player.GetComponent<Movement>().unblockMovement();
 		//player.GetComponent<Movement>().enabled = true;

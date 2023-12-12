@@ -199,11 +199,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlackTruck
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Truck
+      objectReference: {fileID: 0}
     - target: {fileID: 8153101253863224186, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 931cfd0ebdba5bf43887eca11b8d2bdc, type: 2}
+    - target: {fileID: 8513859187771203891, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Truck
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -220,6 +230,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5242917947392741831}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4225505433295110098}
     - targetCorrespondingSourceObject: {fileID: 8513859187771203891, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       insertIndex: -1
@@ -274,6 +288,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 15
   userDirection: {x: -1, y: 0, z: 0}
+--- !u!114 &4225505433295110098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 102408751198155872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba5639827807e542be20cbc5cc994aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeMin: 60
+  lifeMax: 60
 --- !u!4 &8543559154761285188 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8879528566716807029, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
