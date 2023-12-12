@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FaceTexController : MonoBehaviour
 {
-	bool isHoldingBreath, isScared, isStraining, isHappy, isTrance, isAiming, isSneaking;
+	public bool isHoldingBreath, isScared, isStraining, isHappy, isTrance, isAiming, isSneaking;
     bool flipFlop;
     bool isBlinking;
 	Vector2 holdBreathID = new Vector2(-0.625f, 0.125f);

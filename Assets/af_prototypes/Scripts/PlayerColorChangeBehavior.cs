@@ -12,7 +12,8 @@ public class PlayerColorChangeBehavior : MonoBehaviour
 	public SkinnedMeshRenderer[] mesh;
     public bool IsBlack { get; private set; } = false; // true for black, false for white
     public bool IsChanging{ get; private set; } = false; // true for black, false for white
-    public float ColorTransitionTime = 0.3f;
+	public float ColorTransitionTime = 0.3f;
+	FaceTexController faceTex;
 
     float _colorChangeTimer = 0;
 
@@ -38,7 +39,36 @@ public class PlayerColorChangeBehavior : MonoBehaviour
             }
         }
 
-    }
+	}
+	void updateFaceExpression(){
+		if(face.gameObject.GetComponent<FaceTexController>() != null){
+			faceTex = face.gameObject.GetComponent<FaceTexController>();
+			if(faceTex.isAiming){
+				faceTex.setAiming();
+			}
+			else if(faceTex.isHappy){
+				faceTex.setHappy();
+			}
+			else if(faceTex.isHoldingBreath){
+				faceTex.setHoldingBreath();
+			}
+			else if(faceTex.isScared){
+				faceTex.setScared();
+			}
+			else if(faceTex.isStraining){
+				faceTex.setStraining();
+			}
+			else if(faceTex.isTrance){
+				faceTex.setTrance();
+			}
+			else if(faceTex.isSneaking){
+				faceTex.setSneaking();
+			}
+			else if(faceTex.isAiming){
+				faceTex.setAiming();
+			}
+		}
+	}
     private void ChangeColor()
     {
         IsChanging = true;
@@ -51,11 +81,13 @@ public class PlayerColorChangeBehavior : MonoBehaviour
 	    	if(m){
 	    		if(IsBlack){
 	    			face.material = SceneData.Instance.faceWhite;
+	    			updateFaceExpression();
 	    			m2[0] = SceneData.Instance.Black;
 	    			m2[1] = SceneData.Instance.White;
 	    		}
 	    		else{
 	    			face.material = SceneData.Instance.faceBlack;
+	    			updateFaceExpression();
 		    		m2[1] = SceneData.Instance.Black;
 	    			m2[0] = SceneData.Instance.White;
 	    		}
