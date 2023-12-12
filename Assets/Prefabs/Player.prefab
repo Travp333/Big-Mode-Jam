@@ -649,6 +649,8 @@ MonoBehaviour:
   - {fileID: 9219112665346206715}
   - {fileID: 5570088013952852931}
   - {fileID: 5240279440058029351}
+  - {fileID: 2777086650498382708}
+  - {fileID: 1280106298542491048}
   ColorTransitionTime: 0.3
 --- !u!1 &3486547431117684658
 GameObject:
@@ -3680,6 +3682,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51adec145b106164183db15ab2ac46bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isHoldingBreath: 0
+  isScared: 0
+  isStraining: 0
+  isHappy: 0
+  isTrance: 0
+  isAiming: 0
+  isSneaking: 0
   forceLeft: 0
   forceRight: 0
   forceStraight: 0
