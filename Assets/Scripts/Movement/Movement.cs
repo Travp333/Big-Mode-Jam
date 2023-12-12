@@ -273,29 +273,25 @@ public class Movement : MonoBehaviour {
 		if (OnGround && !state.crouching && !state.holding) {
 				jumpDirection = contactNormal;
 			}
-		else if (OnSteep && !state.crouching && !state.holding) {
-				jumpDirection = steepNormal;
+		//else if (OnSteep && !state.crouching && !state.holding) {
+		//		jumpDirection = steepNormal;
 				// this was originally 0 but i changed it so that wall jumping doesnt count as one of your air jumps
-				jumpPhase -= 1;
+		//		jumpPhase -= 1;
+		//	}
+		else if (maxAirJumps > 0 && jumpPhase <= maxAirJumps) {
+			if (jumpPhase == 0) {
+			jumpPhase = 1;
 			}
-			else if (maxAirJumps > 0 && jumpPhase <= maxAirJumps) {
-				if (jumpPhase == 0) {
-				jumpPhase = 1;
-				}
-				jumpDirection = contactNormal;
-			}
-			else {
-				return;
-			}
+			jumpDirection = contactNormal;
+		}
+		else {
+			return;
+		}
 
 			if (skip){
 				stepsSinceLastJump = 0;
 				jumpPhase += 1;
 				float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
-				//This slows down your jump speed based on how far you are in water, Im gonna comment it out for now so that water jumps work better
-				//if (InWater) {
-				//jumpSpeed *= Mathf.Max(0f, 1f - submergence / swimThreshold);
-				//}
 				jumpDirection = (jumpDirection + upAxis).normalized;
 				float alignedSpeed = Vector3.Dot(velocity, jumpDirection);
 				if (alignedSpeed > 0f) {

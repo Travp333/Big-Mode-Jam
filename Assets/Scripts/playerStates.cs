@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class playerStates : MonoBehaviour
 {   
 	[SerializeField]
-	PlayerPickup pickup;
+	public PlayerPickup pickup;
 	[SerializeField]
 	GameObject root;
 	[SerializeField]

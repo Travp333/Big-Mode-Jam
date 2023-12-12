@@ -77,44 +77,46 @@ public class PlayerPickup : MonoBehaviour
 	public void PutDown(){
 		isCarryingObject = false;
 		//RugTrap!
-		if(holdingObject.GetComponent<EntityParent>()!= null){
-			if(holdingObject.GetComponent<EntityTrap>()!= null){
-				if(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole){
-					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
-					holdingObject.GetComponent<EntityParent>().canBePickedUp = false;
-				}
-				else if(!(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole)){
-					//objectsInTriggerSpace.Add(holdingObject);
-					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
-				}
-			}
-			else{
-				if(holdingObject.tag == "Key"){
-					Debug.Log("Droped Key");
-					colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
-					foreach(Collider hit in colliders){
-						if(hit.gameObject.GetComponent<Lock>()){
-							hit.gameObject.GetComponent<Lock>().Unlock();
-							if(objectsInTriggerSpace.Contains(holdingObject)){
-								objectsInTriggerSpace.Remove(holdingObject);
-							}
-							Destroy(holdingObject);
-						}
+		if(holdingObject != null){
+			if(holdingObject.GetComponent<EntityParent>()!= null){
+				if(holdingObject.GetComponent<EntityTrap>()!= null){
+					if(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole){
+						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+						holdingObject.GetComponent<EntityParent>().canBePickedUp = false;
 					}
-					if(holdingObject != null){
+					else if(!(holdingObject.GetComponent<EntityTrap>().Type == EntityTrap.TrapType.Hole)){
+						//objectsInTriggerSpace.Add(holdingObject);
 						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
 					}
 				}
 				else{
-					holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+					if(holdingObject.tag == "Key"){
+						Debug.Log("Droped Key");
+						colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
+						foreach(Collider hit in colliders){
+							if(hit.gameObject.GetComponent<Lock>()){
+								hit.gameObject.GetComponent<Lock>().Unlock();
+								if(objectsInTriggerSpace.Contains(holdingObject)){
+									objectsInTriggerSpace.Remove(holdingObject);
+								}
+								Destroy(holdingObject);
+							}
+						}
+						if(holdingObject != null){
+							holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+						}
+					}
+					else{
+						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+					}
 				}
 			}
+			else{
+				Debug.Log(holdingObject + " does not contain an entity trap component");
+			}
+			FindObjectOfType<playerStates>().holding = false;
+			FindObjectOfType<playerStates>().face.setBase();
 		}
-		else{
-			Debug.Log(holdingObject + " does not contain an entity trap component");
-		}
-		FindObjectOfType<playerStates>().holding = false;
-		FindObjectOfType<playerStates>().face.setBase();
 	}
 
 	public void ThrowInput()

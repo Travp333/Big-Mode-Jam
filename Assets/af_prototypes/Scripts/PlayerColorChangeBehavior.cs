@@ -40,7 +40,7 @@ public class PlayerColorChangeBehavior : MonoBehaviour
         }
 
 	}
-	void updateFaceExpression(){
+	public void updateFaceExpression(){
 		if(face.gameObject.GetComponent<FaceTexController>() != null){
 			faceTex = face.gameObject.GetComponent<FaceTexController>();
 			if(faceTex.isAiming){

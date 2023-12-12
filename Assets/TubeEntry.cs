@@ -67,7 +67,12 @@ public class TubeEntry : MonoBehaviour
 			if(other.transform.parent.parent.gameObject.GetComponent<Movement>() != null){
 				if(other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject != null){
 					if(other.transform.parent.parent.gameObject.GetComponent<playerStates>().FPSorTPS == false){
+						//Debug.Log("Tubed while in first person something");
 						other.transform.parent.parent.gameObject.GetComponent<playerStates>().ForceThirdPerson();
+					}
+					if(other.transform.parent.parent.gameObject.GetComponent<playerStates>().holding == true){
+						//Debug.Log("Tubed while holding something");
+						other.transform.parent.parent.gameObject.GetComponent<playerStates>().pickup.PutDown();
 					}
 					player.gameObject.GetComponent<playerStates>().SetFPSBlock(true);
 					this.GetComponent<Animator>().SetBool("Enter", true);

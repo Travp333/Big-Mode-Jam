@@ -46,14 +46,18 @@ public class GrabPlayer : MonoBehaviour
 				if(other.gameObject.transform.parent.parent.GetComponent<Movement>()!= null){
 					if(camera.focus != null){
 						if(move.gameObject.GetComponent<playerStates>().FPSorTPS == false){
-							Debug.Log("Grabbed in first person!");
+							//Debug.Log("Grabbed in first person!");
 							move.gameObject.GetComponent<playerStates>().ForceThirdPerson();
+						}
+						if(move.gameObject.GetComponent<playerStates>().holding == true){
+							//Debug.Log("Grabbed while holding something");
+							move.gameObject.GetComponent<playerStates>().pickup.PutDown();
 						}
 						move.gameObject.GetComponent<playerStates>().SetFPSBlock(true);
 						//Got player root!
 						player2 = other.gameObject.transform.parent.parent.gameObject;
 						isHolding = true;
-						Debug.Log("Grabbed Player Neck");
+						//Debug.Log("Grabbed Player Neck");
 						playerDummy.SetActive(true);
 						//update camera position
 						camera.focus = this.transform;
@@ -93,7 +97,7 @@ public class GrabPlayer : MonoBehaviour
 		player.GetComponent<playerStates>().standingHitbox.SetActive(true);
 		player.GetComponent<playerStates>().crouchingHitbox.SetActive(false);
 		foreach (SkinnedMeshRenderer m in player.GetComponent<PlayerColorChangeBehavior>().mesh){
-			if(m.name != "Sling Mesh"){
+			if(m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling"){
 				m.enabled = true;
 			}	
 		}

@@ -1,6 +1,3 @@
-
-need to disable wall jumps
-
 Ai sometimes walks in place while patrolling
 
 can attack AI after being smushed and revive him, same with any of his states, the take damage state shoulc be ignored if he is stuck, smashed, slipping, falling in a pit, etc
@@ -11,4 +8,4 @@ ai notices you just barely moving while completely behind him and crouching, may
 
 need to sync up enemy holding player states 
 
-choked player does not sync materials with actual player, neither do hands
+ AI cant go straight into ragdolled state whe he spawns, traps dont effect him for the first like 2 seconds he spawns
