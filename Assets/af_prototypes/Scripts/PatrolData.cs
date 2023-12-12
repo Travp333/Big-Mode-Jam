@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -37,7 +37,7 @@ public class PatrolData : MonoBehaviour
             for (int i = 0; i < Points.Length; i++)
             {
                 Gizmos.DrawWireSphere(Points[i], 1);
-                Handles.Label(Points[i] + Vector3.up, "Point " + (i + 1));
+	            //Handles.Label(Points[i] + Vector3.up, "Point " + (i + 1));
             }
         }
     }

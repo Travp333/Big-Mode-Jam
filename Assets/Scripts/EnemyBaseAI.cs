@@ -222,7 +222,7 @@ public class EnemyBaseAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(PointOfInterest, 2);
-        Handles.Label(PointOfInterest + Vector3.up, "Point Of Interest");
+	    //Handles.Label(PointOfInterest + Vector3.up, "Point Of Interest");
     }
 public class EnemyIdleState : EnemyBaseState
     {
