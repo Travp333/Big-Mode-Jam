@@ -252,6 +252,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5237472611872163539}
+    - targetCorrespondingSourceObject: {fileID: 8513859187771203891, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6265579089484221334}
   m_SourcePrefab: {fileID: 100100000, guid: af0471bfbe4bfcd4d81366d5fadd0dc9, type: 3}
 --- !u!1 &954981606709572148 stripped
 GameObject:
@@ -362,7 +366,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!208 &5237472611872163539
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -379,6 +383,18 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: -0.051000003, y: -0.022000002, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &6265579089484221334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621827805345607254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 887f5b57c2e004647aa653953373aa79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8843877008467245072 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8879528566716807029, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,

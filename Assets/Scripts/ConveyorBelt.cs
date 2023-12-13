@@ -120,11 +120,11 @@ public class ConveyorBelt : MonoBehaviour
 	{
 
         for (int i = 0; i < pushingObjects.Count; i++){
-	        //if (pushingObjects[i] == null){
-                //Debug.Log("REMOVED VIA DESTRUCTION");
-	            //     pushingObjects.Remove(pushingObjects[i].gameObject);
-		         //}
-	        if(pushingObjects[i].GetComponent<EntityParent>() != null){
+	        if (pushingObjects[i] == null){
+                Debug.Log("REMOVED VIA DESTRUCTION");
+	                 pushingObjects.Remove(pushingObjects[i].gameObject);
+		    }
+	        else if(pushingObjects[i].GetComponent<EntityParent>() != null){
 		        if(pushingObjects[i].GetComponent<EntityParent>().isPickedUp){
 			        //Debug.Log("REMOVED VIA PICKUP");
 		            pushingObjects.Remove(pushingObjects[i].gameObject);

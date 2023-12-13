@@ -13,7 +13,7 @@ public class TestTrap : MonoBehaviour
 	
 	protected void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.gameObject.name);
+		//Debug.Log(other.gameObject.name);
 		if (other.tag == "AI")
 		{
 			/*			if(other.gameObject.GetComponent<RagdollSwap>() != null){

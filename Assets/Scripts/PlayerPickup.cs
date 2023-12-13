@@ -34,7 +34,13 @@ public class PlayerPickup : MonoBehaviour
         objectsInTriggerSpace = new List<GameObject>();
         pickupIndicator.SetActive(false);
     }
-
+		
+	public void RemoveFromList(GameObject obj){
+		if (objectsInTriggerSpace.Contains(obj))
+			objectsInTriggerSpace.Remove(obj);
+		pickupIndicator.SetActive(false);
+	}
+	
     // Update is called once per frame
     void Update()
 	{
@@ -121,7 +127,7 @@ public class PlayerPickup : MonoBehaviour
 
 	public void ThrowInput()
     {
-	    Debug.Log("Throwing!");
+	    //Debug.Log("Throwing!");
 	    isCarryingObject = false;
 	    
 	    
@@ -198,11 +204,14 @@ public class PlayerPickup : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
 	{
-        if (objectsInTriggerSpace.Contains(other.gameObject))
-	        objectsInTriggerSpace.Remove(other.gameObject);
-		if(other.transform.parent != null){
-			if (objectsInTriggerSpace.Contains(other.transform.parent.gameObject))
-				objectsInTriggerSpace.Remove(other.transform.parent.gameObject);
+		if(other.gameObject.tag != "Environment"){
+			//Debug.Log(other.gameObject.name + " Just left range!");
+	        if (objectsInTriggerSpace.Contains(other.gameObject))
+		        objectsInTriggerSpace.Remove(other.gameObject);
+			if(other.transform.parent != null){
+				if (objectsInTriggerSpace.Contains(other.transform.parent.gameObject))
+					objectsInTriggerSpace.Remove(other.transform.parent.gameObject);
+			}
 		}
     }
 }
