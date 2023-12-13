@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class playerStates : MonoBehaviour
 {   
 	[SerializeField]
-	PlayerPickup pickup;
+	public PlayerPickup pickup;
 	[SerializeField]
 	GameObject root;
 	[SerializeField]
@@ -35,9 +35,9 @@ public class playerStates : MonoBehaviour
 	[SerializeField]
 	public FaceTexController face;
 	[SerializeField]
-	GameObject standingHitbox;
+	public GameObject standingHitbox;
 	[SerializeField]
-	GameObject crouchingHitbox;
+	public GameObject crouchingHitbox;
 	Movement move;
 	public bool walking;
 	public bool crouching;
@@ -48,6 +48,7 @@ public class playerStates : MonoBehaviour
 	public bool aiming;
 	public bool armed;
 	public bool firing;
+	public bool choked;
 	public InputAction movementAction;
 	public InputAction walkAction;
 	public InputAction crouchAction;
@@ -58,8 +59,10 @@ public class playerStates : MonoBehaviour
 	float lastPressTime;
 	[SerializeField]
 	float doublePressTime;
+	[SerializeField]
 	// Accessed by slingshot manager -almost_friday
-	public bool FPSorTPS { get; private set; } = true; // True for first person
+	public bool FPSorTPS = true; // True for third person
+	public bool FPSBlocked;
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -98,10 +101,13 @@ public class playerStates : MonoBehaviour
 	public void ResetFiring(){
 		firing = false;
 	}
+	public void SetFPSBlock(bool plug){
+		FPSBlocked = plug;
+	}
 	IEnumerator StartCrouch()
 	{
 		yield return new WaitForSeconds(doublePressTime);
-		Debug.Log("Croumch" + (Time.time - lastPressTime));
+		//Debug.Log("Croumch" + (Time.time - lastPressTime));
 		rolling = false;
 		if(crouching){
 			UnCrouch();
@@ -110,15 +116,47 @@ public class playerStates : MonoBehaviour
 			Crouch();
 		}
 	}
-    void Start()
-    {
-        
-    }
+	public void ForceThirdPerson(){
+		//swap to third person!
+		//ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().enabled = true;
+		aiming = false;
+		FirstPersonHandsMesh.enabled = false;
+		FirstPersonSlingMesh.enabled = false;
+		ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().UnBlockCamInput();
+		ThirdPersonCam.transform.parent.GetComponent<OrbitCamera>().ResetCameraAngles();
+		rot.enabled = true;
+		ThirdPersonBaseMesh.enabled=true;
+		ThirdPersonFaceMesh.enabled=true;
+		ThirdPersonSashMesh.enabled=true;
+		if(armed){
+			ThirdPersonSlingMesh.enabled=true;
+		}
+		ThirdPersonCam.enabled=true;
+		ThirdPersonCam.GetComponent<AudioListener>().enabled = true;
+		FirstPersonCam.enabled=false;
+		FirstPersonHandCam.enabled = false;
+		FirstPersonCam.GetComponent<AudioListener>().enabled = false;
+		move.playerInputSpace = ThirdPersonCam.transform;
+		FPSorTPS = true;
+		fpscamscript.enabled = false;
+		ThirdPersonCam.transform.parent.parent = root.transform;
+	}
 
     // Update is called once per frame
     void Update()
 	{
-		if(armAction.WasPressedThisFrame() && move.OnGround && !holding){
+		//if(choked){
+			//	if(FPSorTPS = false){
+				//		ForceThirdPerson();
+				//		FPSBlocked = true;
+				//	}
+			//}
+		//else{
+			//	if(FPSBlocked = true){
+				//		FPSBlocked = false;
+				//	}
+			//}
+		if(armAction.WasPressedThisFrame() && move.OnGround && !holding && !choked){
 			
 			if(armed){
 				armed = false;
@@ -135,7 +173,7 @@ public class playerStates : MonoBehaviour
 			}
 		}
 		
-		if(aimAction.WasPressedThisFrame() && !holding && !rolling){
+		if(aimAction.WasPressedThisFrame() && !holding && !rolling  && !choked && !FPSBlocked){
 			if(FPSorTPS){
 				aiming = true;
 				//Swap to first person!
@@ -191,7 +229,7 @@ public class playerStates : MonoBehaviour
 		if(holding){
 			face.setStraining();
 		}
-		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding){
+		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding  && !choked){
 			if((Time.time - lastPressTime <= doublePressTime)&& moving && !aiming){
 				StopCoroutine("StartCrouch");
 				Debug.Log("ROLL!");
@@ -205,27 +243,27 @@ public class playerStates : MonoBehaviour
 				StartCoroutine("StartCrouch");
 			}
 		}
-		if(walkAction.IsPressed()){
+		if(walkAction.IsPressed() && !choked){
 			walking = true;
 		}
 		else{
 			walking = false;
 		}
-		if(armed && attackAction.WasPerformedThisFrame()){
+		if(armed && attackAction.WasPerformedThisFrame() && !choked){
 			firing = true;
 		}
-		if(!holding && interactAction.WasPerformedThisFrame()){
-			if(pickup.objectsInTriggerSpace.Count > 0){
+		if(!holding && interactAction.WasPerformedThisFrame()  && !choked){
+			if(pickup.objectsInTriggerSpace.Count > 0 && !aiming && !armed){
 				holding = true;
 				face.setStraining();			
 			}
 
 		}
-		else if(holding && interactAction.WasPerformedThisFrame()){
+		else if(holding && interactAction.WasPerformedThisFrame() && !choked){
 			holding = false;
 			face.setBase();
 		}
-		if(holding && attackAction.WasPerformedThisFrame()){
+		if(holding && attackAction.WasPerformedThisFrame() && !choked){
 			throwing = true;
 			Invoke("ResetThrowing", 1f);
 			holding = false;

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,7 +53,16 @@ public class ProjectileManager : MonoBehaviour
                 }
                 if (ImpactEffects) Instantiate(ImpactEffects, _hit.point, Quaternion.LookRotation(_hit.normal));
                 Destroy(gameObject);
-            } else
+            }
+	        if (_hit.collider.tag == "Target")
+	        {
+	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
+	        }
+	        if (_hit.collider.tag == "Breakable")
+	        {
+	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
+	        }
+            else
             {
                 if (ProjectileHit != null) ProjectileHit(this, new ImpactParams(_hit.point));
                 Destroy(gameObject);

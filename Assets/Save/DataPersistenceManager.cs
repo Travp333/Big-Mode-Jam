@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -40,7 +40,7 @@ public class DataPersistenceManager : MonoBehaviour
 			foreach (IDataPersistence dataPersistenceObj in dataPersistenceObjects) {
 			dataPersistenceObj.LoadData(gameData);
 			}
-		Debug.Log(gameData.playerHp + " , " + gameData.playerPos);
+		//Debug.Log(gameData.playerHp + " , " + gameData.playerPos);
 	}
 	public void SaveGame() 
 	{

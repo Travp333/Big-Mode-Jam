@@ -52,7 +52,7 @@ public class OrbitCamera : MonoBehaviour {
 	float focusRadius = 1f;
 
     [SerializeField]
-	Transform focus = default;
+	public Transform focus = default;
 	Transform Prevfocus = default;
 
 	[SerializeField, Range(1f, 20f)]

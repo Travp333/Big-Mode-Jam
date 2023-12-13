@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class EntityTrap : EntityParent
 {
+	//[SerializeField]
+	//public bool isPickedUp;
 	[SerializeField]
 	BoxCollider holeCollider;
 	[SerializeField]
 	GameObject launchVolume;
 /*	[SerializeField]
 	bool isHammer, isBananna, isHole, isGlove, isGlue;*/ //replaced with enum below
-	[SerializeField] TrapType Type;
+	[SerializeField] public TrapType Type;
 	public enum TrapType { Hammer, Banana, Hole, PunchGlove, Glue }
     public bool trapIsTriggered;
     [Tooltip("Set to -1 for infinite")]
@@ -31,13 +33,11 @@ public class EntityTrap : EntityParent
     public override void PickUpObject(Transform newParent)
 	{
 		//gameObject.layer = 11;
-		/*		if(isHole){
-					gameObject.transform.GetChild(1).gameObject.layer = 11;
-				}*/
 		if (Type == TrapType.Hole)
 		{
 			gameObject.transform.GetChild(1).gameObject.layer = 11;
 		}
+		//isPickedUp = true;
 		base.PickUpObject(newParent);
         trapIsTriggered = false;
     }
@@ -54,9 +54,10 @@ public class EntityTrap : EntityParent
 			this.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationX |RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 			canBePickedUp = false;
 		}
+		//isPickedUp = false;
         base.PlaceObject(newPos);
         trapIsTriggered = true;
-    }
+	}
     public virtual bool ActivateTrap(GameObject triggeredTrap) // returns false if the trap should be destroyed
     {
         if (!trapIsTriggered || numberOfUses == 0)
@@ -87,21 +88,27 @@ public class EntityTrap : EntityParent
 					case TrapType.Hammer:
 							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							baseAi.AI.SetState(EnemyBaseAI.SmashedState,baseAi);
+							canBePickedUp = false;
 							break;
 						case TrapType.Glue:
 							baseAi.AI.SetState(EnemyBaseAI.gluedState, baseAi);
+							this.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+							canBePickedUp = false;
 							break;
 					case TrapType.Banana:
 							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							baseAi.AI.SetState(EnemyBaseAI.SlipState, baseAi);
+							canBePickedUp = false;
 							break;
 					case TrapType.PunchGlove:
 							this.gameObject.GetComponent<Animator>().SetBool("Triggered", true);
 							launchVolume.SetActive(true);
 							Invoke("DisableVolumeTrigger", .5f);
+							canBePickedUp = false;
 						//baseAi.AI.SetState(EnemyBaseAI.RagdollState, baseAi);
 							break;
 					case TrapType.Hole:
+							canBePickedUp = false;
 							Invoke("DespawnHole", 3f);
 							break;
 					}
