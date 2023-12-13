@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2319798621285913199}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,6 +43,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Lock (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1611329479645080495, guid: 24218f33984fd2242b91324eaea827e5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2096222437961920789, guid: 24218f33984fd2242b91324eaea827e5,
         type: 3}
@@ -223,6 +228,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door White
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 32d04e40c91f2c84e8f2ea6893d2b730,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -243,6 +253,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7575666801351064228}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 32d04e40c91f2c84e8f2ea6893d2b730,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8767389488716055493}
   m_SourcePrefab: {fileID: 100100000, guid: 32d04e40c91f2c84e8f2ea6893d2b730, type: 3}
 --- !u!1 &2650673832211337573 stripped
 GameObject:
@@ -271,6 +285,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.032572765, y: 0.004934483, z: 0.0597788}
   m_Center: {x: -2.1037147e-16, y: 0, z: 0.029607149}
+--- !u!208 &8767389488716055493
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2650673832211337573}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.016, y: 0.002, z: 0.030000001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.030000001}
+  m_TimeToStationary: 0.5
 --- !u!4 &3423515695257816031 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 32d04e40c91f2c84e8f2ea6893d2b730,
@@ -365,6 +395,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door White (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 32d04e40c91f2c84e8f2ea6893d2b730,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -419,6 +454,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Door Interact (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977770302590756267, guid: 164271d3e4a30d34a824195344c23c1c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6746054925094168932, guid: 164271d3e4a30d34a824195344c23c1c,
         type: 3}
