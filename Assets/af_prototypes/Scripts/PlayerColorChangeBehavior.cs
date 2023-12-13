@@ -8,14 +8,15 @@ public class PlayerColorChangeBehavior : MonoBehaviour
 	public SkinnedMeshRenderer face;
     public static PlayerColorChangeBehavior Instance;
     public CanvasManager Canvas;
-	public InputAction colorSwap;
 	public SkinnedMeshRenderer[] mesh;
     public bool IsBlack { get; private set; } = false; // true for black, false for white
     public bool IsChanging{ get; private set; } = false; // true for black, false for white
 	public float ColorTransitionTime = 0.3f;
 	FaceTexController faceTex;
 
-    float _colorChangeTimer = 0;
+	private InputAction colorSwap;
+
+	float _colorChangeTimer = 0;
 
     private void Awake()
     {

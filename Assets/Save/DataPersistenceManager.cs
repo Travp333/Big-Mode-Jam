@@ -51,7 +51,7 @@ public class DataPersistenceManager : MonoBehaviour
 		}
 
 		//save the data to file
-		Debug.Log(gameData.playerHp + " , " + gameData.playerPos);
+		//Debug.Log(gameData.playerHp + " , " + gameData.playerPos);
 
 		dataHandler.Save(gameData);
 	}

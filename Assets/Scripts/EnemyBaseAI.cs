@@ -136,18 +136,19 @@ public class EnemyBaseAI : MonoBehaviour
     {
         if (PlayerStates.moving)
         {
-            PointOfInterest = PlayerPosition;
-
+            if (PlayerStates.crouching) return false;
             if (PlayerStates.walking)
             {
                 if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.WalkingFootstepDetectionRange)
                 {
+                    PointOfInterest = PlayerPosition;
                     return true;
                 }
             } else
             {
                 if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.RunningFootstepDetectionRange)
                 {
+                    PointOfInterest = PlayerPosition;
                     return true;
                 }
             }
@@ -230,18 +231,18 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner) {
             //owner.AnimationStates.chaseDesired = false;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
-            owner.Agent.isStopped = false;
+            owner.Agent.isStopped = true;
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
-            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner, true);
             if (owner.PlayerWalkingNear())
             {
-                owner.AI.SetState(SuspiciousState, owner);
+                owner.AI.SetState(SuspiciousState, owner, true);
             }
         }
         public override void Exit(EnemyBaseAI owner) {
-            owner.Agent.isStopped = true;
+            owner.Agent.isStopped = false;
         }
     }
     public class EnemySuspiciousState : EnemyBaseState
@@ -267,14 +268,14 @@ public class EnemyIdleState : EnemyBaseState
             {
                 if (owner.PlayerVisible())
                 {
-                    owner.AI.SetState(PlayerSpotted, owner);
+                    owner.AI.SetState(PlayerSpotted, owner, true);
                 } else if (owner.TestPatrol)
                 {
-                    owner.AI.SetState(PatrolState, owner);
+                    owner.AI.SetState(PatrolState, owner, true);
                 }
                 else 
                 {
-                    owner.AI.SetState(IdleState, owner);
+                    owner.AI.SetState(IdleState, owner, true);
                 }
             }
         }
@@ -303,7 +304,7 @@ public class EnemyIdleState : EnemyBaseState
             if (_timer > 0)
                 _timer -= Time.deltaTime;
             else
-                owner.AI.SetState(ChaseState, owner);
+                owner.AI.SetState(ChaseState, owner, true);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -325,7 +326,7 @@ public class EnemyIdleState : EnemyBaseState
             owner.GoToPlayer();
             if (owner.PlayerBehindCover()) // if the player is behind cover! wow!
             {
-                owner.AI.SetState(LostPlayerState, owner);
+                owner.AI.SetState(LostPlayerState, owner, true);
             }
         }
         public override void Exit(EnemyBaseAI owner)
@@ -349,7 +350,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
             if (timer > 0) timer -= Time.deltaTime;
-            else  owner.AI.SetState(StunnedState, owner);
+            else  owner.AI.SetState(StunnedState, owner, true);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -404,7 +405,7 @@ public class EnemyIdleState : EnemyBaseState
                 timer -= Time.deltaTime;
             } else
             {
-                owner.AI.SetState(RiseState, owner);             
+                owner.AI.SetState(RiseState, owner, true);             
             }
         }
         public override void Exit(EnemyBaseAI owner)
@@ -421,12 +422,12 @@ public class EnemyIdleState : EnemyBaseState
         {
             owner.Agent.speed = owner.EnemyData.WalkSpeed;
             if (owner.PatrolPoints != null)
-                owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+                owner.PointOfInterest = owner.PatrolPoints.TargetPoint;
             else
             {
                 Debug.LogError("Must have a reference to " + owner.PatrolPoints.GetType().Name);
                 owner.TestPatrol = false;
-                owner.AI.SetState(IdleState, owner);
+                owner.AI.SetState(IdleState, owner, true);
             }
             owner.Agent.stoppingDistance = 0;
             owner.GoToPointOfInterest();
@@ -434,14 +435,16 @@ public class EnemyIdleState : EnemyBaseState
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (Vector3.Distance(owner.transform.position, owner.PointOfInterest) < DISTANCETHATISCLOSEENOUGH)
+            float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
+            if (dist < DISTANCETHATISCLOSEENOUGH)
             {
                 owner.PatrolPoints.SetNextPatrolPoint();
-                owner.PointOfInterest = owner.PatrolPoints.Points[owner.PatrolPoints.PatrolIndex];
+                owner.PointOfInterest = owner.PatrolPoints.TargetPoint;
                 owner.GoToPointOfInterest();
             }
-            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
-            if (owner.PlayerWalkingNear()) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner, true);
+            if (owner.PlayerWalkingNear()) owner.AI.SetState(SuspiciousState, owner, true);
+            owner.DebugCommentText.text = dist.ToString();
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -470,11 +473,11 @@ public class EnemyIdleState : EnemyBaseState
             {
                 if (owner.PlayerVisible())
                 {
-                    owner.AI.SetState(ChaseState, owner);
+                    owner.AI.SetState(ChaseState, owner, true);
                 }
                 else
                 {
-                    owner.AI.SetState(SuspiciousState, owner);
+                    owner.AI.SetState(SuspiciousState, owner, true);
                 }
             }
         }
@@ -505,10 +508,10 @@ public class EnemyIdleState : EnemyBaseState
             {
                 if (owner.PlayerBehindCover())
                 {
-                    owner.AI.SetState(SuspiciousState, owner);
+                    owner.AI.SetState(SuspiciousState, owner, true);
                 } else
                 {
-                    owner.AI.SetState(ChaseState, owner);
+                    owner.AI.SetState(ChaseState, owner, true);
                 }
             }
         }
@@ -536,12 +539,12 @@ public class EnemyIdleState : EnemyBaseState
             float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
             if (dist < DISTANCETHATISCLOSEENOUGH)
             {
-                owner.AI.SetState(LookAround, owner);
+                owner.AI.SetState(LookAround, owner, true);
             }
             else Debug.Log(dist);
 
             //Chase the player if they become visible again
-            if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner);
+            if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner, true);
             //if (owner.PlayerVisible()) owner.AI.SetState(ChaseState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
@@ -587,11 +590,11 @@ public class EnemyIdleState : EnemyBaseState
             {
                 if (owner.TestPatrol)
                 {
-                    owner.AI.SetState(PatrolState, owner);
+                    owner.AI.SetState(PatrolState, owner, true);
                 }
-                else owner.AI.SetState(IdleState, owner);
+                else owner.AI.SetState(IdleState, owner, true);
             }
-            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner, true);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -615,7 +618,7 @@ public class EnemyIdleState : EnemyBaseState
             if (_timer > 0)
                 _timer -= Time.deltaTime;
             else
-                owner.AI.SetState(RiseState, owner);
+                owner.AI.SetState(RiseState, owner, true);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -639,10 +642,25 @@ namespace StateMachine
         public EnemyBaseState LastState { get; private set; }
         public EnemyBaseState CurrentState { get; private set; }
 
-        public void SetState(EnemyBaseState newState, EnemyBaseAI owner)
+        public void SetState(EnemyBaseState newState, EnemyBaseAI owner, bool calledInternally = false)
         {
             if (CurrentState != null)
             {
+                // Prevent these states from being interrupted
+                if (!calledInternally)
+                {
+                    switch (CurrentState)
+                    {
+                        case EnemyBaseAI.EnemyGluedState:
+                        case EnemyBaseAI.EnemyStunnedState:
+                        case EnemyBaseAI.EnemyRagdollState:
+                        case EnemyBaseAI.EnemyRiseState:
+                        case EnemyBaseAI.EnemySlipState:
+                        case EnemyBaseAI.EnemySmashedState:
+                            return;
+                    }
+                }
+
                 LastState = CurrentState;
                 CurrentState?.Exit(owner);
             }
