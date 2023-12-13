@@ -197,6 +197,7 @@ MonoBehaviour:
   isPickedUp: 0
   canBePickedUp: 1
   pickUpTime: 0.01
+  placeDownGravity: -5
 --- !u!54 &2311212664502045351
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -236,7 +237,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773806379db596b48afaebaace3964a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingPodium: {fileID: 0}
+  door: {fileID: 0}
+  belt: {fileID: 0}
   shatterPrefab: {fileID: 2135654709555171264, guid: 1d75c100aeb5e2348bdf8b8b04bb53c9,
     type: 3}
   shatterSpawnPos: {fileID: 7615160387818373606}

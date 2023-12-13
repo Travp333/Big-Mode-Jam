@@ -82,11 +82,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 167238c40ee742d43a4e40db6e6a86dd, type: 2}
+      objectReference: {fileID: 2100000, guid: 98b1dd7477a976143ae178a408022466, type: 2}
     - target: {fileID: 919132149155446097, guid: 17e3a5bcc4a77d941a160e8795dad0ba,
         type: 3}
       propertyPath: m_Name
-      value: keyfbx
+      value: Key
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 17e3a5bcc4a77d941a160e8795dad0ba,
         type: 3}
@@ -180,3 +180,4 @@ MonoBehaviour:
   isPickedUp: 0
   canBePickedUp: 1
   pickUpTime: 0.01
+  placeDownGravity: -50

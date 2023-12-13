@@ -6,6 +6,10 @@ using UnityEngine;
 //Travis Parks
 public class Shatter : MonoBehaviour
 {
+	[SerializeField]
+	GameObject door;
+	[SerializeField]
+	GameObject[] belt;
 	ArtifactRespawner startingPodium;
     public GameObject shatterPrefab;
     [Tooltip("What shattered mesh spawns")]
@@ -29,7 +33,7 @@ public class Shatter : MonoBehaviour
 		}
 	}
 	void OnCollisionEnter(Collision other) {
-	    if(other.gameObject.GetComponent<Rigidbody>() != null && (other.gameObject.GetComponent<Rigidbody>().velocity.magnitude > breakSpeed)){
+		if(other.gameObject.GetComponent<Rigidbody>() != null && other.gameObject.tag != "Player" && (other.gameObject.GetComponent<Rigidbody>().velocity.magnitude > breakSpeed)){
 		    spawnShatter();
 	    }
 	    else if (delayedMagnitude > breakSpeed){
@@ -55,6 +59,15 @@ public class Shatter : MonoBehaviour
         Invoke("spawnShatter", time);
     }
 	void spawnShatter(){
+		if(door != null){
+			door.GetComponent<Interactable>().OpenDoor = true;
+		}
+		if(belt != null){
+			foreach(GameObject b in belt){
+				b.GetComponent<ConveyorBelt>().EnableBelt();
+			}
+			
+		}
 		if(this.gameObject.GetComponent<isArtifact>() != null){
 			startingPodium.RespawnArtifact();
 		}

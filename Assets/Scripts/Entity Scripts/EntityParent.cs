@@ -21,6 +21,7 @@ public class EntityParent : MonoBehaviour
     Rigidbody rb;
 	BoxCollider boxCollider;
 	MeshCollider meshCollider;
+	[SerializeField]
 	float placeDownGravity = -50f;
 	
 	UpdateRotation player;

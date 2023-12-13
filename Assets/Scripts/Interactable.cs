@@ -1,18 +1,17 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
     bool playerIsIn;
-    public GameObject useIndicator;
     public ListOfActions action;
     public GameObject mainObject;
     public GameObject secondaryObject;
     public float speed;
 
     string actionCommand;
-
+	public bool OpenDoor;
     Vector3 mainObjectInitialPosition;
     bool moveSwap;
     float moveTimeElapsed;
@@ -20,7 +19,6 @@ public class Interactable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        useIndicator.SetActive(false);
         mainObjectInitialPosition = mainObject.transform.position;
         actionCommand = "None";
         moveSwap = false; // move main object towards secondary object
@@ -30,9 +28,10 @@ public class Interactable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerIsIn && Input.GetKeyDown(KeyCode.E))
+	    if (OpenDoor)
         {
-            SetActionCommand();
+		    SetActionCommand();
+		    OpenDoor = false;
         }
         MasterFunction();
     }
@@ -83,7 +82,6 @@ public class Interactable : MonoBehaviour
         {
             playerIsIn = true;
 
-            useIndicator.SetActive(true);
 
         }
     }
@@ -94,7 +92,6 @@ public class Interactable : MonoBehaviour
         {
             playerIsIn = false;
 
-            useIndicator.SetActive(false);
 
         }
     }

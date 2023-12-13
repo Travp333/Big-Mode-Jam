@@ -5,7 +5,11 @@ using UnityEngine;
 public class Lock : MonoBehaviour
 {
 	[SerializeField]
+	GameObject door;
+	[SerializeField]
 	GameObject UnlockedPrefab;
+	[SerializeField]
+	Transform UnlockPrefabSpawn;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +22,8 @@ public class Lock : MonoBehaviour
         
     }
 	public void Unlock(){
-		Instantiate(UnlockedPrefab, this.transform.position, Quaternion.identity);
+		Instantiate(UnlockedPrefab, UnlockPrefabSpawn.position, UnlockPrefabSpawn.rotation);
+		door.GetComponent<Interactable>().OpenDoor = true;
 		Destroy(this.gameObject);
 	}
 }

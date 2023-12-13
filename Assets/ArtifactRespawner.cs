@@ -8,7 +8,10 @@ public class ArtifactRespawner : MonoBehaviour
 	GameObject artifact;
 	[SerializeField]
 	Transform spawnPos;
-	public void RespawnArtifact(){
+	void spawn(){
 		Instantiate(artifact, spawnPos.position, Quaternion.identity);
+	}
+	public void RespawnArtifact(){
+		Invoke("spawn", 2f);
 	}
 }

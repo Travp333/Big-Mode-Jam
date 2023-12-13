@@ -11,7 +11,7 @@ public class ConveyorBelt : MonoBehaviour
 	[SerializeField]
 	Material nonMovingMat;
 	[SerializeField]
-	bool isEnabled;
+	public bool isEnabled;
 	GameObject g;
     [SerializeField]
     bool isEndPiece = false;
@@ -133,9 +133,6 @@ public class ConveyorBelt : MonoBehaviour
 			        pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
 
 		        }
-		        if(spinAmount != 0){
-			        pushingObjects[i].transform.Rotate(new Vector3(0f, Time.deltaTime * spinAmount), Space.World);
-		        }
 	        }
 	        else if(pushingObjects[i].tag == "BeltIgnore"){
 		        //Debug.Log("REMOVED VIA RAGDOLL");
@@ -143,9 +140,6 @@ public class ConveyorBelt : MonoBehaviour
 	        }
 	        else if(speed != 0 && isEnabled){
                 pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
-            }
-            if(spinAmount != 0){
-                pushingObjects[i].transform.Rotate(new Vector3(0f, Time.deltaTime * spinAmount), Space.World);
             }
         }
     }
