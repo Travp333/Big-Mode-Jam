@@ -202,10 +202,10 @@ public class AnimationStateController : MonoBehaviour
 		bool armpressed = state.armed;
 		bool firePressed = state.firing;
 
-        if (isOnGround){
+        if (isOnGroundADJ){
             animator.SetBool(onGroundHash, true);
         }
-        else if (!isOnGround){
+        else if (!isOnGroundADJ){
 	        animator.SetBool(onGroundHash, false);
 	        animator.SetBool(isCrouchedHash, false);
 	        state.UnCrouch();
