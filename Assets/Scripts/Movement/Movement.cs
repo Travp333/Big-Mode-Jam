@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour { 
 	//CAN I DIFFERENTIATE BETWEEN CERTAIN TYPES OF STEEPS? ie a straight wall vs a sloped ramp? this would be nice!
 	//This script controls the movement of the character. Adapted from https://catlikecoding.com/unity/tutorials/movement/ by Travis Parks
-	playerStates state;
+	PlayerStates state;
 	[SerializeField]
 	public GameObject center;
 	[SerializeField]
@@ -107,7 +107,7 @@ public class Movement : MonoBehaviour {
 	}
 	//runs when object becomes active
 	void Awake () {
-		state = GetComponent<playerStates>();
+		state = GetComponent<PlayerStates>();
 		jumpAction = GetComponent<PlayerInput>().currentActionMap.FindAction("Jump");
 		
 		speedController = GetComponent<MovementSpeedController>();

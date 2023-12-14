@@ -13,7 +13,7 @@ public class HandAnimController : MonoBehaviour
 	[SerializeField]
 	Animator bodyAnim;
 	Animator animator;
-	playerStates state;
+	PlayerStates state;
 	[SerializeField]
 	public GameObject player = default;
 	// Start is called before the first frame update
@@ -28,7 +28,7 @@ public class HandAnimController : MonoBehaviour
 		isFiringHash = Animator.StringToHash("isFiring");
 		isMovingHash = Animator.StringToHash("isMoving");
 		//isRollingHash = Animator.StringToHash("Rolling");
-	    state = player.GetComponent<playerStates>();
+	    state = player.GetComponent<PlayerStates>();
     }
 
     // Update is called once per frame

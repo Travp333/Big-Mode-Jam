@@ -26,6 +26,8 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemySlipState SlipState = new EnemySlipState();
     public static EnemySmashedState SmashedState = new EnemySmashedState();
     public static EnemyGluedState gluedState = new EnemyGluedState();
+    public static EnemyGrabPlayerState grabState = new EnemyGrabPlayerState();
+    public static EnemyChokingPlayerState chokingPlayerState = new EnemyChokingPlayerState();
     //public static EnemySlipState SlipState = new EnemySlipState();
 
 
@@ -48,9 +50,21 @@ public class EnemyBaseAI : MonoBehaviour
     [HideInInspector] public Vector3 PointOfInterest;
 
     [SerializeField] Transform PlayerTransform;
-    [SerializeField] playerStates PlayerStates;
+    [SerializeField] PlayerStates PlayerStates;
     Ray _playerRay;
     RaycastHit _hit;
+
+
+    // Used by PickupPlayer
+    Movement playerMovement;
+    [HideInInspector] public GameObject GrabbedObject;
+    public Transform HandTransform;
+    Transform playerRoot;
+    PlayerStates playerStates;
+    GameObject playerDummy;
+    OrbitCamera orbCam;
+    PlayerColorChangeBehavior colorChange;
+
     Vector3 PlayerPosition {
         get
         {
@@ -75,7 +89,18 @@ public class EnemyBaseAI : MonoBehaviour
 
     private void Awake()
     {
-        if (!PlayerTransform) PlayerTransform = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        playerRoot = GameObject.Find("Player").GetComponent<Transform>();
+        if (!playerRoot) Debug.LogError("Could not find player");
+        PlayerTransform = GameObject.Find("3rd Person Character").GetComponent<Transform>();
+
+        playerMovement = playerRoot.GetComponentInChildren<Movement>();
+        if (!playerMovement) Debug.LogError("Could not find player movement");
+
+        playerStates = playerRoot.GetComponentInChildren<PlayerStates>();
+        orbCam = playerRoot.GetComponentInChildren<OrbitCamera>();
+        orbCam = playerRoot.GetComponentInChildren<OrbitCamera>();
+        playerDummy = GetComponentInChildren<ColorChecker>(true).gameObject;
+        colorChange = playerMovement.GetComponent<PlayerColorChangeBehavior>();
 
         if (TestPatrol)
         {
@@ -96,6 +121,11 @@ public class EnemyBaseAI : MonoBehaviour
     public void GoToPointOfInterest()
     {
         if (Agent.isOnNavMesh) Agent.SetDestination(PointOfInterest);
+    }
+    public float DistanceToPlayer { 
+        get {
+            return Vector3.Distance(transform.position, playerMovement.transform.position);
+        }
     }
     public bool PlayerBehindCover()
     {
@@ -154,6 +184,78 @@ public class EnemyBaseAI : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void PickupPlayer()
+    {
+        bool gotPlayer = false;
+        // Check if the player is still close enough to grab
+        foreach (Collider col in Physics.OverlapSphere(HandTransform.position, 2, PlayerDetectionMask, QueryTriggerInteraction.Ignore))
+        {
+            if (col.tag == "Player")
+            {
+                gotPlayer = true;
+                break;
+            }
+        }
+        if (!gotPlayer)
+        {
+            Debug.Log("Missed the player");
+            return;
+        }
+
+        GrabbedObject = playerRoot.gameObject;
+        playerDummy.SetActive(true);
+
+        playerStates.ForceThirdPerson();
+        if (playerStates.holding) playerStates.pickup.PutDown();
+        playerStates.SetFPSBlock(true);
+
+        orbCam.focus = HandTransform;
+        playerMovement.blockMovement();
+        playerStates.choked = true;
+        playerStates.standingHitbox.SetActive(false);
+        playerStates.crouchingHitbox.SetActive(false);
+
+        foreach (SkinnedMeshRenderer m in colorChange.mesh)
+        {
+            m.enabled = false;
+        }
+        colorChange.face.enabled = false;
+    }
+    public void ReleasePlayer()
+    {
+        //Got player root!
+        GrabbedObject = null;
+        playerDummy.SetActive(false);
+        //update camera position
+        orbCam.focus = playerMovement.center.transform;
+        //disable player movement
+        playerMovement.unblockMovement();
+        //player.GetComponent<Movement>().enabled = true;
+        PlayerStates.SetFPSBlock(false);
+        PlayerStates.choked = false;
+        PlayerStates.crouching = false;
+        PlayerStates.standingHitbox.SetActive(true);
+        PlayerStates.crouchingHitbox.SetActive(false);
+        foreach (SkinnedMeshRenderer m in colorChange.mesh)
+        {
+            if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling")
+            {
+                m.enabled = true;
+            }
+        }
+        colorChange.face.enabled = true;
+    }
+    public void GotPlayer()
+    {
+        if (GrabbedObject != null) // If the enemy is holding something
+        {
+            AI.SetState(chokingPlayerState, this);
+        } else
+        {
+            AI.SetState(ChaseState, this);
+        }
     }
     public bool PlayerVisible()
     {
@@ -328,6 +430,10 @@ public class EnemyIdleState : EnemyBaseState
             {
                 owner.AI.SetState(LostPlayerState, owner, true);
             }
+            if (owner.DistanceToPlayer < owner.EnemyData.GrabDistance)
+            {
+                owner.AI.SetState(grabState, owner);
+            }
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -411,6 +517,40 @@ public class EnemyIdleState : EnemyBaseState
         public override void Exit(EnemyBaseAI owner)
         {
             //owner.AnimationStates.onBackDesired = false;
+        }
+    }
+    public class EnemyChokingPlayerState : EnemyBaseState
+    {
+        public override string Name() { return "Choking Player"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabWalkHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.ReleasePlayer();
+        }
+    }
+
+    public class EnemyGrabPlayerState : EnemyBaseState
+    {
+        public override string Name() { return "Choking Player"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            //owner.GrabbedObject.transform.position = owner.HandTransform.position;
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = false;
+
         }
     }
 
@@ -598,7 +738,6 @@ public class EnemyIdleState : EnemyBaseState
         }
         public override void Exit(EnemyBaseAI owner)
         {
-            //owner.AnimationStates.searchingDesired = false;
             owner.Agent.isStopped = false;
         }
     }

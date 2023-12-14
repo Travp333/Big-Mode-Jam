@@ -72,9 +72,9 @@ public class Shatter : MonoBehaviour
 			startingPodium.RespawnArtifact();
 		}
 		Instantiate(shatterPrefab, shatterSpawnPos.transform.position, shatterSpawnPos.transform.rotation);
-		if(player.GetComponent<playerStates>().holding){
-			player.GetComponent<playerStates>().pickup.gameObject.GetComponent<PlayerPickup>().PutDown();
-			player.GetComponent<playerStates>().pickup.gameObject.GetComponent<PlayerPickup>().RemoveFromList(this.gameObject);
+		if(player.GetComponent<PlayerStates>().holding){
+			player.GetComponent<PlayerStates>().pickup.gameObject.GetComponent<PlayerPickup>().PutDown();
+			player.GetComponent<PlayerStates>().pickup.gameObject.GetComponent<PlayerPickup>().RemoveFromList(this.gameObject);
 		}
         Destroy(this.gameObject);
     }

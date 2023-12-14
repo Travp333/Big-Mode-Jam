@@ -76,7 +76,7 @@ public class PlayerPickup : MonoBehaviour
 			holdingObject.transform.parent.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
 		}
 		isCarryingObject = true;
-		FindObjectOfType<playerStates>().holding = true;
+		FindObjectOfType<PlayerStates>().holding = true;
 	}
 	
     
@@ -120,8 +120,8 @@ public class PlayerPickup : MonoBehaviour
 			else{
 				Debug.Log(holdingObject + " does not contain an entity trap component");
 			}
-			FindObjectOfType<playerStates>().holding = false;
-			FindObjectOfType<playerStates>().face.setBase();
+			FindObjectOfType<PlayerStates>().holding = false;
+			FindObjectOfType<PlayerStates>().face.setBase();
 		}
 	}
 
@@ -138,7 +138,7 @@ public class PlayerPickup : MonoBehaviour
 	    {
 	    	holdingObject.transform.parent.gameObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
 	    }
-	    FindObjectOfType<playerStates>().holding = false;
+	    FindObjectOfType<PlayerStates>().holding = false;
     }
 
 	protected void OnTriggerStay(Collider other)
