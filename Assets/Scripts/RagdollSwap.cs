@@ -142,8 +142,8 @@ public class RagdollSwap : MonoBehaviour
 	{
 		//Debug.Log(collisionInfo.gameObject.name);
 		if(collisionInfo.gameObject.tag == "Player"){
-			if(collisionInfo.gameObject.GetComponent<playerStates>() != null){
-				if(collisionInfo.gameObject.GetComponent<playerStates>().rolling){
+			if(collisionInfo.gameObject.GetComponent<PlayerStates>() != null){
+				if(collisionInfo.gameObject.GetComponent<PlayerStates>().rolling){
 					enemyAI.AI.SetState(EnemyBaseAI.RagdollState, enemyAI);
 				}
 			}

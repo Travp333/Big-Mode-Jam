@@ -34,4 +34,5 @@ public class EnemyData : ScriptableObject
     [Tooltip("How far away a slingshot projectile will alert this guy without the hit point being visible")]
     public float DistractionImmediateDetectionRadius = 6;
 
+    public float GrabDistance = 4;
 }

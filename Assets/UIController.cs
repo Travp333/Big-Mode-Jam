@@ -30,13 +30,13 @@ public class UIController : MonoBehaviour
 	GameObject WhiteChokeIcon;
 	[SerializeField]
 	GameObject BlackChokeIcon;
-	playerStates states;
+	PlayerStates states;
 	PlayerColorChangeBehavior color;
 	bool LightorDark; //true = black, false = white
     // Start is called before the first frame update
     void Start()
     {
-	    states = GameObject.FindFirstObjectByType<playerStates>();
+	    states = GameObject.FindFirstObjectByType<PlayerStates>();
 	    foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")){
 	    	if (g.GetComponent<PlayerColorChangeBehavior>()!= null){
 	    		color = g.GetComponent<PlayerColorChangeBehavior>();

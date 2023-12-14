@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 [System.Serializable]
 public class PatrolData : MonoBehaviour
 {
-    public Vector3[] Points;
+    [SerializeField] private Vector3[] Points;
     public PatrolType Type;
     public int PatrolIndex;
     private bool reverse = false;
+    public Vector3 TargetPoint
+    {
+        get
+        {
+            return Points[PatrolIndex];
+        }
+    }
     public void SetNextPatrolPoint()
     {
         PatrolIndex += reverse ? -1 : 1;
@@ -29,7 +35,7 @@ public class PatrolData : MonoBehaviour
             }
         }
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         if (Points.Length > 0)
@@ -37,10 +43,10 @@ public class PatrolData : MonoBehaviour
             for (int i = 0; i < Points.Length; i++)
             {
                 Gizmos.DrawWireSphere(Points[i], 1);
-	            //Handles.Label(Points[i] + Vector3.up, "Point " + (i + 1));
             }
         }
     }
+#endif
     public enum PatrolType
     {
         Loop, Mirror

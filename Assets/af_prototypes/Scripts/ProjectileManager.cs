@@ -44,6 +44,7 @@ public class ProjectileManager : MonoBehaviour
 
         if (Physics.Linecast(_previousPos, transform.position, out _hit, collisionMask, QueryTriggerInteraction.Collide))
         {
+            Debug.Log("Bullet hit " + _hit.collider.gameObject.name);
             if (_hit.collider.tag == "AI")
             {
                 EnemyBaseAI enemy;
@@ -53,12 +54,10 @@ public class ProjectileManager : MonoBehaviour
                 }
                 if (ImpactEffects) Instantiate(ImpactEffects, _hit.point, Quaternion.LookRotation(_hit.normal));
                 Destroy(gameObject);
-            }
-	        if (_hit.collider.tag == "Target")
+            } else if (_hit.collider.tag == "Target")
 	        {
 	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
-	        }
-	        if (_hit.collider.tag == "Breakable")
+	        } else if (_hit.collider.tag == "Breakable")
 	        {
 	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
 	        }

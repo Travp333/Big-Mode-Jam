@@ -32,9 +32,10 @@ public class TestTrap : MonoBehaviour
 			EnemyBaseAI enemy;
 			if (other.transform.root.TryGetComponent(out enemy))
 			{
-				if(other.transform.root.GetComponent<NewEnemyAnimStateController>().HandVolume.gameObject.GetComponent<GrabPlayer>().isHolding){
+				// PLAYER IS RELEASED ON AI STATE CHANGE!
+/*				if(other.transform.root.GetComponent<NewEnemyAnimStateController>().HandVolume.gameObject.GetComponent<GrabPlayer>().isHolding){
 					other.transform.root.GetComponent<NewEnemyAnimStateController>().ReleasePlayer();
-				}
+				}*/
 				enemy.AI.SetState(EnemyBaseAI.RagdollState, enemy);
 				Collider[] colliders = Physics.OverlapSphere(this.transform.position, radius);
 				foreach (Collider hit in colliders)

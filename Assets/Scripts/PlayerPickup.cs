@@ -36,13 +36,13 @@ public class PlayerPickup : MonoBehaviour
         objectsInTriggerSpace = new List<GameObject>();
         pickupIndicator.SetActive(false);
     }
-		
+
 	public void RemoveFromList(GameObject obj){
 		if (objectsInTriggerSpace.Contains(obj))
 			objectsInTriggerSpace.Remove(obj);
 		pickupIndicator.SetActive(false);
 	}
-	
+
     // Update is called once per frame
     void Update()
 	{
@@ -61,7 +61,7 @@ public class PlayerPickup : MonoBehaviour
 		//Debug.Log("PICKINGUP");
 		objectsInTriggerSpace.RemoveAll(s => s == null);
 		holdingObject = objectsInTriggerSpace[0];
-            
+
 		foreach(GameObject obj in objectsInTriggerSpace)
 		{
 			if (obj == null)
@@ -72,7 +72,7 @@ public class PlayerPickup : MonoBehaviour
 			}
 		}
 		if(holdingObject.GetComponent<EntityParent>() != null){
-			
+
 			if(holdingObject.gameObject.tag == "BigOne"){
 				holdingObject.GetComponent<EntityParent>().PickUpBigOne(pickupHoldingParent);
 				FindObjectOfType<playerStates>().holdingBigOne = true;
@@ -88,10 +88,10 @@ public class PlayerPickup : MonoBehaviour
 			FindObjectOfType<playerStates>().holding = true;
 		}
 		isCarryingObject = true;
-		
+
 	}
-	
-    
+
+
 	public void PutDown(){
 		isCarryingObject = false;
 		//RugTrap!
@@ -137,8 +137,8 @@ public class PlayerPickup : MonoBehaviour
 			else{
 				Debug.Log(holdingObject + " does not contain an entity trap component");
 			}
-			FindObjectOfType<playerStates>().holding = false;
-			FindObjectOfType<playerStates>().face.setBase();
+			FindObjectOfType<PlayerStates>().holding = false;
+			FindObjectOfType<PlayerStates>().face.setBase();
 		}
 	}
 
@@ -146,8 +146,8 @@ public class PlayerPickup : MonoBehaviour
     {
 	    //Debug.Log("Throwing!");
 	    isCarryingObject = false;
-	    
-	    
+
+
 	    if(holdingObject.GetComponent<EntityParent>() != null){
 		    if(holdingObject.gameObject.tag == "BigOne"){
 			    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
@@ -204,7 +204,7 @@ public class PlayerPickup : MonoBehaviour
 
 
 
-		
+
 	}
 
     private void OnTriggerEnter(Collider other)

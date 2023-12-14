@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class playerStates : MonoBehaviour
+public class PlayerStates : MonoBehaviour
 {   
 	[SerializeField]
 	public PlayerPickup pickup;

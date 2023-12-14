@@ -22,6 +22,8 @@ public class NewEnemyAnimStateController : MonoBehaviour
     public int susHash { get; private set; }
     public int susWalkHash { get; private set; }
     public int searchingHash { get; private set; }
+    public int grabHash { get; private set; }
+    public int grabWalkHash { get; private set; }
 	
 	public void SpawnVolume(){
 		HandVolume.GetComponent<GrabPlayer>().EnableVolume();
@@ -38,7 +40,7 @@ public class NewEnemyAnimStateController : MonoBehaviour
     private void Awake()
 	{
 		foreach (GameObject g in GameObject.FindGameObjectsWithTag("Player")){
-			if(g.GetComponent<playerStates>()!= null){
+			if(g.GetComponent<PlayerStates>()!= null){
 				player = g;
 			}
 		}
@@ -57,6 +59,8 @@ public class NewEnemyAnimStateController : MonoBehaviour
             susHash  = Animator.StringToHash("Sus Idle");
             susWalkHash  = Animator.StringToHash("Sus Walk");
             searchingHash  = Animator.StringToHash("Searching");
+            grabHash  = Animator.StringToHash("Pickup");
+            grabWalkHash  = Animator.StringToHash("Pickup Walk");
         }
     }
 }

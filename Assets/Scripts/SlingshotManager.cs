@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SlingshotManager : MonoBehaviour
 {
-    public playerStates playerStates; 
+    public PlayerStates playerStates; 
     public GameObject ProjectilePrefab;
     public Transform Projectile3rdPersonOrigin;
     public Transform Projectile1stPersonOrigin;

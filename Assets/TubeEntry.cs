@@ -56,7 +56,7 @@ public class TubeEntry : MonoBehaviour
 		Invoke("ResetExit", .1f);
 		Orbitcam.focus = player.GetComponent<Movement>().center.transform;
 		Invoke("DisableHitbox", 1f);
-		player.gameObject.GetComponent<playerStates>().SetFPSBlock(false);
+		player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(false);
 		
 	}
 	// OnTriggerEnter is called when the Collider other enters the trigger.
@@ -66,15 +66,15 @@ public class TubeEntry : MonoBehaviour
 		if(other.gameObject.tag == "Player"){
 			if(other.transform.parent.parent.gameObject.GetComponent<Movement>() != null){
 				if(other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject != null){
-					if(other.transform.parent.parent.gameObject.GetComponent<playerStates>().FPSorTPS == false){
+					if(other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().FPSorTPS == false){
 						//Debug.Log("Tubed while in first person something");
-						other.transform.parent.parent.gameObject.GetComponent<playerStates>().ForceThirdPerson();
+						other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().ForceThirdPerson();
 					}
-					if(other.transform.parent.parent.gameObject.GetComponent<playerStates>().holding == true){
+					if(other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().holding == true){
 						//Debug.Log("Tubed while holding something");
-						other.transform.parent.parent.gameObject.GetComponent<playerStates>().pickup.PutDown();
+						other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().pickup.PutDown();
 					}
-					player.gameObject.GetComponent<playerStates>().SetFPSBlock(true);
+					player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(true);
 					this.GetComponent<Animator>().SetBool("Enter", true);
 					Invoke("ResetEnter", .1f);
 					Orbitcam.focus = tubeCamSpot.transform;

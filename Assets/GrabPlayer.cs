@@ -6,7 +6,7 @@ public class GrabPlayer : MonoBehaviour
 {
 	[SerializeField]
 	GameObject playerDummy;
-	public bool isHolding;
+	public bool isHolding { get; set; }
 	GameObject player2 = null;
 	Movement move;
 	OrbitCamera orbCam;
@@ -45,15 +45,15 @@ public class GrabPlayer : MonoBehaviour
 			if(other.gameObject.transform.parent.parent != null){
 				if(other.gameObject.transform.parent.parent.GetComponent<Movement>()!= null){
 					if(orbCam.focus != null){
-						if(move.gameObject.GetComponent<playerStates>().FPSorTPS == false){
+						if(move.gameObject.GetComponent<PlayerStates>().FPSorTPS == false){
 							//Debug.Log("Grabbed in first person!");
-							move.gameObject.GetComponent<playerStates>().ForceThirdPerson();
+							move.gameObject.GetComponent<PlayerStates>().ForceThirdPerson();
 						}
-						if(move.gameObject.GetComponent<playerStates>().holding == true){
+						if(move.gameObject.GetComponent<PlayerStates>().holding == true){
 							//Debug.Log("Grabbed while holding something");
-							move.gameObject.GetComponent<playerStates>().pickup.PutDown();
+							move.gameObject.GetComponent<PlayerStates>().pickup.PutDown();
 						}
-						move.gameObject.GetComponent<playerStates>().SetFPSBlock(true);
+						move.gameObject.GetComponent<PlayerStates>().SetFPSBlock(true);
 						//Got player root!
 						player2 = other.gameObject.transform.parent.parent.gameObject;
 						isHolding = true;
@@ -64,9 +64,9 @@ public class GrabPlayer : MonoBehaviour
 						//disable player movement
 						move.blockMovement();
 						//other.gameObject.transform.parent.parent.gameObject.GetComponent<Movement>().enabled = false;
-						move.gameObject.GetComponent<playerStates>().choked = true;
-						move.gameObject.GetComponent<playerStates>().standingHitbox.SetActive(false);
-						move.gameObject.GetComponent<playerStates>().crouchingHitbox.SetActive(false);
+						move.gameObject.GetComponent<PlayerStates>().choked = true;
+						move.gameObject.GetComponent<PlayerStates>().standingHitbox.SetActive(false);
+						move.gameObject.GetComponent<PlayerStates>().crouchingHitbox.SetActive(false);
 						foreach (SkinnedMeshRenderer m in move.gameObject.GetComponent<PlayerColorChangeBehavior>().mesh){
 							m.enabled = false;
 						}
@@ -91,11 +91,11 @@ public class GrabPlayer : MonoBehaviour
 		//disable player movement
 		player.GetComponent<Movement>().unblockMovement();
 		//player.GetComponent<Movement>().enabled = true;
-		player.GetComponent<playerStates>().SetFPSBlock(false);
-		player.GetComponent<playerStates>().choked = false;
-		player.GetComponent<playerStates>().crouching = false;
-		player.GetComponent<playerStates>().standingHitbox.SetActive(true);
-		player.GetComponent<playerStates>().crouchingHitbox.SetActive(false);
+		player.GetComponent<PlayerStates>().SetFPSBlock(false);
+		player.GetComponent<PlayerStates>().choked = false;
+		player.GetComponent<PlayerStates>().crouching = false;
+		player.GetComponent<PlayerStates>().standingHitbox.SetActive(true);
+		player.GetComponent<PlayerStates>().crouchingHitbox.SetActive(false);
 		foreach (SkinnedMeshRenderer m in player.GetComponent<PlayerColorChangeBehavior>().mesh){
 			if(m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling"){
 				m.enabled = true;

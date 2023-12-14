@@ -34,7 +34,7 @@ public class ConveyorBelt : MonoBehaviour
             }
         }
 		if(other.gameObject.tag == "Player"){
-			if(!other.gameObject.transform.parent.transform.parent.gameObject.GetComponent<playerStates>().crouching &&  other.gameObject.tag != "Volumes" && ((other.gameObject.transform.parent.transform.parent.gameObject.tag == "Player") && !pushingObjects.Contains(other.gameObject.transform.parent.transform.parent.gameObject))){
+			if(!other.gameObject.transform.parent.transform.parent.gameObject.GetComponent<PlayerStates>().crouching &&  other.gameObject.tag != "Volumes" && ((other.gameObject.transform.parent.transform.parent.gameObject.tag == "Player") && !pushingObjects.Contains(other.gameObject.transform.parent.transform.parent.gameObject))){
 				//Debug.Log("A player ( "+ other.gameObject.transform.parent.transform.parent.gameObject+ " )  just got added");
 				pushingObjects.Add(other.gameObject.transform.parent.transform.parent.gameObject);
 			}

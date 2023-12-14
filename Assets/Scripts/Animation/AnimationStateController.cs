@@ -13,7 +13,7 @@ public class AnimationStateController : MonoBehaviour
 	GameObject slingshot;
     public GameObject player = default;
 	Movement sphere = default; 
-	playerStates state;
+	PlayerStates state;
 	UpdateRotation rotation;
     Animator animator;
 	int isRunningHash;
@@ -71,7 +71,7 @@ public class AnimationStateController : MonoBehaviour
 	}
 
 	void Start() { 
-		state = player.GetComponent<playerStates>();
+		state = player.GetComponent<PlayerStates>();
 		rotation = player.transform.GetChild(0).GetComponent<UpdateRotation>();
         sphere = player.GetComponent<Movement>();
         animator = GetComponent<Animator>();

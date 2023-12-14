@@ -7,7 +7,7 @@ using UnityEngine;
 public class MovementSpeedController : MonoBehaviour
 {
 	Movement movement;
-	playerStates state;
+	PlayerStates state;
     [SerializeField, Range(0f, 100f)]
     [Tooltip("speeds of the character, these states represent the speed when your character is jogging, walking, rolling")]
 	public float baseSpeed = 10f, walkSpeed = 5f, rollSpeed = 30f, crouchWalkSpeed = 3f;
@@ -24,7 +24,7 @@ public class MovementSpeedController : MonoBehaviour
     }
 
 	void Start() {
-		state = GetComponent<playerStates>();
+		state = GetComponent<PlayerStates>();
         movement = GetComponent<Movement>();
     }
     void MovementState(){
