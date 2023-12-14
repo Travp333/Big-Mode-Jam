@@ -55,7 +55,8 @@ public class Shatter : MonoBehaviour
             }
         }
     }
-    public void oneShot(float time){
+	public void oneShot(float time){
+		Debug.Log("BREAKKKKK ");
         Invoke("spawnShatter", time);
     }
 	void spawnShatter(){
