@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.AI;
 using StateMachine;
+using UnityEngine.Audio;
 
 public class EnemyBaseAI : MonoBehaviour
 {
@@ -46,6 +47,11 @@ public class EnemyBaseAI : MonoBehaviour
     public LayerMask EnvironmentDetectionMask;
     public TMPro.TMP_Text DebugCommentText;
     public TMPro.TMP_Text DebugStateText;
+
+    [SerializeField]
+    SFXManager sfx;
+    [SerializeField]
+    AudioSource audioSource;
 
     [HideInInspector] public Vector3 PointOfInterest;
 
@@ -146,6 +152,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void TakeDamage()
     {
+        audioSource.PlayOneShot(sfx.sillyImpact);
         AI.SetState(DamagedState, this);
     }
     public bool PointOfInterestVisible(float radius = -1, bool CheckIfPointVisible = true)
@@ -195,6 +202,7 @@ public class EnemyBaseAI : MonoBehaviour
             if (col.tag == "Player")
             {
                 gotPlayer = true;
+                audioSource.PlayOneShot(sfx.EnemyAlert);
                 break;
             }
         }
@@ -318,6 +326,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void FaceObjectOfInterest()
     {
+        
         Vector3 objectVector = PointOfInterest- transform.position;
         transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation(Vector3.Scale(objectVector, FLATVECTOR)), Time.deltaTime * EnemyData.TurnSpeed );
     }
@@ -332,6 +341,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Idle"; }
         public override void Enter(EnemyBaseAI owner) {
             //owner.AnimationStates.chaseDesired = false;
+            owner.audioSource.PlayOneShot(owner.sfx.EnemyAlert);
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
             owner.Agent.isStopped = true;
         }
@@ -354,6 +364,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
             _timer = owner.EnemyData.ReactionTime;
