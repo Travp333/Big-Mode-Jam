@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2228647109276392400}
   m_Layer: 9
   m_Name: Launch Volume
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 687253200576494977}
   m_Layer: 9
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Environment
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -224,7 +224,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1.0000005, y: 0.9999999, z: 1.0000005}
   m_Center: {x: -0.000011444094, y: 0, z: -0.000061035185}
@@ -268,6 +268,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: -9091112994186226456, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
@@ -339,25 +344,50 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: -7069297261233299625, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
+      objectReference: {fileID: 0}
     - target: {fileID: -6804224529849698862, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: -6804224529849698862, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: -4388680750337458582, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: -4388680750337458582, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
+      objectReference: {fileID: 0}
     - target: {fileID: -2821761757288588400, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: -2821761757288588400, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
+      objectReference: {fileID: 0}
+    - target: {fileID: -1689137151616660966, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
     - target: {fileID: -1689137151616660966, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
-      propertyPath: m_Layer
-      value: 9
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
@@ -372,27 +402,47 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_TagString
-      value: Truck
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: 1501120433808574713, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1501120433808574713, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
+      objectReference: {fileID: 0}
     - target: {fileID: 1790183945725220954, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1790183945725220954, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: 6905609870639353253, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 6905609870639353253, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
+      objectReference: {fileID: 0}
     - target: {fileID: 7036213049465896255, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      propertyPath: m_TagString
+      value: Environment
       objectReference: {fileID: 0}
     - target: {fileID: 8153101253863224186, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
@@ -413,7 +463,7 @@ PrefabInstance:
     - target: {fileID: 8513859187771203891, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
         type: 3}
       propertyPath: m_TagString
-      value: Truck
+      value: Environment
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -455,6 +505,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6891109778738114344}
+    - targetCorrespondingSourceObject: {fileID: 8513859187771203891, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6678061545361915013}
   m_SourcePrefab: {fileID: 100100000, guid: af0471bfbe4bfcd4d81366d5fadd0dc9, type: 3}
 --- !u!4 &435466092853651598 stripped
 Transform:
@@ -595,10 +649,32 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.06, y: 0.041, z: 0.021265995}
   m_Center: {x: -0.042, y: -0.0204, z: 0}
+--- !u!64 &6678061545361915013
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621827805345607254}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7387706064836869012, guid: 6e3eba5943a4eea4baee818f946083f2, type: 3}
 --- !u!4 &8843877008467245072 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8879528566716807029, guid: af0471bfbe4bfcd4d81366d5fadd0dc9,

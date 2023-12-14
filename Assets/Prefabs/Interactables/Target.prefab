@@ -170,7 +170,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   door: {fileID: 0}
-  belt: {fileID: 0}
+  belt:
+  - {fileID: 0}
   shatterPrefab: {fileID: 1457216575749968881, guid: 5daf8d43bdc84464d9656a43a6467a79,
     type: 3}
   shatterSpawnPos: {fileID: 697428570134619258}
