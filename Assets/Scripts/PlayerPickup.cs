@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerPickup : MonoBehaviour
 {
 	[SerializeField]
+	GameObject holdingBigOne;
+	[SerializeField]
 	GameObject Player;
 	public InputAction Pickup;
     public Transform pickupHoldingParent;
@@ -70,13 +72,23 @@ public class PlayerPickup : MonoBehaviour
 			}
 		}
 		if(holdingObject.GetComponent<EntityParent>() != null){
-			holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+			
+			if(holdingObject.gameObject.tag == "BigOne"){
+				holdingObject.GetComponent<EntityParent>().PickUpBigOne(pickupHoldingParent);
+				FindObjectOfType<playerStates>().holdingBigOne = true;
+				holdingBigOne.SetActive(true);
+			}
+			else{
+				holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+				FindObjectOfType<playerStates>().holding = true;
+			}
 		}
 		else if(holdingObject.transform.parent.GetComponent<EntityParent>() != null){
 			holdingObject.transform.parent.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
+			FindObjectOfType<playerStates>().holding = true;
 		}
 		isCarryingObject = true;
-		FindObjectOfType<playerStates>().holding = true;
+		
 	}
 	
     
@@ -112,6 +124,11 @@ public class PlayerPickup : MonoBehaviour
 							holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
 						}
 					}
+					else if(holdingObject.gameObject.tag == "BigOne"){
+						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+						FindObjectOfType<playerStates>().holdingBigOne = false;
+						holdingBigOne.SetActive(false);
+					}
 					else{
 						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
 					}
@@ -132,13 +149,23 @@ public class PlayerPickup : MonoBehaviour
 	    
 	    
 	    if(holdingObject.GetComponent<EntityParent>() != null){
-		    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+		    if(holdingObject.gameObject.tag == "BigOne"){
+			    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+			    FindObjectOfType<playerStates>().holdingBigOne = false;
+			    holdingBigOne.SetActive(false);
+		    }
+		    else{
+			    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
+
+		    }
 	    }
+
 	    else if(holdingObject.transform.parent.gameObject.GetComponent<EntityParent>()!= null)
 	    {
 	    	holdingObject.transform.parent.gameObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
 	    }
 	    FindObjectOfType<playerStates>().holding = false;
+	    FindObjectOfType<playerStates>().face.setBase();
     }
 
 	protected void OnTriggerStay(Collider other)

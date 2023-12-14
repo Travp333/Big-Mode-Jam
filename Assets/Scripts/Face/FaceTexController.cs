@@ -19,7 +19,9 @@ public class FaceTexController : MonoBehaviour
     [SerializeField]
     bool forceLeft, forceRight, forceStraight;
     [SerializeField]
-    float blinkTimerLow = 5f, blinkTimerHigh = 10f;
+	float blinkTimerLow = 5f, blinkTimerHigh = 10f;
+	//[SerializeField]
+	float tranceTime = .5f;
     //Start is called before the first frame update
     void Start(){
         Base();
@@ -136,16 +138,16 @@ public class FaceTexController : MonoBehaviour
 
     void tranceFlip(){
         if(isTrance && !isBlinking){
-            if(flipFlop){
+	        //      if(flipFlop){
                 this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceID);
-                flipFlop = !flipFlop;
-            }
-            else{
-                this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipID);
-                flipFlop = !flipFlop;
-            }
-            Invoke("tranceFlip", .1f);
-        }
+	            //         flipFlop = !flipFlop;
+	            //     }
+	        //     else{
+	            //         this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceFlipID);
+	            //        flipFlop = !flipFlop;
+	            //    }
+	        //    Invoke("tranceFlip", tranceTime);
+	        }
 
     }
     void Base(){
@@ -256,7 +258,7 @@ public class FaceTexController : MonoBehaviour
         }
         else if(isTrance){
             this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
-            Invoke("flipTrance", .025f);
+	        Invoke("flipTrance", tranceTime);
         }
         else if(isAiming){
 	        this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);
@@ -351,7 +353,7 @@ public class FaceTexController : MonoBehaviour
         }
         else if(isTrance){
             this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", TranceBlink1ID);
-            Invoke("flipTrance", .025f);
+	        Invoke("flipTrance", tranceTime);
         }
         else if(isAiming){
 			this.GetComponent<SkinnedMeshRenderer>().material.SetTextureOffset("_BaseMap", aimingBlink1ID);

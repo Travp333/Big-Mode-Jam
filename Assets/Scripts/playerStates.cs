@@ -44,6 +44,7 @@ public class playerStates : MonoBehaviour
 	public bool moving;
 	public bool rolling;
 	public bool holding;
+	public bool holdingBigOne;
 	public bool throwing;
 	public bool aiming;
 	public bool armed;
@@ -228,6 +229,9 @@ public class playerStates : MonoBehaviour
 		}
 		if(holding){
 			face.setStraining();
+		}
+		if(holdingBigOne){
+			face.setTrance();
 		}
 		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding  && !choked){
 			if((Time.time - lastPressTime <= doublePressTime)&& moving && !aiming){

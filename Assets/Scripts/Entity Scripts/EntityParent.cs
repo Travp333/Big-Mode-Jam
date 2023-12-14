@@ -86,6 +86,26 @@ public class EntityParent : MonoBehaviour
 		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
 		gameObject.layer = 11;
 	}
+	public virtual void PickUpBigOne(Transform newParent)
+	{
+		CancelInvoke();
+		//Debug.Log("testing");
+		transform.SetParent(newParent);
+		//transform.position = newParent.position; // Surpy: Taking this out so it smooth transitions into picking to match closer to animation time
+		isBeingPickedUp = true;
+		beingPickedUpTime = 0;
+		initialPosition = transform.position;
+		SnapRotationToDirection();
+		//if(boxCollider != null){
+		//	boxCollider.enabled = false;
+		//}
+		//else if(meshCollider != null){
+		//	meshCollider.enabled = false;
+		//}
+		isPickedUp = true;
+		rb.isKinematic = true; // Prevents physics from affecting the trap when moved by a parent
+		gameObject.layer = 11;
+	}
 	
 	void ResetLayer(){
 		gameObject.layer = 12;
