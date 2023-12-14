@@ -1,5 +1,7 @@
 HIGHER PRIORITY:
 
+guards all stop navigating through their paths once you change the navmesh at all, ie opening a door 
+
 hole trap still doesnt work  
 
 AI doesnt do anything if he has no path points, he should just post up there and chase if he sees someone
@@ -22,4 +24,4 @@ something is wrong with the barricade models, the AI detects the white one as bl
 
 it seems like grabbing the player is not working well rn, the enemy seems to miss a lot
  
-guards all stop navigating through their paths once you change the navmesh at all, ie opening a door (this can be fixed by remiving the mavmesh obstacles on doors, although this means technically enemies can walk through doors. shouldnt even really happen though, hopefully)
+
