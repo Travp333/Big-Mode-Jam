@@ -1840,7 +1840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   door: {fileID: 0}
   belt:
-  - {fileID: 0}
+  - {fileID: 631442798}
   shatterPrefab: {fileID: 1457216575749968881, guid: 5daf8d43bdc84464d9656a43a6467a79,
     type: 3}
   shatterSpawnPos: {fileID: 1206079235}
@@ -1969,6 +1969,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 899773427}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &631442798 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7858993846347501980, guid: de4f3ea05deb4c64ea6e9a19f1ba826f,
+    type: 3}
+  m_PrefabInstance: {fileID: 206160547}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &690831977
 GameObject:
   m_ObjectHideFlags: 0
@@ -6039,6 +6045,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd8f0aa76a39af24e905f08365f2eb0f, type: 3}
+--- !u!1001 &1834291016
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -18.440022
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -9.938543
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2457524271188007741, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2977215672209080711, guid: bee103ecf9cefd545964f016d370fbc8,
+        type: 3}
+      propertyPath: m_Name
+      value: Bananna
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bee103ecf9cefd545964f016d370fbc8, type: 3}
 --- !u!4 &1840399832 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1683292297765396053, guid: f08b635d507c90b48a2c6fb362fe57a2,
@@ -7408,6 +7482,11 @@ PrefabInstance:
       propertyPath: door
       value: 
       objectReference: {fileID: 1085147280}
+    - target: {fileID: 435012933736499624, guid: db699fb4714e4c246bd60a2068f4b0d9,
+        type: 3}
+      propertyPath: belt.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 503362531540554168, guid: db699fb4714e4c246bd60a2068f4b0d9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8959,7 +9038,7 @@ PrefabInstance:
     - target: {fileID: 1248492047034047631, guid: e91ca1d0b69c7a0478011642b00a7924,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 117.7
+      value: 41.58
       objectReference: {fileID: 0}
     - target: {fileID: 1248492047034047631, guid: e91ca1d0b69c7a0478011642b00a7924,
         type: 3}
@@ -9381,3 +9460,4 @@ SceneRoots:
   - {fileID: 1536541143}
   - {fileID: 1574653106106492681}
   - {fileID: 71282646}
+  - {fileID: 1834291016}

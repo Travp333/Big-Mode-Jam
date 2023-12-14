@@ -75,17 +75,17 @@ public class PlayerPickup : MonoBehaviour
 
 			if(holdingObject.gameObject.tag == "BigOne"){
 				holdingObject.GetComponent<EntityParent>().PickUpBigOne(pickupHoldingParent);
-				FindObjectOfType<playerStates>().holdingBigOne = true;
+				FindObjectOfType<PlayerStates>().holdingBigOne = true;
 				holdingBigOne.SetActive(true);
 			}
 			else{
 				holdingObject.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
-				FindObjectOfType<playerStates>().holding = true;
+				FindObjectOfType<PlayerStates>().holding = true;
 			}
 		}
 		else if(holdingObject.transform.parent.GetComponent<EntityParent>() != null){
 			holdingObject.transform.parent.GetComponent<EntityParent>().PickUpObject(pickupHoldingParent);
-			FindObjectOfType<playerStates>().holding = true;
+			FindObjectOfType<PlayerStates>().holding = true;
 		}
 		isCarryingObject = true;
 
@@ -126,7 +126,7 @@ public class PlayerPickup : MonoBehaviour
 					}
 					else if(holdingObject.gameObject.tag == "BigOne"){
 						holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
-						FindObjectOfType<playerStates>().holdingBigOne = false;
+						FindObjectOfType<PlayerStates>().holdingBigOne = false;
 						holdingBigOne.SetActive(false);
 					}
 					else{
@@ -151,7 +151,7 @@ public class PlayerPickup : MonoBehaviour
 	    if(holdingObject.GetComponent<EntityParent>() != null){
 		    if(holdingObject.gameObject.tag == "BigOne"){
 			    holdingObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
-			    FindObjectOfType<playerStates>().holdingBigOne = false;
+			    FindObjectOfType<PlayerStates>().holdingBigOne = false;
 			    holdingBigOne.SetActive(false);
 		    }
 		    else{
@@ -164,8 +164,8 @@ public class PlayerPickup : MonoBehaviour
 	    {
 	    	holdingObject.transform.parent.gameObject.GetComponent<EntityParent>().ThrowObject(throwForce, rot.transform.forward);
 	    }
-	    FindObjectOfType<playerStates>().holding = false;
-	    FindObjectOfType<playerStates>().face.setBase();
+	    FindObjectOfType<PlayerStates>().holding = false;
+	    FindObjectOfType<PlayerStates>().face.setBase();
     }
 
 	protected void OnTriggerStay(Collider other)
