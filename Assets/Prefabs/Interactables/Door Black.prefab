@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3300441259254334416}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,6 +43,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Lock
+      objectReference: {fileID: 0}
+    - target: {fileID: 1611329479645080495, guid: 24218f33984fd2242b91324eaea827e5,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2096222437961920789, guid: 24218f33984fd2242b91324eaea827e5,
         type: 3}
@@ -223,6 +228,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Door Black
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 96049e1de22ca4440ae089a41476de26,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -243,6 +253,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8977026929838413257}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 96049e1de22ca4440ae089a41476de26,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2441279956879758773}
   m_SourcePrefab: {fileID: 100100000, guid: 96049e1de22ca4440ae089a41476de26, type: 3}
 --- !u!4 &3954014510190999022 stripped
 Transform:
@@ -277,6 +291,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.032572765, y: 0.004934483, z: 0.0597788}
   m_Center: {x: -2.1037147e-16, y: 0, z: 0.029607149}
+--- !u!208 &2441279956879758773
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4437360184844414804}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.016, y: 0.002, z: 0.030000001}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.030000001}
+  m_TimeToStationary: 0.5
 --- !u!1001 &5995142831585207377
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -362,6 +392,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 96049e1de22ca4440ae089a41476de26,
         type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 96049e1de22ca4440ae089a41476de26,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -419,6 +454,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Door Interact
+      objectReference: {fileID: 0}
+    - target: {fileID: 1977770302590756267, guid: 164271d3e4a30d34a824195344c23c1c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6746054925094168932, guid: 164271d3e4a30d34a824195344c23c1c,
         type: 3}

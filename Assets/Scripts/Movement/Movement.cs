@@ -120,7 +120,8 @@ public class Movement : MonoBehaviour {
 	//runs every frame
 	void Update () {
 		//responds to the jump keybind to allow jumping
-
+		//Debug.Log("IS ON GROUND "+ OnGround);
+		//Debug.Log("IS ON STEEP "+ OnSteep);
 		desiredJump |= jumpAction.WasPressedThisFrame() && !moveBlocked;
 		//stores the horizontal and vertical input axes
 		if(!moveBlocked){
