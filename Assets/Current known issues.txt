@@ -1,32 +1,26 @@
+HIGHER PRIORITY:
+guards all stop navigating through their paths once you change the navmesh at all, ie opening a door
+
+hole trap still doesnt work  
+
+AI doesnt do anything if he has no path points, he should just post up there and chase if he sees someone
+
+if the enemy misses the player the enemy will just get stuck in this running in place state right next to the player
+
+Lower Priority:
+
 Ai sometimes walks in place while patrolling
 
 ai also sometimes slides in idle pose while patrolling with no player visible
 
 Ai also seem to stand up out of ragdoll all in sync
 
-can attack AI after being smushed and revive him, same with any of his states, the take damage state shoulc be ignored if he is stuck, smashed, slipping, falling in a pit, etc
-
-hole trap still doesnt work 
-
-ai notices you just barely moving while completely behind him and crouching, maybe needs tweaking
-
-need to sync up enemy holding player states 
-
  AI cant go straight into ragdolled state whe he spawns, traps dont effect him for the first like 2 seconds he spawns
-
-AI doesnt do anything if he has no path points, he should jsut post up there and chase if he sees someone 
-
-ai footstep detection doesnt seem to work in new scene
-
-AI mesh renderer isnt dynamic on choked dummy
 
 AI doesnt seem to ever give up if he is chasing something he doesnt see or ever reach
 
-something is wrong with the barricade models, the AI detects the white one as black. Might be fucked up uvs idk 
+something is wrong with the barricade models, the AI detects the white one as black.
 
-if the enemy misses the player the enemy will just get stuck in this running in place state right next to the player
-
-actually it seems like grabbing the player is not working well rn, the enemy seems to miss a lot
-
-the guard in the conveyor belt + key room in the tutorial level gets stuck in his patrol routes once you open the door?
+it seems like grabbing the player is not working well rn, the enemy seems to miss a lot
+ 
 
