@@ -7,8 +7,6 @@ guards all stop navigating through their paths and walk in palce when you hit so
 
 hole trap still doesnt work  
 
-AI doesnt do anything if he has no path points, he should just post up there and chase if he sees someone
-
 if the enemy misses the player the enemy will just get stuck in this running in place state right next to the player
 
 Lower Priority:
@@ -17,15 +15,14 @@ AI when stuck in glue trap can still be pushed around
 
 Ai sometimes walks in place while patrolling
 
-ai also sometimes slides in idle pose while patrolling with no player visible
+ai also sometimes slides in idle pose while patrolling 
 
 Ai also seem to stand up out of ragdoll all in sync
 
  AI cant go straight into ragdolled state whe he spawns, traps dont effect him for the first like 2 seconds he spawns
 
-AI doesnt seem to ever give up if he is chasing something he doesnt see or ever reach
+AI doesnt seem to ever give up if he is chasing something on an inacessible part of the navmesh
 
 it seems like grabbing the player is not working well rn, the enemy seems to miss a lot
  
- pickup an item while crouched is messed up
 
