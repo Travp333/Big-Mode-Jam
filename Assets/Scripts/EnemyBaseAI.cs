@@ -692,7 +692,7 @@ public class EnemyIdleState : EnemyBaseState
             {
                 owner.AI.SetState(LookAround, owner, true);
             }
-            else Debug.Log(dist);
+            else //Debug.Log(dist);
 
             //Chase the player if they become visible again
             if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner, true);
