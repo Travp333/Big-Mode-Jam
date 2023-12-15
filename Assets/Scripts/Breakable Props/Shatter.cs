@@ -21,6 +21,8 @@ public class Shatter : MonoBehaviour
 	float time = .5f;
 	float count;
 	float delayedMagnitude;
+	
+
 	protected void Update()
 	{
 		if(count < time){
@@ -56,12 +58,15 @@ public class Shatter : MonoBehaviour
                 //sounds = g.transform.GetChild(5).gameObject;
             }
         }
+		//audioSource = this.gameObject.GetComponent<AudioSource>();
     }
 	public void oneShot(float time){
 		Debug.Log("BREAKKKKK ");
-        Invoke("spawnShatter", time);
+		
+		Invoke("spawnShatter", time);
     }
 	void spawnShatter(){
+		
 		if(door != null){
 			door.GetComponent<Interactable>().OpenDoor = true;
 		}
