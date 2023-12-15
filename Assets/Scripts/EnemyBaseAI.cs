@@ -54,6 +54,7 @@ public class EnemyBaseAI : MonoBehaviour
     AudioSource audioSource;
 
     [HideInInspector] public Vector3 PointOfInterest;
+    [HideInInspector] public float Timer;
 
     [SerializeField] Transform PlayerTransform;
     [SerializeField] PlayerStates PlayerStates;
@@ -197,7 +198,7 @@ public class EnemyBaseAI : MonoBehaviour
     {
         bool gotPlayer = false;
         // Check if the player is still close enough to grab
-        foreach (Collider col in Physics.OverlapSphere(HandTransform.position, 2, PlayerDetectionMask, QueryTriggerInteraction.Ignore))
+        foreach (Collider col in Physics.OverlapSphere(HandTransform.position, EnemyData.GrabRadius, PlayerDetectionMask, QueryTriggerInteraction.Ignore))
         {
             if (col.tag == "Player")
             {
@@ -248,7 +249,7 @@ public class EnemyBaseAI : MonoBehaviour
         PlayerStates.crouchingHitbox.SetActive(false);
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
-            if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling")
+            if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Hands")
             {
                 m.enabled = true;
             }
@@ -359,15 +360,13 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemySuspiciousState : EnemyBaseState
     {
-
-        float _timer;
         public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
             
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
-            _timer = owner.EnemyData.ReactionTime;
+            owner.Timer = owner.EnemyData.ReactionTime;
         }
         public override void Update(EnemyBaseAI owner)
         {
@@ -375,11 +374,11 @@ public class EnemyIdleState : EnemyBaseState
             owner.FaceObjectOfInterest();
 
             // Transition
-            if (_timer > 0)
-                _timer -= Time.deltaTime;
+            if (owner.Timer > 0)
+                owner.Timer -= Time.deltaTime;
             else
             {
-                if (owner.PlayerVisible())
+                if (owner.PlayerVisible() || owner.PlayerWalkingNear())
                 {
                     owner.AI.SetState(PlayerSpotted, owner, true);
                 } else if (owner.TestPatrol)
@@ -399,13 +398,11 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemyPlayerSpottedState : EnemyBaseState
     {
-        float _timer;
-
         public override string Name() { return "PlayerSpotted"; }
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = true;
-            _timer = owner.EnemyData.SurprisedDuration;
+            owner.Timer = owner.EnemyData.SurprisedDuration;
 
             //owner.AnimationStates.noticingDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.startledHash, 0.1f);
@@ -414,8 +411,8 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
             //owner.PlayerVisible();
-            if (_timer > 0)
-                _timer -= Time.deltaTime;
+            if (owner.Timer > 0)
+                owner.Timer -= Time.deltaTime;
             else
                 owner.AI.SetState(ChaseState, owner, true);
         }
@@ -454,19 +451,18 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemySlipState : EnemyBaseState
     {
-        float timer;
         public override string Name() { return "Slipping"; }
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = true;
-            timer = owner.EnemyData.SlipDuration;
+            owner.Timer = owner.EnemyData.SlipDuration;
             //owner.AnimationStates.slipDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.slipHash, 0.1f);
 
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (timer > 0) timer -= Time.deltaTime;
+            if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
             else  owner.AI.SetState(StunnedState, owner, true);
         }
         public override void Exit(EnemyBaseAI owner)
@@ -509,17 +505,16 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemyStunnedState: EnemyBaseState
     {
-        float timer = 0;
         public override string Name() { return "Stunned"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            timer = owner.EnemyData.StunDuration;
+            owner.Timer = owner.EnemyData.StunDuration;
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (timer > 0)
+            if (owner.Timer > 0)
             {
-                timer -= Time.deltaTime;
+                owner.Timer -= Time.deltaTime;
             } else
             {
                 owner.AI.SetState(RiseState, owner, true);             
@@ -535,10 +530,45 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Choking Player"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.Timer = 30;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabWalkHash, 0.1f);
+
+            float nearest = -1;
+            float dist;
+            Vector3 pos = Vector3.zero;
+            bool foundTrash = false;
+            NavMeshPath navMeshPath = new NavMeshPath();
+            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Trash"))
+            {
+                dist = Vector3.Distance(owner.transform.position, obj.transform.position);
+                if (nearest < 0)
+                {
+                    if (owner.Agent.CalculatePath(pos, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                    {
+                        pos = obj.transform.position;
+                        foundTrash = true;
+                        nearest = dist;
+                    }
+                }
+                else
+                {
+                    if (dist < nearest) nearest = dist;
+                    if (owner.Agent.CalculatePath(pos, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                        pos = obj.transform.position;
+                }
+            }
+            if (foundTrash)
+            {
+                owner.Agent.SetDestination(pos);
+            } else
+            {
+                Debug.LogError("No trash chute found. Make sure any of them are tagged \"Trash\"");
+            }
         }
         public override void Update(EnemyBaseAI owner)
         {
+            owner.Timer -= Time.deltaTime;
+            if (owner.Timer < 0) owner.AI.SetState(SuspiciousState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -548,7 +578,7 @@ public class EnemyIdleState : EnemyBaseState
 
     public class EnemyGrabPlayerState : EnemyBaseState
     {
-        public override string Name() { return "Choking Player"; }
+        public override string Name() { return "Grabbing Player"; }
         public override void Enter(EnemyBaseAI owner)
         {
             owner.Agent.isStopped = true;
@@ -567,7 +597,6 @@ public class EnemyIdleState : EnemyBaseState
 
     public class EnemyPatrolState : EnemyBaseState
     {
-        float timer = 0;
         public override string Name() { return "Patrolling"; }
         public override void Enter(EnemyBaseAI owner)
         {
@@ -606,19 +635,18 @@ public class EnemyIdleState : EnemyBaseState
 
     public class EnemyRiseState : EnemyBaseState
     {
-        float timer = 0;
         public override string Name() { return "Rising"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            timer = owner.EnemyData.RiseDuration;
+            owner.Timer = owner.EnemyData.RiseDuration;
             //owner.GetComponent<Animator>()?.Play("Get Up");
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.getUpHash, 0.1f);
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (timer > 0)
+            if (owner.Timer > 0)
             {
-                timer -= Time.deltaTime;
+                owner.Timer -= Time.deltaTime;
             }
             else
             {
@@ -639,11 +667,10 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemyDamagedState : EnemyBaseState
     {
-        float timer = 0;
         public override string Name() { return "Damaged"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            timer = owner.EnemyData.HitFlinchDuration;
+            owner.Timer = owner.EnemyData.HitFlinchDuration;
             owner.Agent.isStopped = true;
             //owner.AnimationStates.damageDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.gettingHitHash, 0.1f);
@@ -651,9 +678,9 @@ public class EnemyIdleState : EnemyBaseState
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (timer > 0)
+            if (owner.Timer > 0)
             {
-                timer -= Time.deltaTime;
+                owner.Timer -= Time.deltaTime;
             }
             else
             {
@@ -692,8 +719,6 @@ public class EnemyIdleState : EnemyBaseState
             {
                 owner.AI.SetState(LookAround, owner, true);
             }
-            else Debug.Log(dist);
-
             //Chase the player if they become visible again
             if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner, true);
             //if (owner.PlayerVisible()) owner.AI.SetState(ChaseState, owner);
@@ -705,8 +730,6 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemyLookAroundState : EnemyBaseState
     {
-        float _timer = 0;
-        float _lookTimer = 0;
         public override string Name() { return "Lookin' Around"; }
         public override void Enter(EnemyBaseAI owner)
         {
@@ -714,17 +737,17 @@ public class EnemyIdleState : EnemyBaseState
             //owner.AnimationStates.searchingDesired = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.searchingHash, 0.1f);
 
-            _timer = owner.EnemyData.SuspiciousTime;
+            owner.Timer = owner.EnemyData.SuspiciousTime;
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (_lookTimer > 0)
+            if (owner.Timer > 0)
             {
-                _lookTimer -= Time.deltaTime;
+                owner.Timer -= Time.deltaTime;
             }
             else
             {
-                _lookTimer = Random.Range(1f, 3f);
+                owner.Timer = Random.Range(1f, 3f);
                 float randomAngle = Random.Range(40, 160);
                 if (Random.Range(0, 2) == 0) // coin flip
                     randomAngle = -randomAngle;
@@ -733,9 +756,9 @@ public class EnemyIdleState : EnemyBaseState
 
             owner.FaceObjectOfInterest();
 
-            if (_timer > 0)
+            if (owner.Timer > 0)
             {
-                _timer -= Time.deltaTime;
+                owner.Timer -= Time.deltaTime;
             }
             else
             {
@@ -754,19 +777,17 @@ public class EnemyIdleState : EnemyBaseState
     }
     public class EnemyRagdollState : EnemyBaseState
     {
-        float _timer;
-
         public override string Name() { return "PlayerSpotted"; }
         public override void Enter(EnemyBaseAI owner)
         {
             owner.RagdollScript.StartRagdoll();
-            _timer = owner.EnemyData.StunDuration;
+            owner.Timer = owner.EnemyData.StunDuration;
         }
         public override void Update(EnemyBaseAI owner)
         {
             //owner.PlayerVisible();
-            if (_timer > 0)
-                _timer -= Time.deltaTime;
+            if (owner.Timer > 0)
+                owner.Timer -= Time.deltaTime;
             else
                 owner.AI.SetState(RiseState, owner, true);
         }
