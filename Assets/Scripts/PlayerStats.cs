@@ -35,11 +35,11 @@ public class PlayerStats : MonoBehaviour, IDataPersistence
     }
     public void LoadData(GameData data) {
         this.hp = data.playerHp;
-        this.transform.position = data.playerPos;
+        //this.transform.position = data.playerPos;
     }
     public void SaveData(ref GameData data) {
         data.playerHp = this.hp;
-        data.playerPos = this.transform.position;
+        //data.playerPos = this.transform.position;
 
 
     }
