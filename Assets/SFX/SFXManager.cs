@@ -8,5 +8,5 @@ public class SFXManager : ScriptableObject
 {
     public AudioMixer mixer;
     public AudioMixerGroup EnvironmentalSounds, Music, PlayerSounds, EnemySounds;
-    public AudioClip EnemyAlert, spring, metalSlam, sillyImpact, spit,schlorp,thump,uff,ceramic1,ceramic2,ceramic3;
+    public AudioClip EnemyAlert, spring, metalSlam, sillyImpact, spit,schlorp,thump,uff,ceramic1,ceramic2,ceramic3,LockSound;
 }
