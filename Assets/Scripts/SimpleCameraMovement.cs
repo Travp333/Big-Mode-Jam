@@ -19,8 +19,7 @@ public class SimpleCameraMovement : MonoBehaviour
     float mouseSmoothTime = 0.03f;
 	float pitch = 0f;
 	public GameObject player = default;
-    [SerializeField, Range(50, 500f)]
-	float sens;
+    [Range(50, 500f)] public float sens = 66;
 	public void SnapFPStoTPS(){
 		
 		//playerCamera.localEulerAngles = new Vector3(0f,0f,0f);
@@ -35,7 +34,6 @@ public class SimpleCameraMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-
 	}
 	void Update()
 	{
