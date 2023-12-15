@@ -10,17 +10,33 @@ public class MusicSwitcher : MonoBehaviour
     AudioSource a,b;
 	float t = 0f;
 
+	
 	private void Update()
 	{
-		if (p.IsBlack)
+
+
+
+		if (p.IsBlack) {
+			if (a.volume < 1){
+				a.volume += .02f; }
+			if (b.volume > 0)
+			{
+				b.volume -= .02f;
+			}
+		}
+		if (!p.IsBlack )
 		{
-			
-			a.volume = 1;
-			b.volume = 0;
+			if (a.volume > 0){
+				a.volume -= .02f;}
+			if (b.volume < 1){
+				b.volume += .02f;}
 		}
-		else {
-			a.volume = 0;
-			b.volume = 1;
-		}
+		if (a.volume > 1) { a.volume = 1f; }
+		if (b.volume > 1) { b.volume = 1f; }
+
+
+
+
+
 	}
 }
