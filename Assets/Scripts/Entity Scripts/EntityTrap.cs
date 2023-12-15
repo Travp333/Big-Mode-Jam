@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class EntityTrap : EntityParent
 {
@@ -17,11 +18,17 @@ public class EntityTrap : EntityParent
     public bool trapIsTriggered;
     [Tooltip("Set to -1 for infinite")]
     public int numberOfUses;
-    // Start is called before the first frame update
+	
+	[SerializeField]
+	SFXManager sfx;
+	
+	AudioSource audioSource;
+
     public override void Awake()
     {
         base.Awake();
         trapIsTriggered = false;
+		audioSource = this.gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -83,6 +90,7 @@ public class EntityTrap : EntityParent
 
 				if (baseAi)
                 {
+					TriggerTrapSound(Type);
 					switch (Type)
 					{
 					case TrapType.Hammer:
@@ -119,14 +127,35 @@ public class EntityTrap : EntityParent
 	}
 	// public void OnCollisionEnter(Collision col)
 	// {
-	    // EnemyBaseAI enemy;
-	    // if (col.collider.tag == "Enemy")
-	        // {
-	        // if (col.transform.root.TryGetComponent(out enemy))
-	            // {
-	            //ActivateTrap(col.gameObject);
-	            //enemy.AI.SetState(EnemyBaseAI.StunnedState, enemy);
-	            //}
-	    //  }
-	    //}
+	// EnemyBaseAI enemy;
+	// if (col.collider.tag == "Enemy")
+	// {
+	// if (col.transform.root.TryGetComponent(out enemy))
+	// {
+	//ActivateTrap(col.gameObject);
+	//enemy.AI.SetState(EnemyBaseAI.StunnedState, enemy);
+	//}
+	//  }
+	//}
+	private void TriggerTrapSound(TrapType type) {
+		switch (type)
+		{
+			case TrapType.Hammer:
+				audioSource.PlayOneShot(sfx.metalSlam);
+				break;
+			case TrapType.Glue:
+				audioSource.PlayOneShot(sfx.schlorp);
+				break;
+			case TrapType.Banana:
+				audioSource.PlayOneShot(sfx.schlorp);
+				break;
+			case TrapType.PunchGlove:
+				audioSource.PlayOneShot(sfx.spring);
+				break;
+			case TrapType.Hole:
+				
+				break;
+		}
+	}
+	
 }

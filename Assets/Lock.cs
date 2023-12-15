@@ -5,6 +5,10 @@ using UnityEngine;
 public class Lock : MonoBehaviour
 {
 	[SerializeField]
+	public bool wantsKey;
+	[SerializeField]
+	public bool wantsArtifact;
+	[SerializeField]
 	GameObject door;
 	[SerializeField]
 	GameObject UnlockedPrefab;

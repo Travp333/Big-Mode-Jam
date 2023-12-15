@@ -45,7 +45,9 @@ public class Shatter : MonoBehaviour
 	void Start() {
 		//startingPodium
 		foreach(GameObject s in GameObject.FindGameObjectsWithTag("Podium")){
-			startingPodium = s.GetComponent<ArtifactRespawner>();
+			if(s.GetComponent<ArtifactRespawner>() != null){
+				startingPodium = s.GetComponent<ArtifactRespawner>();
+			}
 		}
         foreach(GameObject g in GameObject.FindGameObjectsWithTag("Player")){
             if(g.GetComponent<Movement>()!=null){
@@ -55,7 +57,8 @@ public class Shatter : MonoBehaviour
             }
         }
     }
-    public void oneShot(float time){
+	public void oneShot(float time){
+		Debug.Log("BREAKKKKK ");
         Invoke("spawnShatter", time);
     }
 	void spawnShatter(){
@@ -69,7 +72,9 @@ public class Shatter : MonoBehaviour
 			
 		}
 		if(this.gameObject.GetComponent<isArtifact>() != null){
-			startingPodium.RespawnArtifact();
+			if(startingPodium!=null){
+				startingPodium.RespawnArtifact();
+			}
 		}
 		Instantiate(shatterPrefab, shatterSpawnPos.transform.position, shatterSpawnPos.transform.rotation);
 		if(player.GetComponent<PlayerStates>().holding){

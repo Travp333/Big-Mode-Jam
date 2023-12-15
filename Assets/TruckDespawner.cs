@@ -6,8 +6,10 @@ public class TruckDespawner : MonoBehaviour
 {
 	protected void OnTriggerEnter(Collider other)
 	{
-		if(other.gameObject.tag == "Truck"){
-			Destroy(other.transform.parent.gameObject);
+		if(other.gameObject.transform.parent != null){
+			if(other.gameObject.transform.parent.GetComponent<TruckMovement>()!= null){
+				Destroy(other.transform.parent.gameObject);
+			}
 		}
 	}
 }

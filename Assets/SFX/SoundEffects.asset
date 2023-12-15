@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d9e58a2f081518468a19d6f2272c3c4, type: 3}
+  m_Name: SoundEffects
+  m_EditorClassIdentifier: 
+  mixer: {fileID: 24100000, guid: ec0852bb1bec1114487880b1433b7c5c, type: 2}
+  EnvironmentalSounds: {fileID: -1127833326878381691, guid: ec0852bb1bec1114487880b1433b7c5c,
+    type: 2}
+  Music: {fileID: -2353657591091710003, guid: ec0852bb1bec1114487880b1433b7c5c, type: 2}
+  PlayerSounds: {fileID: 7915847559126555597, guid: ec0852bb1bec1114487880b1433b7c5c,
+    type: 2}
+  EnemySounds: {fileID: 300903819525034848, guid: ec0852bb1bec1114487880b1433b7c5c,
+    type: 2}
+  EnemyAlert: {fileID: 8300000, guid: 10fbeeeb4def3b54a95a59154cc83dc8, type: 3}
+  spring: {fileID: 8300000, guid: ebbeb1fd9f73d1b46bb387d2e12b99f3, type: 3}
+  metalSlam: {fileID: 8300000, guid: 5097f731839c77645b739e00f7fbc7a2, type: 3}
+  sillyImpact: {fileID: 8300000, guid: 314bdd3e32ce0a04ab93264b6df87d58, type: 3}
+  spit: {fileID: 8300000, guid: 97ec3342197f59c48bb33b0c0313b6f6, type: 3}
+  schlorp: {fileID: 8300000, guid: 4f9bc715bf2663647af2feaa8bd5c0ab, type: 3}
+  thump: {fileID: 8300000, guid: b002ba7be4c8af541a3962cd505230f0, type: 3}
+  uff: {fileID: 8300000, guid: f20ec6dd21bcded4c95ff318f65c01bf, type: 3}

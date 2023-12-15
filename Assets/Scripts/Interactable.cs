@@ -29,7 +29,7 @@ public class Interactable : MonoBehaviour
     void Update()
     {
 	    if (OpenDoor)
-        {
+	    {
 		    SetActionCommand();
 		    OpenDoor = false;
         }

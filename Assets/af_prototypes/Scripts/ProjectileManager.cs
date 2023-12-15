@@ -54,12 +54,15 @@ public class ProjectileManager : MonoBehaviour
                 }
                 if (ImpactEffects) Instantiate(ImpactEffects, _hit.point, Quaternion.LookRotation(_hit.normal));
                 Destroy(gameObject);
-            } else if (_hit.collider.tag == "Target")
-	        {
+            } 
+            else if (_hit.collider.tag == "Target"){
 	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
-	        } else if (_hit.collider.tag == "Breakable")
-	        {
+	        } 
+            else if (_hit.collider.tag == "Breakable"){
 	        	_hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
+	        }
+        	else if (_hit.collider.tag == "Artifact"){
+		        _hit.collider.gameObject.GetComponent<Shatter>().oneShot(0);
 	        }
             else
             {

@@ -113,11 +113,32 @@ public class PlayerPickup : MonoBehaviour
 						colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
 						foreach(Collider hit in colliders){
 							if(hit.gameObject.GetComponent<Lock>()){
-								hit.gameObject.GetComponent<Lock>().Unlock();
-								if(objectsInTriggerSpace.Contains(holdingObject)){
-									objectsInTriggerSpace.Remove(holdingObject);
+								if(hit.gameObject.GetComponent<Lock>().wantsKey){
+									hit.gameObject.GetComponent<Lock>().Unlock();
+									if(objectsInTriggerSpace.Contains(holdingObject)){
+										objectsInTriggerSpace.Remove(holdingObject);
+									}
+										Destroy(holdingObject);
 								}
-								Destroy(holdingObject);
+							}
+						}
+						if(holdingObject != null){
+							holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
+						}
+					}
+					if(holdingObject.GetComponent<isArtifact>()!= null){
+						Debug.Log("Droped Artifact");
+						colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
+						foreach(Collider hit in colliders){
+							if(hit.gameObject.GetComponent<Lock>()){
+								if(hit.gameObject.GetComponent<Lock>().wantsArtifact){
+									hit.gameObject.GetComponent<Lock>().Unlock();
+									if(objectsInTriggerSpace.Contains(holdingObject)){
+										objectsInTriggerSpace.Remove(holdingObject);
+									}
+									Destroy(holdingObject);
+								}
+
 							}
 						}
 						if(holdingObject != null){
