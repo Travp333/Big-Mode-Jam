@@ -126,7 +126,7 @@ public class PlayerPickup : MonoBehaviour
 							holdingObject.GetComponent<EntityParent>().PlaceObject(placeObjectPosition);
 						}
 					}
-					if(holdingObject.tag == "Artifact"){
+					if(holdingObject.GetComponent<isArtifact>()!= null){
 						Debug.Log("Droped Artifact");
 						colliders = Physics.OverlapSphere(this.transform.position, keyRadius);
 						foreach(Collider hit in colliders){

@@ -276,11 +276,11 @@ public class AnimationStateController : MonoBehaviour
 			animator.SetBool(isArmedHash, false);
 			
 		}
-		if(!isHolding && holdPressed && isOnGroundADJ && !isCrouching && !isRolling){
+		if(!isHolding && holdPressed && isOnGroundADJ && !isRolling){
 			animator.SetBool(isHoldingHash, true);
 			//Debug.Log("Picking Up in animator");
 		}
-		if(isHolding && (!holdPressed || !isOnGroundADJ || isCrouching || isRolling)){
+		if(isHolding && (!holdPressed || !isOnGroundADJ || isRolling)){
 			animator.SetBool(isHoldingHash, false);
 			//Debug.Log("PuttingDown in animatior");
 		}

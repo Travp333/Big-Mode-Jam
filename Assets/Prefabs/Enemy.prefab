@@ -924,22 +924,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.6
+      value: 48.295414
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.8134456
+      value: -1.6170807
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 117.7
+      value: -176.78
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.99969834
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
@@ -949,7 +949,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.024561059
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
@@ -964,7 +964,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 722.815
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4e879b0a3080db43b77785fe6a711a5,
         type: 3}
@@ -2388,9 +2388,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Points:
-  - {x: -27.82, y: -2, z: 0}
-  - {x: -104.8, y: 25.5, z: 6.78}
-  - {x: -55.8, y: 44.5, z: 2.31}
+  - {x: 48.295414, y: -1.6170807, z: -176.78}
   Type: 1
   PatrolIndex: 0
 --- !u!82 &381171472174791109
