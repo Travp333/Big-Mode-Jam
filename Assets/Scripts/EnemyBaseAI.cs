@@ -600,7 +600,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
             owner.Timer -= Time.deltaTime;
-            if (owner.Timer < 0) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.Timer < 0) owner.AI.SetState(SlipState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
