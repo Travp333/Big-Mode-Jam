@@ -8,11 +8,13 @@ public class MusicSwitcher : MonoBehaviour
     PlayerColorChangeBehavior p;
     [SerializeField]
     AudioSource a,b;
+	float t = 0f;
 
 	private void Update()
 	{
 		if (p.IsBlack)
 		{
+			
 			a.volume = 1;
 			b.volume = 0;
 		}
