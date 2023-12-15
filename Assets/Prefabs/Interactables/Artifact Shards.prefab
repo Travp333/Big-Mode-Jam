@@ -151,6 +151,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 4429607475948661366}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 743d21572eb29f34186590464089aa42,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7913592451167036107}
     - targetCorrespondingSourceObject: {fileID: 5783429469702312536, guid: 743d21572eb29f34186590464089aa42,
         type: 3}
       insertIndex: -1
@@ -339,9 +343,20 @@ MonoBehaviour:
   radius: 10
   power: 1000
   upModifier: 50
-  isBomb: 0
-  playerDamageMax: 0
-  playerDamageMin: 0
+--- !u!114 &7913592451167036107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2135654709555171264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba5639827807e542be20cbc5cc994aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeMin: 15
+  lifeMax: 15
 --- !u!1 &3425892103446319707 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -4690215600816135990, guid: 743d21572eb29f34186590464089aa42,
