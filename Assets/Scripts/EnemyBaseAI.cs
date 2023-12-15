@@ -29,6 +29,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyGluedState gluedState = new EnemyGluedState();
     public static EnemyGrabPlayerState grabState = new EnemyGrabPlayerState();
     public static EnemyChokingPlayerState chokingPlayerState = new EnemyChokingPlayerState();
+    public static EnemyLookingState LookingState = new EnemyLookingState();
     //public static EnemySlipState SlipState = new EnemySlipState();
 
 
@@ -378,7 +379,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.Timer -= Time.deltaTime;
             else
             {
-                if (owner.PlayerVisible() || owner.PlayerWalkingNear())
+                if (owner.PlayerVisible() || (owner.PlayerWalkingNear() && !owner.PlayerBehindCover()))
                 {
                     owner.AI.SetState(PlayerSpotted, owner, true);
                 } else if (owner.TestPatrol)
@@ -414,7 +415,38 @@ public class EnemyIdleState : EnemyBaseState
             if (owner.Timer > 0)
                 owner.Timer -= Time.deltaTime;
             else
-                owner.AI.SetState(ChaseState, owner, true);
+            {
+                NavMeshPath navMeshPath = new NavMeshPath();
+
+                if (owner.Agent.CalculatePath(owner.PlayerPosition, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                {
+                    owner.AI.SetState(ChaseState, owner, true);
+                } else
+                {
+                    owner.AI.SetState(LookingState, owner, true);
+                }
+            }
+        }
+        public override void Exit(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = false;
+        }
+    }
+    public class EnemyLookingState : EnemyBaseState
+    {
+        public override string Name() { return "Looking at Player"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
+            owner.Timer = 10;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            owner.PointOfInterest = owner.PlayerPosition;
+            owner.FaceObjectOfInterest();
+            if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
+            else owner.AI.SetState(IdleState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -568,7 +600,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
             owner.Timer -= Time.deltaTime;
-            if (owner.Timer < 0) owner.AI.SetState(SuspiciousState, owner);
+            if (owner.Timer < 0) owner.AI.SetState(SlipState, owner);
         }
         public override void Exit(EnemyBaseAI owner)
         {
@@ -689,7 +721,15 @@ public class EnemyIdleState : EnemyBaseState
                     owner.AI.SetState(SuspiciousState, owner, true);
                 } else
                 {
-                    owner.AI.SetState(ChaseState, owner, true);
+                    NavMeshPath navMeshPath = new NavMeshPath();
+
+                    if (owner.Agent.CalculatePath(owner.PlayerPosition, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+                    {
+                        owner.AI.SetState(ChaseState, owner, true);
+                    } else
+                    {
+                        owner.AI.SetState(LookingState, owner, true);
+                    }
                 }
             }
         }
