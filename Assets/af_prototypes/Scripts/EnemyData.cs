@@ -27,6 +27,8 @@ public class EnemyData : ScriptableObject
     public float SlipDuration = 1;
     [Tooltip("How long this enemy will stay stunned by a trap")]
     public float StunDuration= 6;
+    [Tooltip("How long this enemy will stay ragdolled")]
+    public float RagdollDuration = 6;
     [Tooltip("How long this enemy will take to get up")]
     public float RiseDuration = 6;
     [Tooltip("How far away a slingshot projectile will alert this guy")]
