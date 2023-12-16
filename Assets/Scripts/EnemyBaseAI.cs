@@ -529,6 +529,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Pulverized"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            owner.Agent.velocity = Vector3.zero;
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.squashedHash, 0.1f);
         }
@@ -913,6 +914,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner)
         {
             if (owner.GrabbedObject) owner.ReleasePlayer();
+            owner.Agent.velocity = Vector3.zero;
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.fallHash, 0.1f);
         }
