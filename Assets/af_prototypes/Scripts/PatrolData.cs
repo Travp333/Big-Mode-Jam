@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class PatrolData : MonoBehaviour
 {
-    [SerializeField] private Vector3[] Points;
+    [SerializeField] public Vector3[] Points;
     public PatrolType Type;
     public int PatrolIndex;
     private bool reverse = false;

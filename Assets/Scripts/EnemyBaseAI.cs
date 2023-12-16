@@ -30,6 +30,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyGrabPlayerState grabState = new EnemyGrabPlayerState();
     public static EnemyChokingPlayerState chokingPlayerState = new EnemyChokingPlayerState();
     public static EnemyLookingState LookingState = new EnemyLookingState();
+    public static EnemyDumpPlayerState DumpingState = new EnemyDumpPlayerState();
     //public static EnemySlipState SlipState = new EnemySlipState();
 
 
@@ -72,6 +73,7 @@ public class EnemyBaseAI : MonoBehaviour
     GameObject playerDummy;
     OrbitCamera orbCam;
     PlayerColorChangeBehavior colorChange;
+    [HideInInspector] public TubeEntry tube;
 
     Vector3 PlayerPosition {
         get
@@ -233,6 +235,13 @@ public class EnemyBaseAI : MonoBehaviour
         }
         colorChange.face.enabled = false;
     }
+    public void DumpPlayerInPipe()
+    {
+        GrabbedObject.transform.position = HandTransform.position;
+        ReleasePlayer();
+        if (tube) tube.DumpPlayer(playerRoot);
+        tube = null;
+    }
     public void ReleasePlayer()
     {
         //Got player root!
@@ -250,7 +259,7 @@ public class EnemyBaseAI : MonoBehaviour
         PlayerStates.crouchingHitbox.SetActive(false);
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
-            if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Hands")
+            if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Cylinder" && m.name != "Cylinder.001")
             {
                 m.enabled = true;
             }
@@ -355,7 +364,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.AI.SetState(SuspiciousState, owner, true);
             }
         }
-        public override void Exit(EnemyBaseAI owner) {
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState) {
             owner.Agent.isStopped = false;
         }
     }
@@ -392,7 +401,7 @@ public class EnemyIdleState : EnemyBaseState
                 }
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
         }
@@ -427,7 +436,7 @@ public class EnemyIdleState : EnemyBaseState
                 }
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
         }
@@ -448,7 +457,7 @@ public class EnemyIdleState : EnemyBaseState
             if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
             else owner.AI.SetState(IdleState, owner);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
         }
@@ -475,7 +484,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.AI.SetState(grabState, owner);
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.speed = owner.EnemyData.WalkSpeed;
             //owner.AnimationStates.chaseDesired = false;
@@ -497,7 +506,7 @@ public class EnemyIdleState : EnemyBaseState
             if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
             else  owner.AI.SetState(StunnedState, owner, true);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             //owner.AnimationStates.slipDesired = false;
             //owner.AnimationStates.onBackDesired = true;
@@ -516,7 +525,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
         }
     }
@@ -531,7 +540,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Update(EnemyBaseAI owner)
         {
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
         }
     }
@@ -552,7 +561,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.AI.SetState(RiseState, owner, true);             
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             //owner.AnimationStates.onBackDesired = false;
         }
@@ -567,44 +576,86 @@ public class EnemyIdleState : EnemyBaseState
 
             float nearest = -1;
             float dist;
-            Vector3 pos = Vector3.zero;
+            Vector3 pos, nearestPos = Vector3.zero;
             bool foundTrash = false;
             NavMeshPath navMeshPath = new NavMeshPath();
-            foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Trash"))
+            GameObject[] chutes = GameObject.FindGameObjectsWithTag("Trash");
+            foreach (GameObject obj in chutes)
             {
                 dist = Vector3.Distance(owner.transform.position, obj.transform.position);
-                if (nearest < 0)
+                pos = obj.transform.position;
+
+
+                if (!foundTrash)
                 {
                     if (owner.Agent.CalculatePath(pos, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
                     {
-                        pos = obj.transform.position;
                         foundTrash = true;
                         nearest = dist;
+                        nearestPos = pos;
                     }
                 }
                 else
                 {
-                    if (dist < nearest) nearest = dist;
                     if (owner.Agent.CalculatePath(pos, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
-                        pos = obj.transform.position;
+                    {
+                        if (dist < nearest)
+                        {
+                            nearest = dist;
+                            nearestPos = pos;
+
+                        }
+                    }
                 }
+                Debug.Log(obj.name + " Distance: " + dist + " nearest thing so far: " + nearest);
+
             }
             if (foundTrash)
             {
-                owner.Agent.SetDestination(pos);
+                owner.Agent.SetDestination(nearestPos);
             } else
             {
+                owner.Timer = 10;
                 Debug.LogError("No trash chute found. Make sure any of them are tagged \"Trash\"");
             }
         }
         public override void Update(EnemyBaseAI owner)
         {
+            if (owner.GrabbedObject) owner.GrabbedObject.transform.position = owner.HandTransform.position;
+
             owner.Timer -= Time.deltaTime;
             if (owner.Timer < 0) owner.AI.SetState(SlipState, owner);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
-            owner.ReleasePlayer();
+            if (newState != DumpingState) owner.ReleasePlayer();
+        }
+    }
+
+    public class EnemyDumpPlayerState : EnemyBaseState
+    {
+        public override string Name() { return "Dumping"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.dumpHash, 0.1f);
+            owner.Timer = 1.5f;
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+            if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
+            else
+            {
+                if (owner.TestPatrol)
+                {
+                    owner.AI.SetState(PatrolState, owner, true);
+                }
+                else owner.AI.SetState(IdleState, owner, true);
+            }
+        }
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
+        {
+            owner.Agent.isStopped = false;
         }
     }
 
@@ -615,15 +666,17 @@ public class EnemyIdleState : EnemyBaseState
         {
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabHash, 0.1f);
+            owner.Timer = 1.5f;
         }
         public override void Update(EnemyBaseAI owner)
         {
+            if (owner.Timer > 0) owner.Timer -= Time.deltaTime;
+            else owner.AI.SetState(ChaseState, owner);
             //owner.GrabbedObject.transform.position = owner.HandTransform.position;
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
-
         }
     }
 
@@ -650,6 +703,10 @@ public class EnemyIdleState : EnemyBaseState
             float dist = Vector3.Distance(owner.transform.position, owner.PointOfInterest);
             if (dist < DISTANCETHATISCLOSEENOUGH)
             {
+                if (owner.PatrolPoints.Points.Length <= 1)
+                {
+                    owner.AI.SetState(IdleState, owner);
+                }
                 owner.PatrolPoints.SetNextPatrolPoint();
                 owner.PointOfInterest = owner.PatrolPoints.TargetPoint;
                 owner.GoToPointOfInterest();
@@ -658,7 +715,7 @@ public class EnemyIdleState : EnemyBaseState
             if (owner.PlayerWalkingNear()) owner.AI.SetState(SuspiciousState, owner, true);
             owner.DebugCommentText.text = dist.ToString();
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             //owner.AnimationStates.onBackDesired = false;
             owner.Agent.stoppingDistance = owner.EnemyData.StoppingDistance;
@@ -692,7 +749,7 @@ public class EnemyIdleState : EnemyBaseState
                 }
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
         }
@@ -733,7 +790,7 @@ public class EnemyIdleState : EnemyBaseState
                 }
             }
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
             //owner.AnimationStates.damageDesired = false;
@@ -763,7 +820,7 @@ public class EnemyIdleState : EnemyBaseState
             if (!owner.PlayerBehindCover()) owner.AI.SetState(ChaseState, owner, true);
             //if (owner.PlayerVisible()) owner.AI.SetState(ChaseState, owner);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.stoppingDistance = owner.EnemyData.StoppingDistance;
         }
@@ -810,7 +867,7 @@ public class EnemyIdleState : EnemyBaseState
             }
             if (owner.PlayerVisible()) owner.AI.SetState(SuspiciousState, owner, true);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             owner.Agent.isStopped = false;
         }
@@ -831,7 +888,7 @@ public class EnemyIdleState : EnemyBaseState
             else
                 owner.AI.SetState(RiseState, owner, true);
         }
-        public override void Exit(EnemyBaseAI owner)
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
         {
             //owner.AnimationStates.noticingDesired = false;
             owner.RagdollScript.RevertRagdoll();
@@ -846,7 +903,7 @@ namespace StateMachine
         public abstract string Name();
         public virtual void Enter(EnemyBaseAI owner) { throw new System.NotImplementedException(); }
         public virtual void Update(EnemyBaseAI owner) { throw new System.NotImplementedException(); }
-        public virtual void Exit(EnemyBaseAI owner) { throw new System.NotImplementedException(); }
+        public virtual void Exit(EnemyBaseAI owner, EnemyBaseState newState) { throw new System.NotImplementedException(); }
     }
     public class EnemyStateMachine
     {
@@ -873,7 +930,7 @@ namespace StateMachine
                 }
 
                 LastState = CurrentState;
-                CurrentState?.Exit(owner);
+                CurrentState?.Exit(owner, newState);
             }
             CurrentState = newState;
             if (owner.DebugStateText) owner.DebugStateText.text = newState.Name();

@@ -24,6 +24,7 @@ public class NewEnemyAnimStateController : MonoBehaviour
     public int searchingHash { get; private set; }
     public int grabHash { get; private set; }
     public int grabWalkHash { get; private set; }
+    public int dumpHash { get; private set; }
 	
 	public void SpawnVolume(){
 		HandVolume.GetComponent<GrabPlayer>().EnableVolume();
@@ -61,6 +62,7 @@ public class NewEnemyAnimStateController : MonoBehaviour
             searchingHash  = Animator.StringToHash("Searching");
             grabHash  = Animator.StringToHash("Pickup");
             grabWalkHash  = Animator.StringToHash("Pickup Walk");
+            dumpHash  = Animator.StringToHash("pickup Dunk");
         }
     }
 }
