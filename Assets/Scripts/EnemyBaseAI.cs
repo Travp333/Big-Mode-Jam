@@ -954,6 +954,7 @@ namespace StateMachine
                         case EnemyBaseAI.EnemyRiseState:
                         case EnemyBaseAI.EnemySlipState:
                         case EnemyBaseAI.EnemySmashedState:
+                        case EnemyBaseAI.EnemyFallInHoleState:
                             return;
                     }
                 }
