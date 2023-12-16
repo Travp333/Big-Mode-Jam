@@ -14,6 +14,7 @@ public class Lock : MonoBehaviour
 	GameObject UnlockedPrefab;
 	[SerializeField]
 	Transform UnlockPrefabSpawn;
+	
     // Start is called before the first frame update
     void Start()
     {
