@@ -59,30 +59,69 @@ public class TubeEntry : MonoBehaviour
 		player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(false);
 		
 	}
+	public void DumpPlayer(Transform playerRoot)
+    {
+        Movement mov = playerRoot.GetComponentInChildren<Movement>();
+        PlayerStates states = playerRoot.GetComponentInChildren<PlayerStates>();
+        if (mov != null)
+        {
+            if (mov.playerInputSpace.gameObject != null)
+            {
+                if (states.FPSorTPS == false)
+                {
+                    //Debug.Log("Tubed while in first person something");
+                    states.ForceThirdPerson();
+                }
+                if (states.holding == true)
+                {
+                    //Debug.Log("Tubed while holding something");
+                    states.pickup.PutDown();
+                }
+                states.SetFPSBlock(true);
+                this.GetComponent<Animator>().SetBool("Enter", true);
+                Invoke("ResetEnter", .1f);
+                Orbitcam.focus = tubeCamSpot.transform;
+                mov.blockMovement();
+                player.transform.position = safeRoom.transform.position;
+                Invoke("SetCamToExit", 2f);
+            }
+        }
+    }
 	// OnTriggerEnter is called when the Collider other enters the trigger.
 	protected void OnTriggerEnter(Collider other)
 	{
-		
-		if(other.gameObject.tag == "Player"){
-			if(other.transform.parent.parent.gameObject.GetComponent<Movement>() != null){
-				if(other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject != null){
-					if(other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().FPSorTPS == false){
-						//Debug.Log("Tubed while in first person something");
-						other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().ForceThirdPerson();
-					}
-					if(other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().holding == true){
-						//Debug.Log("Tubed while holding something");
-						other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().pickup.PutDown();
-					}
-					player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(true);
-					this.GetComponent<Animator>().SetBool("Enter", true);
-					Invoke("ResetEnter", .1f);
-					Orbitcam.focus = tubeCamSpot.transform;
-					player.GetComponent<Movement>().blockMovement();
-					player.transform.position = safeRoom.transform.position;
-					Invoke("SetCamToExit", 2f);
-				}
-			}
+		Debug.Log(other.gameObject.name);
+		if (other.tag == "AI")
+		{
+			EnemyBaseAI ai = other.transform.root.GetComponent<EnemyBaseAI>();
+            ai.tube = this;
+			if (ai) ai.AI.SetState(EnemyBaseAI.DumpingState, ai);
 		}
-	}
+/*        if (other.gameObject.tag == "Player")
+        {
+            if (other.transform.parent.parent.gameObject.GetComponent<Movement>() != null)
+            {
+                if (other.transform.parent.parent.gameObject.GetComponent<Movement>().playerInputSpace.gameObject != null)
+                {
+                    if (other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().FPSorTPS == false)
+                    {
+                        //Debug.Log("Tubed while in first person something");
+                        other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().ForceThirdPerson();
+                    }
+                    if (other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().holding == true)
+                    {
+                        //Debug.Log("Tubed while holding something");
+                        other.transform.parent.parent.gameObject.GetComponent<PlayerStates>().pickup.PutDown();
+                    }
+                    player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(true);
+                    this.GetComponent<Animator>().SetBool("Enter", true);
+                    Invoke("ResetEnter", .1f);
+                    Orbitcam.focus = tubeCamSpot.transform;
+                    player.GetComponent<Movement>().blockMovement();
+                    player.transform.position = safeRoom.transform.position;
+                    Invoke("SetCamToExit", 2f);
+                }
+            }
+        }*/
+    }
 }
