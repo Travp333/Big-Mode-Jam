@@ -18,4 +18,8 @@ public class Killplane : MonoBehaviour
 			}
 		}
 	}
+	public void resetSpawn(Transform newT){
+		respawnPoint.transform.position = newT.position;
+	}
+	
 }

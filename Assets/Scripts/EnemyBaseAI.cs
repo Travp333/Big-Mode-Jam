@@ -132,7 +132,7 @@ public class EnemyBaseAI : MonoBehaviour
     {
         if (Agent.isOnNavMesh) Agent.SetDestination(PointOfInterest);
     }
-    public float DistanceToPlayer { 
+    public float DistanceToPlayer {
         get {
             return Vector3.Distance(transform.position, playerMovement.transform.position);
         }
@@ -170,8 +170,8 @@ public class EnemyBaseAI : MonoBehaviour
             // if CheckIfPointVisible is false, alert this enemy if the projectile hit in the radius
             else if (!CheckIfPointVisible) return true;
         }
-        
-        // returns true if 
+
+        // returns true if
         Physics.Linecast(EyeTransform.position, PointOfInterest, out _hit, PlayerDetectionMask);
         return Vector3.Distance(EyeTransform.position, _hit.point) >= distToPOI;
     }
@@ -201,7 +201,7 @@ public class EnemyBaseAI : MonoBehaviour
 
     public void PickupPlayer()
 	{
-		
+
         bool gotPlayer = false;
         // Check if the player is still close enough to grab
         foreach (Collider col in Physics.OverlapSphere(HandTransform.position, EnemyData.GrabRadius, PlayerDetectionMask, QueryTriggerInteraction.Ignore))
@@ -262,7 +262,7 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.crouching = false;
         playerStates.standingHitbox.SetActive(true);
         playerStates.crouchingHitbox.SetActive(false);
-	    
+
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
             if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Cylinder" && m.name != "Cylinder.001")
@@ -344,7 +344,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void FaceObjectOfInterest()
     {
-        
+
         Vector3 objectVector = PointOfInterest- transform.position;
         transform.rotation = Quaternion.Lerp( transform.rotation, Quaternion.LookRotation(Vector3.Scale(objectVector, FLATVECTOR)), Time.deltaTime * EnemyData.TurnSpeed );
     }
@@ -381,7 +381,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Suspicious"; }
         public override void Enter(EnemyBaseAI owner)
         {
-            
+
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.susHash, 0.1f);
             owner.Timer = owner.EnemyData.ReactionTime;
@@ -403,7 +403,7 @@ public class EnemyIdleState : EnemyBaseState
                 {
                     owner.AI.SetState(PatrolState, owner, true);
                 }
-                else 
+                else
                 {
                     owner.AI.SetState(IdleState, owner, true);
                 }
@@ -566,7 +566,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.Timer -= Time.deltaTime;
             } else
             {
-                owner.AI.SetState(RiseState, owner, true);             
+                owner.AI.SetState(RiseState, owner, true);
             }
         }
         public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
@@ -672,7 +672,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Grabbing Player"; }
         public override void Enter(EnemyBaseAI owner)
 	    {
-        	
+
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabHash, 0.1f);
             owner.Timer = 1.5f;
@@ -816,7 +816,7 @@ public class EnemyIdleState : EnemyBaseState
 
             // Go to the place the player was last seen at
             owner.PointOfInterest = owner.PlayerTransform.position;
-            owner.GoToPointOfInterest();            
+            owner.GoToPointOfInterest();
         }
         public override void Update(EnemyBaseAI owner)
         {
