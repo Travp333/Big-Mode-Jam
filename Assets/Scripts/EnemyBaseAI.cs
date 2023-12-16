@@ -60,7 +60,6 @@ public class EnemyBaseAI : MonoBehaviour
     [HideInInspector] public float Timer;
 
     [SerializeField] Transform PlayerTransform;
-    [SerializeField] PlayerStates PlayerStates;
     Ray _playerRay;
     RaycastHit _hit;
 
@@ -144,6 +143,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void LookAtProjectile(object sender, ImpactParams parameters)
     {
+        if (Vector3.Distance(transform.position, parameters.ImpactPoint) > EnemyData.DistractionRadius) return;
         // prevent getting locked in suspicious state
 	     if (AI.CurrentState == SuspiciousState || AI.CurrentState == ChaseState) return;
 	    PointOfInterest = parameters.ImpactPoint;
@@ -177,10 +177,10 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public bool PlayerWalkingNear()
     {
-        if (PlayerStates.moving)
+        if (playerStates.moving)
         {
-            if (PlayerStates.crouching) return false;
-            if (PlayerStates.walking)
+            if (playerStates.crouching) return false;
+            if (playerStates.walking)
             {
                 if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.WalkingFootstepDetectionRange)
                 {
@@ -256,11 +256,11 @@ public class EnemyBaseAI : MonoBehaviour
         //disable player movement
         playerMovement.unblockMovement();
         //player.GetComponent<Movement>().enabled = true;
-        PlayerStates.SetFPSBlock(false);
-        PlayerStates.choked = false;
-        PlayerStates.crouching = false;
-        PlayerStates.standingHitbox.SetActive(true);
-	    PlayerStates.crouchingHitbox.SetActive(false);
+        playerStates.SetFPSBlock(false);
+        playerStates.choked = false;
+        playerStates.crouching = false;
+        playerStates.standingHitbox.SetActive(true);
+        playerStates.crouchingHitbox.SetActive(false);
 	    playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
@@ -361,6 +361,7 @@ public class EnemyIdleState : EnemyBaseState
             owner.audioSource.PlayOneShot(owner.sfx.EnemyAlert);
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.idleHash, 0.1f);
             owner.Agent.isStopped = true;
+            if (owner.GrabbedObject) owner.ReleasePlayer();
         }
         public override void Update(EnemyBaseAI owner) {
             //owner.PlayerVisible();
@@ -885,6 +886,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "PlayerSpotted"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            if (owner.GrabbedObject) owner.ReleasePlayer();
             owner.RagdollScript.StartRagdoll();
             owner.Timer = owner.EnemyData.RagdollDuration;
         }
@@ -907,6 +909,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "PlayerSpotted"; }
         public override void Enter(EnemyBaseAI owner)
         {
+            if (owner.GrabbedObject) owner.ReleasePlayer();
             owner.Agent.isStopped = true;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.fallHash, 0.1f);
         }
