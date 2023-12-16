@@ -880,7 +880,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner)
         {
             owner.RagdollScript.StartRagdoll();
-            owner.Timer = owner.EnemyData.StunDuration;
+            owner.Timer = owner.EnemyData.RagdollDuration;
         }
         public override void Update(EnemyBaseAI owner)
         {
