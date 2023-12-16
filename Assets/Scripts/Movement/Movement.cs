@@ -94,6 +94,19 @@ public class Movement : MonoBehaviour {
 	bool skip = true;
 
 	public bool moveBlocked;
+	private void OnEnable()
+	{
+		OptionsMenuManager.Unstuck += ResetYPos;
+	}
+    private void OnDisable()
+    {
+		OptionsMenuManager.Unstuck -= ResetYPos;
+
+	}
+	void ResetYPos()
+    {
+		transform.position = new Vector3(transform.position.x, 4, transform.position.z);
+    }
 	public void blockMovement(){
 		//Debug.Log("Blocked Movement in movement.cs!");
 		moveBlocked = true;
