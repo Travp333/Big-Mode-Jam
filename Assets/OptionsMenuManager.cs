@@ -16,6 +16,9 @@ public class OptionsMenuManager : MonoBehaviour
     public Slider TPSensSlider;
     public TMPro.TMP_Text TPSensAmountText;
 
+    public delegate void UnstuckAction();
+    public static event UnstuckAction Unstuck;
+
     public PlayerInput map;
     InputAction PauseAction;
 
@@ -49,6 +52,10 @@ public class OptionsMenuManager : MonoBehaviour
     {
         TPCameraMovement.rotationSpeed = value;
         TPSensAmountText.text = value.ToString();
+    }
+    public void UnstuckEverything()
+    {
+        Unstuck?.Invoke();
     }
     public void Pause(InputAction.CallbackContext callbackContext)
     {
