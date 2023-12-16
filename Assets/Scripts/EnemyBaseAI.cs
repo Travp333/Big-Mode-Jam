@@ -257,11 +257,11 @@ public class EnemyBaseAI : MonoBehaviour
         //disable player movement
         playerMovement.unblockMovement();
         //player.GetComponent<Movement>().enabled = true;
-        PlayerStates.SetFPSBlock(false);
-        PlayerStates.choked = false;
-        PlayerStates.crouching = false;
-        PlayerStates.standingHitbox.SetActive(true);
-	    PlayerStates.crouchingHitbox.SetActive(false);
+        playerStates.SetFPSBlock(false);
+        playerStates.choked = false;
+        playerStates.crouching = false;
+        playerStates.standingHitbox.SetActive(true);
+        playerStates.crouchingHitbox.SetActive(false);
 	    
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
