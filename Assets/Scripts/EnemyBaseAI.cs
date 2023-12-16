@@ -231,7 +231,7 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.choked = true;
         playerStates.standingHitbox.SetActive(false);
 	    playerStates.crouchingHitbox.SetActive(false);
-	    playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+		//playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
@@ -247,7 +247,8 @@ public class EnemyBaseAI : MonoBehaviour
         tube = null;
     }
     public void ReleasePlayer()
-    {
+	{
+		//playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         //Got player root!
         GrabbedObject = null;
         playerDummy.SetActive(false);
@@ -256,12 +257,12 @@ public class EnemyBaseAI : MonoBehaviour
         //disable player movement
         playerMovement.unblockMovement();
         //player.GetComponent<Movement>().enabled = true;
-        playerStates.SetFPSBlock(false);
-        playerStates.choked = false;
-        playerStates.crouching = false;
-        playerStates.standingHitbox.SetActive(true);
-        playerStates.crouchingHitbox.SetActive(false);
-	    playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        PlayerStates.SetFPSBlock(false);
+        PlayerStates.choked = false;
+        PlayerStates.crouching = false;
+        PlayerStates.standingHitbox.SetActive(true);
+	    PlayerStates.crouchingHitbox.SetActive(false);
+	    
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
             if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Cylinder" && m.name != "Cylinder.001")
@@ -579,7 +580,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner)
 	    {
 		    owner.Agent.speed = owner.EnemyData.GrabSpeed;
-            owner.Timer = 30;
+		    owner.Timer = 5;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabWalkHash, 0.1f);
             float nearest = -1;
             float dist;
@@ -628,7 +629,7 @@ public class EnemyIdleState : EnemyBaseState
         }
         public override void Update(EnemyBaseAI owner)
         {
-            if (owner.GrabbedObject) owner.GrabbedObject.transform.position = owner.HandTransform.position;
+	        if (owner.GrabbedObject) owner.GrabbedObject.GetComponentInChildren<Movement>().gameObject.transform.position = owner.HandTransform.position;
 
             owner.Timer -= Time.deltaTime;
             if (owner.Timer < 0) owner.AI.SetState(SlipState, owner);
