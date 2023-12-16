@@ -153,7 +153,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7230768742674205550
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2894,10 +2894,12 @@ MonoBehaviour:
   sfx: {fileID: 11400000, guid: 0e60f437e9c227a48964b24b1aef60ce, type: 2}
   audioSource: {fileID: 6735688397252640541}
   PointOfInterest: {x: 0, y: 0, z: 0}
+  Timer: 0
   PlayerTransform: {fileID: 0}
   PlayerStates: {fileID: 0}
   GrabbedObject: {fileID: 0}
   HandTransform: {fileID: 7093484776427324602}
+  tube: {fileID: 0}
 --- !u!114 &5666469301167627583
 MonoBehaviour:
   m_ObjectHideFlags: 0
