@@ -278,6 +278,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public bool PlayerVisible()
     {
+        if (Vector3.Distance(transform.position, PlayerPosition) > 300) return false;
         _playerRay = new Ray(EyeTransform.position, PlayerPosition - EyeTransform.position);
         float angle = Vector3.Angle(EyeTransform.forward, _playerRay.direction);
         if (angle > EnemyData.DetectionFOV)
