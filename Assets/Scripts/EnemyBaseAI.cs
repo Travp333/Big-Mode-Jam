@@ -91,10 +91,12 @@ public class EnemyBaseAI : MonoBehaviour
     private void OnEnable()
     {
         ProjectileManager.ProjectileHit += LookAtProjectile;
+        OptionsMenuManager.Unstuck += ReleasePlayer;
     }
     private void OnDisable()
     {
         ProjectileManager.ProjectileHit -= LookAtProjectile;
+        OptionsMenuManager.Unstuck -= ReleasePlayer;
     }
 
     private void Awake()
