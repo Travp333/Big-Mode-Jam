@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,5 +36,7 @@ public class EnemyData : ScriptableObject
     [Tooltip("How far away from the player the enemy is before they attempt a grab")]
     public float GrabDistance = 4;
     [Tooltip("How close to the enemy's hand the player has to be to get grabbed")]
-    public float GrabRadius = 3;
+	public float GrabRadius = 3;
+	[Tooltip("How close to the enemy's hand the player has to be to get grabbed")]
+	public float GrabSpeed = 15;
 }

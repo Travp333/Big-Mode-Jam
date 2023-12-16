@@ -57,6 +57,7 @@ public class TubeEntry : MonoBehaviour
 		Orbitcam.focus = player.GetComponent<Movement>().center.transform;
 		Invoke("DisableHitbox", 1f);
 		player.gameObject.GetComponent<PlayerStates>().SetFPSBlock(false);
+		player.gameObject.GetComponent<Rigidbody>().isKinematic = false;
 		
 	}
 	public void DumpPlayer(Transform playerRoot)

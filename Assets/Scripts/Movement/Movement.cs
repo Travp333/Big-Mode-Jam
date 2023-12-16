@@ -158,7 +158,9 @@ public class Movement : MonoBehaviour {
 		else {
 			velocity += gravity * Time.deltaTime;
 		}
-		body.velocity = velocity;
+		if(body.isKinematic == false){
+			body.velocity = velocity;
+		}
 		ClearState();
 	}
 
