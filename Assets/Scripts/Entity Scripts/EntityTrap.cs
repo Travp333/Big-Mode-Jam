@@ -117,6 +117,8 @@ public class EntityTrap : EntityParent
 							break;
 					case TrapType.Hole:
 							canBePickedUp = false;
+							baseAi.AI.SetState(EnemyBaseAI.FallInHoleState, baseAi);
+							Destroy(baseAi.gameObject, 5);
 							Invoke("DespawnHole", 3f);
 							break;
 					}

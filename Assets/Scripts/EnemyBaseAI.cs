@@ -31,6 +31,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyChokingPlayerState chokingPlayerState = new EnemyChokingPlayerState();
     public static EnemyLookingState LookingState = new EnemyLookingState();
     public static EnemyDumpPlayerState DumpingState = new EnemyDumpPlayerState();
+    public static EnemyFallInHoleState FallInHoleState = new EnemyFallInHoleState();
     //public static EnemySlipState SlipState = new EnemySlipState();
 
 
@@ -893,6 +894,21 @@ public class EnemyIdleState : EnemyBaseState
         {
             //owner.AnimationStates.noticingDesired = false;
             owner.RagdollScript.RevertRagdoll();
+        }
+    }
+    public class EnemyFallInHoleState : EnemyBaseState
+    {
+        public override string Name() { return "PlayerSpotted"; }
+        public override void Enter(EnemyBaseAI owner)
+        {
+            owner.Agent.isStopped = true;
+            owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.fallHash, 0.1f);
+        }
+        public override void Update(EnemyBaseAI owner)
+        {
+        }
+        public override void Exit(EnemyBaseAI owner, EnemyBaseState newState)
+        {
         }
     }
 }
