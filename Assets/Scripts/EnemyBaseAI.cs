@@ -145,16 +145,16 @@ public class EnemyBaseAI : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, parameters.ImpactPoint) > EnemyData.DistractionRadius) return;
         // prevent getting locked in suspicious state
-	     if (AI.CurrentState == SuspiciousState || AI.CurrentState == ChaseState) return;
-	    PointOfInterest = parameters.ImpactPoint;
-	    GoToPointOfInterest();
-	     if (PointOfInterestVisible(EnemyData.DistractionImmediateDetectionRadius, false))
-	     {
-	         AI.SetState(SuspiciousState, this);
-	      } else if (PointOfInterestVisible(EnemyData.DistractionRadius))
-	      {
-	              AI.SetState(SuspiciousState, this);
-	      }
+	    //  if (AI.CurrentState == SuspiciousState || AI.CurrentState == ChaseState) return;
+	    // PointOfInterest = parameters.ImpactPoint;
+	    //  GoToPointOfInterest();
+	    //   if (PointOfInterestVisible(EnemyData.DistractionImmediateDetectionRadius, false))
+	    //   {
+	    //      AI.SetState(SuspiciousState, this);
+	    //    } else if (PointOfInterestVisible(EnemyData.DistractionRadius))
+	    //    {
+	    //           AI.SetState(SuspiciousState, this);
+	    //   }
     }
     public void TakeDamage()
     {
@@ -580,7 +580,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner)
 	    {
 		    owner.Agent.speed = owner.EnemyData.GrabSpeed;
-		    owner.Timer = 5;
+		    owner.Timer = 20;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabWalkHash, 0.1f);
             float nearest = -1;
             float dist;
