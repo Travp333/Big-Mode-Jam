@@ -580,7 +580,7 @@ public class EnemyIdleState : EnemyBaseState
         public override void Enter(EnemyBaseAI owner)
 	    {
 		    owner.Agent.speed = owner.EnemyData.GrabSpeed;
-		    owner.Timer = 20;
+		    owner.Timer = 10;
             owner.AnimationStates.Anim.CrossFade(owner.AnimationStates.grabWalkHash, 0.1f);
             float nearest = -1;
             float dist;
