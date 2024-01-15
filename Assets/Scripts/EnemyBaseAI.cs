@@ -697,7 +697,7 @@ public class EnemyIdleState : EnemyBaseState
         public override string Name() { return "Patrolling"; }
         public override void Enter(EnemyBaseAI owner)
 	    {
-		    Debug.Log(owner.PatrolPoints.Points.Length);
+		    //Debug.Log(owner.PatrolPoints.Points.Length);
             owner.Agent.speed = owner.EnemyData.WalkSpeed;
             if (owner.PatrolPoints != null)
                 owner.PointOfInterest = owner.PatrolPoints.TargetPoint;

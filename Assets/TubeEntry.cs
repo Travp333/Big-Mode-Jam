@@ -91,7 +91,7 @@ public class TubeEntry : MonoBehaviour
 	// OnTriggerEnter is called when the Collider other enters the trigger.
 	protected void OnTriggerEnter(Collider other)
 	{
-		Debug.Log(other.gameObject.name);
+		//Debug.Log(other.gameObject.name);
 		if (other.tag == "AI")
 		{
 			EnemyBaseAI ai = other.transform.root.GetComponent<EnemyBaseAI>();
