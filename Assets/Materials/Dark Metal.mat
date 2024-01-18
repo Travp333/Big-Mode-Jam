@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7374703211624049816
+--- !u!114 &-5473434797672190688
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,22 +20,20 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Glass
-  m_Shader: {fileID: -6465566751694194690, guid: 5a0f6f88e29056640865c5ec256c70a9,
+  m_Name: Dark Metal
+  m_Shader: {fileID: -6465566751694194690, guid: 5d8cf186ca50a9349b44f256f0031bed,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _ALPHAPREMULTIPLY_ON
-  - _SURFACE_TYPE_TRANSPARENT
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2996
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties: :m_LightmapFlags _BaseMap _SpecColor _SpecGlossMap
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -79,27 +77,19 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_541e2d7da5df4cbeab517c9472d28754_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 8ce86417f9c024648a9dd81331a74056, type: 3}
+    - _SampleTexture2D_0563523347f6496680fec60411c94947_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 99179d999b62b714c8ce91098e1759c0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_618a71b7d1bd4f81a154b49390c53b29_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 2bec72505abaff04195a5f8a3d1fedbc, type: 3}
+    - _SampleTexture2D_55950c9f33f04631be2ee29ec2bfea26_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 1966456ab3ace604495e258d1775a6eb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_b5120e7d6e5047c7ab11ec0a94d4eb91_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 14cda5bb2766edd428c0f521189c2ea0, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_fd719ce010964882bc9a0b2336593028_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: b819b1a6cb150654cafbdb4f88c76236, type: 3}
+    - _SampleTexture2D_d9562b0417704e389a991d6eb47720df_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: db399bab054c6e647a8919cbdb005732, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SpeedTree8ColorAlpha_52f9a377eed74a149159bbfb8b1be64a_BaseMap_2957833126_Texture2D:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -128,8 +118,8 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 10
-    - _DstBlendAlpha: 10
+    - _DstBlend: 0
+    - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -138,19 +128,19 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
-    - _QueueOffset: -4
+    - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 1
+    - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Surface: 1
-    - _WorkflowMode: 0
-    - _ZWrite: 0
+    - _Surface: 0
+    - _WorkflowMode: 1
+    - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0.3254902}
-    - _Color: {r: 1, g: 1, b: 1, a: 0.3254902}
-    - _EmissionColor: {r: 0, g: 0.25, b: 0.12890625, a: 1}
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
