@@ -26,7 +26,7 @@ public class Interactable : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+	void FixedUpdate()
     {
 	    if (OpenDoor)
 	    {
@@ -68,7 +68,7 @@ public class Interactable : MonoBehaviour
         moveTimeElapsed += Time.deltaTime;
         mainObject.transform.position = Vector3.Lerp(initialPos, targetPos, moveTimeElapsed / speed);
 
-        if (Vector3.Distance(mainObject.transform.position, targetPos) <= .01f)
+	    if (Vector3.Distance(mainObject.transform.position, targetPos) <= .001f)
         {
             actionCommand = "None";
             moveSwap = !moveSwap;
