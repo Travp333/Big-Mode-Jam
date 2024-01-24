@@ -318,19 +318,19 @@ public class EnemyBaseAI : MonoBehaviour
                     Debug.DrawLine(EyeTransform.position, _hit.point, Color.red);
                     if (_hit.collider.tag == "Environment")
                     {
-                    	Debug.Log("LAYER " + _hit.collider.gameObject.layer);
+                    	//Debug.Log("LAYER " + _hit.collider.gameObject.layer);
 	                    //Debug.Log(_hit.collider.name + " u coord: " + _hit.textureCoord.x);
 	                    //UV CHECKING THING HERE
 	                    //if (PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
 	                    if (PlayerColorChangeBehavior.Instance.IsBlack && (_hit.collider.gameObject.layer == 15))
                         {
-                            if (DebugCommentText) DebugCommentText.text = "Materials match!";
+		                    if (DebugCommentText) DebugCommentText.text = "Materials match, dark!";
 	                        return false;
                             
                         }
 	                    else if (!PlayerColorChangeBehavior.Instance.IsBlack && (_hit.collider.gameObject.layer == 16))
 	                    {
-		                    if (DebugCommentText) DebugCommentText.text = "Materials match!";
+		                    if (DebugCommentText) DebugCommentText.text = "Materials match, light!";
 		                    return false;
                             
 	                    }
