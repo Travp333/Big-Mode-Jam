@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6586565600684246560
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2381,10 +2381,10 @@ MonoBehaviour:
   EyeTransform: {fileID: 8707191471136021642}
   PlayerDetectionMask:
     serializedVersion: 2
-    m_Bits: 16904
+    m_Bits: 114696
   EnvironmentDetectionMask:
     serializedVersion: 2
-    m_Bits: 16896
+    m_Bits: 114688
   DebugCommentText: {fileID: 4403154789494502664}
   DebugStateText: {fileID: 3711427466054645734}
   sfx: {fileID: 11400000, guid: 0e60f437e9c227a48964b24b1aef60ce, type: 2}
@@ -2392,7 +2392,6 @@ MonoBehaviour:
   PointOfInterest: {x: 0, y: 0, z: 0}
   Timer: 0
   PlayerTransform: {fileID: 0}
-  PlayerStates: {fileID: 0}
   GrabbedObject: {fileID: 0}
   HandTransform: {fileID: 2746126804079682386}
   tube: {fileID: 0}

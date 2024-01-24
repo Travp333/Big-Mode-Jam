@@ -310,7 +310,7 @@ public class EnemyBaseAI : MonoBehaviour
             Debug.DrawLine(EyeTransform.position, PlayerPosition + position, Color.green);
             if (Physics.Linecast(EyeTransform.position, PlayerPosition + position, out _hit, PlayerDetectionMask) && _hit.collider.tag == "Player")
             {
-                if (DebugCommentText) DebugCommentText.text = "Player Visible";
+	            if (DebugCommentText) DebugCommentText.text = "Player Visible";
 
                 if (Physics.Raycast(EyeTransform.position, _playerRay.direction, out _hit, 100, EnvironmentDetectionMask))
                 {
@@ -318,12 +318,22 @@ public class EnemyBaseAI : MonoBehaviour
                     Debug.DrawLine(EyeTransform.position, _hit.point, Color.red);
                     if (_hit.collider.tag == "Environment")
                     {
+                    	Debug.Log("LAYER " + _hit.collider.gameObject.layer);
 	                    //Debug.Log(_hit.collider.name + " u coord: " + _hit.textureCoord.x);
-                        if (PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
+	                    //UV CHECKING THING HERE
+	                    //if (PlayerColorChangeBehavior.Instance.IsBlack == TextureIsBlackAtCoord(_hit.textureCoord.x))
+	                    if (PlayerColorChangeBehavior.Instance.IsBlack && (_hit.collider.gameObject.layer == 15))
                         {
                             if (DebugCommentText) DebugCommentText.text = "Materials match!";
-                            return false;
+	                        return false;
+                            
                         }
+	                    else if (!PlayerColorChangeBehavior.Instance.IsBlack && (_hit.collider.gameObject.layer == 16))
+	                    {
+		                    if (DebugCommentText) DebugCommentText.text = "Materials match!";
+		                    return false;
+                            
+	                    }
                         else
                         {
                             if (DebugCommentText) DebugCommentText.text = "Materials DO NOT match";
@@ -339,7 +349,7 @@ public class EnemyBaseAI : MonoBehaviour
             }
             else
             {
-                if (DebugCommentText) DebugCommentText.text = "Player Not Visible";
+	            if (DebugCommentText) DebugCommentText.text = "Player Not Visible";
             }
             return false;
         }
