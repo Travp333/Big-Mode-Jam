@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //I need to properly use hashes, im kinda half assing it here
-// is on wall stays true after bumping into a ridigbody in water
 
 public class AnimationStateController : MonoBehaviour
 {
@@ -221,7 +220,7 @@ public class AnimationStateController : MonoBehaviour
 	        }
         }
         //This makes jump stay true a little longer after you press it, dependent on "JumpBuffer"
-        if (JumpPressed){
+		if (JumpPressed && !sphere.moveBlocked){
             if(JumpSwitch){
                 Jumpstopwatch = 0;
                 animator.SetBool(isJumpingHash, true);
@@ -269,57 +268,57 @@ public class AnimationStateController : MonoBehaviour
             animator.SetBool("isOnSteep", false);
             animator.SetBool(isOnWallHash, false);
         }
-		if(!isFiring && firePressed && !isRolling){
+		if(!isFiring && firePressed && !isRolling && !sphere.moveBlocked){
 			animator.SetBool(isFiringHash, true);
 		}
-		if(!isArmed && armpressed && !isRolling){
+		if(!isArmed && armpressed && !isRolling && !sphere.moveBlocked){
 			animator.SetBool(isArmedHash, true);
 			animator.SetLayerWeight(1, 1);
 			ExitNullState();
 		}
-		if(isArmed && (!armpressed || isRolling)){
+		if((isArmed && (!armpressed || isRolling ) && !sphere.moveBlocked)){
 			animator.SetBool(isArmedHash, false);
 			
 		}
-		if(!isHolding && holdPressed && isOnGroundADJ && !isRolling){
+		if(!isHolding && holdPressed && isOnGroundADJ && !isRolling && !sphere.moveBlocked){
 			animator.SetBool(isHoldingHash, true);
 			//Debug.Log("Picking Up in animator");
 		}
-		if(isHolding && (!holdPressed || isRolling)){
+		if((isHolding && (!holdPressed || isRolling)) && !sphere.moveBlocked){
 			animator.SetBool(isHoldingHash, false);
 			//Debug.Log("PuttingDown in animatior");
 		}
-		if(!isThrowing && throwPressed && isHolding && isOnGroundADJ){
+		if(!isThrowing && throwPressed && isHolding && isOnGroundADJ && !sphere.moveBlocked){
 			animator.SetBool(isThrowingHash, true);
 		}
-		if(isThrowing && (!throwPressed || !isOnGroundADJ)){
+		if(isThrowing && (!throwPressed || !isOnGroundADJ) && !sphere.moveBlocked){
 			animator.SetBool(isThrowingHash, false);
 		}
-		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding && !aimPressed){
+		if(!isRolling && rollPressed && isOnGroundADJ && !isHolding && !aimPressed && !sphere.moveBlocked){
 			animator.SetBool(isRollingHash, true);
 			ResetArmedLayerWeight();
 			state.face.setBase();
 			HideSlingShot();
 		}
-		if(isRolling && (!rollPressed || !isOnGroundADJ || isHolding || aimPressed)){
+		if((isRolling && (!rollPressed || !isOnGroundADJ || isHolding || aimPressed)) && !sphere.moveBlocked){
 			animator.SetBool(isRollingHash, false);
 		}
-		if(!isCrouching && crouchPressed && isOnGroundADJ && !isHolding){
+		if(!isCrouching && crouchPressed && isOnGroundADJ && !isHolding && !sphere.moveBlocked){
 			animator.SetBool(isCrouchedHash, true);
 		}
-		if(isCrouching && (!crouchPressed || !isOnGroundADJ || isRolling || isHolding)){
+		if((isCrouching && (!crouchPressed || !isOnGroundADJ || isRolling || isHolding)) && !sphere.moveBlocked){
 			animator.SetBool(isCrouchedHash, false);
 		}
-		if (!isWalking && (movementPressed && WalkPressed  && !isHolding)){
+		if (!isWalking && (movementPressed && WalkPressed  && !isHolding) && !sphere.moveBlocked){
 		    animator.SetBool(isWalkingHash, true);
 	    }
-		if (isWalking && (!movementPressed || !WalkPressed || isHolding )){
+		if (isWalking && (!movementPressed || !WalkPressed || isHolding )&& !sphere.moveBlocked){
 		    animator.SetBool(isWalkingHash, false);
 	    }
-		if (!isRunning && movementPressed && !WalkPressed && sphere.velocity.magnitude > 0 ){
+		if (!isRunning && movementPressed && !WalkPressed && sphere.velocity.magnitude > 0 && !sphere.moveBlocked ){
             animator.SetBool(isRunningHash, true);
 	    }
-		if ((isRunning && !movementPressed) || WalkPressed ||sphere.velocity.magnitude <= 0.08f){
+		if (((isRunning && !movementPressed) || WalkPressed ||sphere.velocity.magnitude <= 0.08f) && !sphere.moveBlocked){
             animator.SetBool(isRunningHash, false);
 	    }
     }

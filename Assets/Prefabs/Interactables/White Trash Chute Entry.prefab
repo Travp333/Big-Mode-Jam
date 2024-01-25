@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 4837868107501131497}
   - component: {fileID: 1457936580024261523}
   - component: {fileID: 748528348642192810}
-  m_Layer: 9
+  m_Layer: 16
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6013658136599930490
 Transform:
@@ -116,12 +116,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3091454475483622222}
-  m_Layer: 9
+  m_Layer: 16
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3091454475483622222
 Transform:
@@ -265,12 +265,17 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: a4e17037ddef1f84bafce9a235557173,
         type: 3}
       propertyPath: m_Layer
-      value: 9
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a4e17037ddef1f84bafce9a235557173,
         type: 3}
       propertyPath: m_TagString
       value: Trash
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a4e17037ddef1f84bafce9a235557173,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -304,6 +309,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6945473754900582626}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a4e17037ddef1f84bafce9a235557173,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6843256093792954665}
   m_SourcePrefab: {fileID: 100100000, guid: a4e17037ddef1f84bafce9a235557173, type: 3}
 --- !u!4 &1500752692421990327 stripped
 Transform:
@@ -422,5 +431,21 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.019600473
+  m_Radius: 0.025
   m_Center: {x: -0.0020280927, y: 0.00017507198, z: 0.013840198}
+--- !u!208 &6843256093792954665
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2276690780401061133}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.005, y: 0.005, z: 0.005}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0.012}
+  m_TimeToStationary: 0.5

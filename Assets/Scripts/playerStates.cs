@@ -157,7 +157,7 @@ public class PlayerStates : MonoBehaviour
 				//		FPSBlocked = false;
 				//	}
 			//}
-		if(armAction.WasPressedThisFrame() && move.OnGround && !holding && !choked){
+		if(armAction.WasPressedThisFrame() && move.OnGround && !holding && !choked && !move.moveBlocked){
 			
 			if(armed){
 				armed = false;
@@ -233,7 +233,7 @@ public class PlayerStates : MonoBehaviour
 		if(holdingBigOne){
 			face.setTrance();
 		}
-		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding  && !choked){
+		if(crouchAction.WasPressedThisFrame() && move.OnGround && !holding  && !choked && !move.moveBlocked){
 			if((Time.time - lastPressTime <= doublePressTime)&& moving && !aiming){
 				StopCoroutine("StartCrouch");
 				Debug.Log("ROLL!");
@@ -247,27 +247,27 @@ public class PlayerStates : MonoBehaviour
 				StartCoroutine("StartCrouch");
 			}
 		}
-		if(walkAction.IsPressed() && !choked){
+		if(walkAction.IsPressed() && !choked && !move.moveBlocked){
 			walking = true;
 		}
 		else{
 			walking = false;
 		}
-		if(armed && attackAction.WasPerformedThisFrame() && !choked){
+		if(armed && attackAction.WasPerformedThisFrame() && !choked && !move.moveBlocked){
 			firing = true;
 		}
-		if(!holding && interactAction.WasPerformedThisFrame()  && !choked){
+		if(!holding && interactAction.WasPerformedThisFrame()  && !choked && !move.moveBlocked){
 			if(pickup.objectsInTriggerSpace.Count > 0 && !aiming && !armed){
 				holding = true;
 				face.setStraining();			
 			}
 
 		}
-		else if(holding && interactAction.WasPerformedThisFrame() && !choked){
+		else if(holding && interactAction.WasPerformedThisFrame() && !choked && !move.moveBlocked){
 			holding = false;
 			face.setBase();
 		}
-		if(holding && attackAction.WasPerformedThisFrame() && !choked){
+		if(holding && attackAction.WasPerformedThisFrame() && !choked&& !move.moveBlocked){
 			throwing = true;
 			Invoke("ResetThrowing", 1f);
 			holding = false;

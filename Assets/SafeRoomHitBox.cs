@@ -6,10 +6,12 @@ public class SafeRoomHitBox : MonoBehaviour
 {
 	Transform end;
 	public void EnableHitbox(Transform endPoint){
+		Debug.Log("Enabled safezonehitbox");
 		GetComponent<BoxCollider>().enabled = true;
 		end = endPoint;
 	}
 	public void DisableHitbox(){
+		Debug.Log("Disabled safezonehitbox");
 		GetComponent<BoxCollider>().enabled = false;
 		end = null;
 	}

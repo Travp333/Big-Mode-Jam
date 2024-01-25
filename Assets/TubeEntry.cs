@@ -40,7 +40,7 @@ public class TubeEntry : MonoBehaviour
 		tubeExit.transform.parent.GetComponent<Animator>().SetBool("Exit", false);
 	}
 	public void SetCamToExit(){
-		
+		Debug.Log("SETCAM TO EXIT");
 		Orbitcam.focus = tubeExit.transform;
 		Invoke("SpawnAtExit", 2f);
 	}
@@ -60,14 +60,20 @@ public class TubeEntry : MonoBehaviour
 		player.gameObject.GetComponent<Rigidbody>().isKinematic = false;
 		
 	}
+	public void SetPosition(){
+		player.transform.position = safeRoom.transform.position;
+	}
 	public void DumpPlayer(Transform playerRoot)
-    {
+	{
+		
         Movement mov = playerRoot.GetComponentInChildren<Movement>();
         PlayerStates states = playerRoot.GetComponentInChildren<PlayerStates>();
         if (mov != null)
         {
+        	
             if (mov.playerInputSpace.gameObject != null)
             {
+            	//player.gameObject.GetComponent<Rigidbody>().isKinematic = false;
                 if (states.FPSorTPS == false)
                 {
                     //Debug.Log("Tubed while in first person something");
@@ -82,8 +88,11 @@ public class TubeEntry : MonoBehaviour
                 this.GetComponent<Animator>().SetBool("Enter", true);
                 Invoke("ResetEnter", .1f);
                 Orbitcam.focus = tubeCamSpot.transform;
-                mov.blockMovement();
-                player.transform.position = safeRoom.transform.position;
+	            mov.blockMovement();
+	            player.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+	            player.transform.position = safeRoom.transform.position;
+	            player.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+	            Invoke("SetPosition", .2f);
                 Invoke("SetCamToExit", 2f);
             }
         }

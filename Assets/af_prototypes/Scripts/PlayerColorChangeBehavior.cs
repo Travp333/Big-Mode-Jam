@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerColorChangeBehavior : MonoBehaviour
 {
+	public GameObject player = default;
+	Movement sphere = default; 
 	public SkinnedMeshRenderer face;
     public static PlayerColorChangeBehavior Instance;
     public CanvasManager Canvas;
@@ -19,7 +21,8 @@ public class PlayerColorChangeBehavior : MonoBehaviour
 	float _colorChangeTimer = 0;
 
     private void Awake()
-    {
+	{
+		sphere = player.GetComponent<Movement>();
         if (!Instance) Instance = this;
         else
         {
@@ -34,7 +37,7 @@ public class PlayerColorChangeBehavior : MonoBehaviour
         if (_colorChangeTimer > 0) _colorChangeTimer -= Time.deltaTime;
         else
         {
-	        if (colorSwap.WasPressedThisFrame())
+	        if (colorSwap.WasPressedThisFrame() && ! sphere.moveBlocked)
             {
                 ChangeColor();
             }

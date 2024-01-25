@@ -40,7 +40,8 @@ public class EnemyBaseAI : MonoBehaviour
     public NavMeshAgent Agent;
     public RagdollSwap RagdollScript;
     #endregion
-    public bool TestPatrol;
+	public bool TestPatrol;
+	public bool isDeaf;
     public PatrolData PatrolPoints;
 
 
@@ -66,14 +67,14 @@ public class EnemyBaseAI : MonoBehaviour
 
     // Used by PickupPlayer
     Movement playerMovement;
-    [HideInInspector] public GameObject GrabbedObject;
+    public GameObject GrabbedObject;
     public Transform HandTransform;
     Transform playerRoot;
     PlayerStates playerStates;
     GameObject playerDummy;
     OrbitCamera orbCam;
     PlayerColorChangeBehavior colorChange;
-    [HideInInspector] public TubeEntry tube;
+     public TubeEntry tube;
 
     Vector3 PlayerPosition {
         get
@@ -181,22 +182,25 @@ public class EnemyBaseAI : MonoBehaviour
     {
         if (playerStates.moving)
         {
-            if (playerStates.crouching) return false;
-            if (playerStates.walking)
-            {
-                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.WalkingFootstepDetectionRange)
-                {
-                    PointOfInterest = PlayerPosition;
-                    return true;
-                }
-            } else
-            {
-                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.RunningFootstepDetectionRange)
-                {
-                    PointOfInterest = PlayerPosition;
-                    return true;
-                }
-            }
+        	if(!isDeaf){
+	            if (playerStates.crouching) return false;
+	            if (playerStates.walking)
+	            {
+	                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.WalkingFootstepDetectionRange)
+	                {
+	                    PointOfInterest = PlayerPosition;
+	                    return true;
+	                }
+	            } else
+	            {
+	                if (Vector3.Distance(PlayerPosition, EyeTransform.position) < EnemyData.RunningFootstepDetectionRange)
+	                {
+	                    PointOfInterest = PlayerPosition;
+	                    return true;
+	                }
+	            }
+        	}
+            
         }
         return false;
     }
@@ -233,7 +237,7 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.choked = true;
         playerStates.standingHitbox.SetActive(false);
 	    playerStates.crouchingHitbox.SetActive(false);
-		//playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+		playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
@@ -250,7 +254,7 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void ReleasePlayer()
 	{
-		//playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+		playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         //Got player root!
         GrabbedObject = null;
         playerDummy.SetActive(false);
@@ -628,7 +632,7 @@ public class EnemyIdleState : EnemyBaseState
                         }
                     }
                 }
-                Debug.Log(obj.name + " Distance: " + dist + " nearest thing so far: " + nearest);
+	            //Debug.Log(obj.name + " Distance: " + dist + " nearest thing so far: " + nearest);
 
             }
             if (foundTrash)

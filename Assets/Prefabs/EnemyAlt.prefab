@@ -2376,15 +2376,16 @@ MonoBehaviour:
   Agent: {fileID: 3566274698020352969}
   RagdollScript: {fileID: 7287581233578033653}
   TestPatrol: 1
+  isDeaf: 0
   PatrolPoints: {fileID: 2852178058550138597}
   EnemyData: {fileID: 11400000, guid: 57b99318b1cfd3e43bfa2a08f8f69ff6, type: 2}
   EyeTransform: {fileID: 8707191471136021642}
   PlayerDetectionMask:
     serializedVersion: 2
-    m_Bits: 114696
+    m_Bits: 245768
   EnvironmentDetectionMask:
     serializedVersion: 2
-    m_Bits: 114688
+    m_Bits: 245760
   DebugCommentText: {fileID: 4403154789494502664}
   DebugStateText: {fileID: 3711427466054645734}
   sfx: {fileID: 11400000, guid: 0e60f437e9c227a48964b24b1aef60ce, type: 2}
