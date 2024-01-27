@@ -34,7 +34,7 @@ public class ConveyorBelt : MonoBehaviour
             }
         }
 		if(other.gameObject.tag == "Player"){
-			if(  other.gameObject.tag != "Volumes" && ((other.gameObject.transform.parent.transform.parent.gameObject.tag == "Player") && !pushingObjects.Contains(other.gameObject.transform.parent.transform.parent.gameObject))){
+			if(other.gameObject.tag != "Volumes" && ((other.gameObject.transform.parent.transform.parent.gameObject.tag == "Player") && !pushingObjects.Contains(other.gameObject.transform.parent.transform.parent.gameObject))){
 				//Debug.Log("A player ( "+ other.gameObject.transform.parent.transform.parent.gameObject+ " )  just got added");
 				pushingObjects.Add(other.gameObject.transform.parent.transform.parent.gameObject);
 			}
@@ -128,6 +128,18 @@ public class ConveyorBelt : MonoBehaviour
 		        if(pushingObjects[i].GetComponent<EntityParent>().isPickedUp){
 			        //Debug.Log("REMOVED VIA PICKUP");
 		            pushingObjects.Remove(pushingObjects[i].gameObject);
+		        }
+		        else if(speed != 0 && isEnabled){
+			        pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);
+
+		        }
+	        }
+	        
+	        //WIP
+	        else if(pushingObjects[i].GetComponent<PlayerStates>() != null){
+		        if(pushingObjects[i].GetComponent<PlayerStates>().choked){
+			        //Debug.Log("REMOVED VIA Choking");
+			        pushingObjects.Remove(pushingObjects[i].gameObject);
 		        }
 		        else if(speed != 0 && isEnabled){
 			        pushingObjects[i].transform.position = pushingObjects[i].transform.position + this.transform.right * (speed * Time.deltaTime);

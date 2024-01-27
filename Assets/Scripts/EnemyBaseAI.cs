@@ -254,7 +254,10 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void ReleasePlayer()
 	{
+		Debug.Log("SETTING POsITION OF PLAEYR");
+		playerRoot.position = HandTransform.position;
 		playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = false;
+		playerRoot.position = HandTransform.position;
         //Got player root!
         GrabbedObject = null;
         playerDummy.SetActive(false);
@@ -268,7 +271,7 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.crouching = false;
         playerStates.standingHitbox.SetActive(true);
         playerStates.crouchingHitbox.SetActive(false);
-
+		playerRoot.position = HandTransform.position;
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
             if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Cylinder" && m.name != "Cylinder.001")
@@ -646,7 +649,7 @@ public class EnemyIdleState : EnemyBaseState
         }
         public override void Update(EnemyBaseAI owner)
         {
-	        if (owner.GrabbedObject) owner.GrabbedObject.GetComponentInChildren<Movement>().gameObject.transform.position = owner.HandTransform.position;
+	        //if (owner.GrabbedObject) owner.GrabbedObject.GetComponentInChildren<Movement>().gameObject.transform.position = owner.HandTransform.position;
 
             owner.Timer -= Time.deltaTime;
             if (owner.Timer < 0) owner.AI.SetState(SlipState, owner);
