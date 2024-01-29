@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine.AI;
 using StateMachine;
 using UnityEngine.Audio;
-
+//need to make the AI not chase the player after its already grabbed
 public class EnemyBaseAI : MonoBehaviour
 {
     public const float DISTANCETHATISCLOSEENOUGH = 8;
@@ -33,7 +33,7 @@ public class EnemyBaseAI : MonoBehaviour
     public static EnemyDumpPlayerState DumpingState = new EnemyDumpPlayerState();
     public static EnemyFallInHoleState FallInHoleState = new EnemyFallInHoleState();
     //public static EnemySlipState SlipState = new EnemySlipState();
-
+	public Transform tempPlayerTransform;
 
 
 
@@ -60,7 +60,7 @@ public class EnemyBaseAI : MonoBehaviour
     [HideInInspector] public Vector3 PointOfInterest;
     [HideInInspector] public float Timer;
 
-    [SerializeField] Transform PlayerTransform;
+	[SerializeField] public Transform PlayerTransform;
     Ray _playerRay;
     RaycastHit _hit;
 
@@ -81,11 +81,6 @@ public class EnemyBaseAI : MonoBehaviour
         {
             return PlayerTransform.position + Vector3.up; // Offsets transform position
         }
-    }
-    bool TextureIsBlackAtCoord (float TextureUCoord)
-    {
-        // If TextureUCoord < 0.5, the texture should be black, so should return true
-        return (TextureUCoord < 0.5f) ? true : false;
     }
     readonly Vector3 FLATVECTOR = new Vector3(1,0,1);
 
@@ -114,7 +109,7 @@ public class EnemyBaseAI : MonoBehaviour
         orbCam = playerRoot.GetComponentInChildren<OrbitCamera>();
         playerDummy = GetComponentInChildren<ColorChecker>(true).gameObject;
         colorChange = playerMovement.GetComponent<PlayerColorChangeBehavior>();
-
+	    tempPlayerTransform = PlayerTransform;
         if (TestPatrol)
         {
             AI.SetState(PatrolState, this);
@@ -124,7 +119,18 @@ public class EnemyBaseAI : MonoBehaviour
     private void Update()
     {
         AI.Update(this);
-        //PlayerVisible();
+	    //PlayerVisible();
+	    if(playerStates.choked){
+	    	//force out of chase state somehow?
+	    	if(GrabbedObject == null){
+	    		if(AI.CurrentState == ChaseState){
+		    		AI.SetState(PatrolState, this);
+	    		}
+	    	}
+	    }
+	    else{
+	    	//resume as normal
+	    }
     }
 
     public void GoToPlayer()
@@ -238,12 +244,12 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.standingHitbox.SetActive(false);
 	    playerStates.crouchingHitbox.SetActive(false);
 		playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+		foreach (SkinnedMeshRenderer m in colorChange.mesh)
+		{
+			m.enabled = false;
+		}
+		colorChange.face.enabled = false;
 
-        foreach (SkinnedMeshRenderer m in colorChange.mesh)
-        {
-            m.enabled = false;
-        }
-        colorChange.face.enabled = false;
     }
     public void DumpPlayerInPipe()
     {
@@ -254,10 +260,9 @@ public class EnemyBaseAI : MonoBehaviour
     }
     public void ReleasePlayer()
 	{
-		Debug.Log("SETTING POsITION OF PLAEYR");
-		playerRoot.position = HandTransform.position;
+		//Debug.Log("SETTING POsITION OF PLAEYR");
+		PlayerTransform.position = HandTransform.position;
 		playerStates.gameObject.GetComponent<Rigidbody>().isKinematic = false;
-		playerRoot.position = HandTransform.position;
         //Got player root!
         GrabbedObject = null;
         playerDummy.SetActive(false);
@@ -271,7 +276,6 @@ public class EnemyBaseAI : MonoBehaviour
         playerStates.crouching = false;
         playerStates.standingHitbox.SetActive(true);
         playerStates.crouchingHitbox.SetActive(false);
-		playerRoot.position = HandTransform.position;
         foreach (SkinnedMeshRenderer m in colorChange.mesh)
         {
             if (m.name != "Sling Mesh" && m.name != "FPSArms" && m.name != "FPSSling" && m.name != "Cylinder" && m.name != "Cylinder.001")
@@ -415,7 +419,7 @@ public class EnemyIdleState : EnemyBaseState
                 owner.Timer -= Time.deltaTime;
             else
             {
-                if (owner.PlayerVisible() || (owner.PlayerWalkingNear() && !owner.PlayerBehindCover()))
+	            if (owner.PlayerVisible() || (owner.PlayerWalkingNear() && !owner.PlayerBehindCover()))
                 {
                     owner.AI.SetState(PlayerSpotted, owner, true);
                 } else if (owner.TestPatrol)
@@ -453,8 +457,8 @@ public class EnemyIdleState : EnemyBaseState
             else
             {
                 NavMeshPath navMeshPath = new NavMeshPath();
-
-                if (owner.Agent.CalculatePath(owner.PlayerPosition, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
+				
+	            if ( owner.Agent.CalculatePath(owner.PlayerPosition, navMeshPath) && navMeshPath.status == NavMeshPathStatus.PathComplete)
                 {
                     owner.AI.SetState(ChaseState, owner, true);
                 } else

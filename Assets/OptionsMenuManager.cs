@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class OptionsMenuManager : MonoBehaviour
 {
-
+	public OrbitCamera cam;
     public GameObject SettingsMenu;
     public SimpleCameraMovement CameraMovement;
     public Slider FPSensSlider;
@@ -34,7 +34,8 @@ public class OptionsMenuManager : MonoBehaviour
     }
 
     private void Awake()
-    {
+	{
+		cam = GameObject.Find("3rd Person Camera Empty").GetComponent<OrbitCamera>();
         SettingsMenu.SetActive(false);
         PauseAction = map.currentActionMap.FindAction("Pause");
         FPSensSlider.value = CameraMovement.sens;
@@ -62,12 +63,14 @@ public class OptionsMenuManager : MonoBehaviour
         paused = !paused;
         if (paused)
         {
+        	cam.BlockCamInput();
             SettingsMenu.SetActive(true);
             Time.timeScale = 0;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         } else
         {
+        	cam.UnBlockCamInput();
             SettingsMenu.SetActive(false);
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked;
